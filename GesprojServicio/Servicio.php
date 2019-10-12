@@ -1,5 +1,8 @@
 <?php
-require_once ("includes/ConectorBD.php");
+require ("includes/ConectorBD.php");
 
 
 $conector =  new ConectorBD();
+
+
+$conector->cerrarBD();

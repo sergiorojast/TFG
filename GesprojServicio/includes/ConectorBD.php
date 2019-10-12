@@ -27,7 +27,7 @@ class ConectorBD
             $this->conexion = new PDO($Dbd, $this->usuario, $this->pass);
 
 
-            echo "conexion realizada con exito";
+            // echo "conexion realizada con exito";
         } catch (PDOException $exc) {
             echo $exc->getMessage();
         }
@@ -38,8 +38,9 @@ class ConectorBD
         $this->conexion = null;
     }
 
-    public function cerrarBD()
+    public function cerrarBD(): void
     {
         $this->conexion  = null;
+        //echo ' <br>Base de datos cerrada';
     }
 }
