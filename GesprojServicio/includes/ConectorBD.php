@@ -43,4 +43,18 @@ class ConectorBD
         $this->conexion  = null;
         //echo ' <br>Base de datos cerrada';
     }
+
+    /**
+     * Funcion llamada para actualizar la base de datos, o insertar 
+     * @param $consulta 
+     * @return boolean | $consulta;
+     */
+    public function actualizarBD($consulta)
+    {
+        return $this->conexion->query($consulta);
+    }
+    public function consultarBD($consulta)
+    {
+        return $this->conexion->query($consulta);
+     }
 }

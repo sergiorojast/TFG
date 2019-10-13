@@ -1,54 +1,88 @@
 <?php
 
-class Usuario{
+class Usuario
+{
     private $correo;
     private $nombre;
     private $apellidos;
     private $contrasenia;
     private $rol;
 
-
-    public function __construct($correo,$nombre,$apellidos,$contrasenia,$rol)
+    /**
+     * Constructores
+     */
+    public function __construct()
+    { }
+    public function constructor($correo, $nombre, $apellidos, $contrasenia, $rol)
     {
         $this->correo = $correo;
         $this->nombre = $nombre;
         $this->apellidos = $apellidos;
-        $this->contrasenia= $contrasenia;
+        $this->contrasenia = $contrasenia;
         $this->rol = $rol;
     }
-    
+    public function constructorArray($array)
+    {
+        if (isset($array['pk_correo'])) {
+            $this->correo = $array[0];
+            
+            $this->nombre = $array[1];
+            $this->apellidos = $array[2];
+            $this->contrasenia = $array[3];
+            $this->rol = $array[4];
+        }
+    }
+
     /**
      * zona de setters
      */
-    public function setCorreo($correo): void{
+    private function setCorreo($correo): void
+    {
         $this->correo = $correo;
     }
-    public function setNombre($nombre):void{
+    private function setNombre($nombre): void
+    {
         $this->nombre  = $nombre;
     }
-    public function setApellidos($apellidos):void{
+    private function setApellidos($apellidos): void
+    {
         $this->apellidos  = $apellidos;
     }
-    public function setContrasenia($contrasenia):void{
+    private function setContrasenia($contrasenia): void
+    {
         $this->contrasenia = $contrasenia;
     }
-    public function setRol($rol):void{
-        $this->rol= $rol;
+    private function setRol($rol): void
+    {
+        $this->rol = $rol;
     }
     /**
      * Zona de getters
      */
 
-     public function getCorreo():string{
-         return $this->correo;
-     }
-     public function getNombre():string{
-         return $this->nombre;
-     }
-     public function getApellidos():string{
-         return $this->apellidos;
-     }
-     public function getRol():int{
-         return $this->rol;
-     }
+    public function getCorreo(): string
+    {
+        return $this->correo;
+    }
+    public function getNombre(): string
+    {
+        return $this->nombre;
+    }
+    public function getApellidos(): string
+    {
+        return $this->apellidos;
+    }
+    public function getContrasenia()
+    {
+        return $this->contrasenia;
+    }
+    public function getRol(): int
+    {
+        return $this->rol;
+    }
+
+    public function __toString()
+    {
+        return "Correo->" . $this->correo . ", Nombre->" . $this->nombre . ", Apellidos->" . $this->apellidos . ", Rol->" . $this->rol;
+    }
 }
