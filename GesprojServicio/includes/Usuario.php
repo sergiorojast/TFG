@@ -25,7 +25,7 @@ class Usuario
     {
         if (isset($array['pk_correo'])) {
             $this->correo = $array[0];
-            
+
             $this->nombre = $array[1];
             $this->apellidos = $array[2];
             $this->contrasenia = $array[3];
@@ -60,7 +60,7 @@ class Usuario
      * Zona de getters
      */
 
-    public function getCorreo(): string
+    public function getCorreo()
     {
         return $this->correo;
     }

@@ -17,18 +17,22 @@ function crearUsuario()
     $contrasenia = 'platano';
     $rol = 100;
     $controlador  = new ConectorBD();
-    
+
     $usuario = new Usuario();
     $usuario->constructor($correo, $nombre, $apellidos, $contrasenia, $rol);
 
 
     $consulta = "Insert into Usuarios values('" .
         $usuario->getCorreo() . "','" . $usuario->getNombre() . "','" . $usuario->getApellidos() . "','" . $usuario->getContrasenia() . "','" . $usuario->getRol() . "')";
-    consultarUsuario($usuario->getCorreo());
+        $usuarioAux = consultarUsuario($usuario->getCorreo());
+    if($usuarioAux->getCorreo() != null){
+        echo 'Usuario en la base de datos. '.$usuario; 
+    }else{
+        // 'Usuario no existe, por  lo tanto creamos el usuario en la base de datos';
 
-    //  echo $consulta;
+        $controlador->actualizarBD($consulta);
+    }
 
-    //var_dump($controlador->actualizarBD($consulta));
 
 }
 
@@ -37,12 +41,15 @@ function crearUsuario()
  */
 function consultarUsuario($correo): Usuario
 {
+    unset($usuario);
     $controlador  = new ConectorBD();
     $consulta = "Select *  from Usuarios where pk_correo ='" . $correo . "'";
     $rows  = $controlador->consultarBD($consulta);
+    $usuario =  new Usuario();
     while ($row =  $rows->fetch()) {
-        $usuario =  new Usuario();
+        
         $usuario->constructorArray($row);
     }
+
     return $usuario;
 }
