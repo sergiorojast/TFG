@@ -49,7 +49,7 @@ function consultarUsuario($correo): Usuario
     while ($row =  $rows->fetch()) {
         
         $usuario->constructorArray($row);
-    }
+    } 
 
     return $usuario;
 }
