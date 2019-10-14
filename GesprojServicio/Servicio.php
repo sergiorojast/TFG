@@ -3,7 +3,9 @@ require('includes/ConectorBD.php');
 require('includes/Usuario.php');
 
 
-crearUsuario();
+//crearUsuario();
+
+
 
 /**
  * funcion encargada de crear un nuevo usuario Sergio
@@ -24,16 +26,27 @@ function crearUsuario()
 
     $consulta = "Insert into Usuarios values('" .
         $usuario->getCorreo() . "','" . $usuario->getNombre() . "','" . $usuario->getApellidos() . "','" . $usuario->getContrasenia() . "','" . $usuario->getRol() . "')";
-        $usuarioAux = consultarUsuario($usuario->getCorreo());
-    if($usuarioAux->getCorreo() != null){
-        echo 'Usuario en la base de datos. '.$usuario; 
-    }else{
+    $usuarioAux = consultarUsuario($usuario->getCorreo());
+    if ($usuarioAux->getCorreo() != null) {
+        echo 'Usuario en la base de datos. ' . $usuario;
+    } else {
         // 'Usuario no existe, por  lo tanto creamos el usuario en la base de datos';
 
         $controlador->actualizarBD($consulta);
     }
+}
 
+function gestionarLogin()
+{
+    if (isset($_POST['Lenviar'])) {
 
+        $usuario =  consultarUsuario($_POST['Lcorreo']);
+        if ($usuario->getCorreo() != null) {
+            echo 'Usuario en la base de datos. ' . $usuario;
+        } else {
+            echo 'Usuario no encontrado';
+        }
+    }
 }
 
 /**
@@ -47,9 +60,9 @@ function consultarUsuario($correo): Usuario
     $rows  = $controlador->consultarBD($consulta);
     $usuario =  new Usuario();
     while ($row =  $rows->fetch()) {
-        
+
         $usuario->constructorArray($row);
-    } 
+    }
 
     return $usuario;
 }

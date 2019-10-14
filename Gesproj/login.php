@@ -10,7 +10,7 @@
 
 <body>  
     <?php
-    require "php/controladores/ControladorLogin.php";
+ 
 
     ?>
 
