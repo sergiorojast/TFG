@@ -73,7 +73,8 @@ function enviarDatosLogin(){
         type: "POST",
         url: "http://localhost/TFG/GesprojServicio/Servicio.php",
         data:{
-            'corre': $('#lCorreo').val(),
+            'accion':'login',
+            'correo': $('#lCorreo').val(),
             'contrasenia' :$('#lContrasenia').val()
         }
         
