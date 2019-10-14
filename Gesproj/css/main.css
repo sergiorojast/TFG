@@ -1,0 +1,19 @@
+body{
+background-image: url(https://picsum.photos/1366/768?grayscale);
+background-size: cover;
+}
+
+.formulario{
+    /* hace referencia al div que contiene el formulario */
+    margin-top:25vh;
+}
+.formulario form{
+    max-width: 50vh;
+    padding: 3%;
+    margin:1%;
+    margin: auto;
+  
+}
+.contenedorLogin{
+    background-color: rgba(0, 0, 0, .5);    
+}
