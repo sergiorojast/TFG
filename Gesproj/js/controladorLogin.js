@@ -1,9 +1,16 @@
 $(document).ready(function () {
 
+    
+
     validacionFormulario();
+
+    $('#formularioLogin').submit(function(e){
+        e.preventDefault();
+    })
 
 
 });
+
 
 function validacionFormulario() {
     $.validator.setDefaults({
@@ -11,7 +18,7 @@ function validacionFormulario() {
             alert("submitted!");
         }
     })
-    
+
     $("#formularioLogin").validate({
         rules: {
             lCorreo: {
@@ -21,7 +28,7 @@ function validacionFormulario() {
             lContrasenia: {
                 required: true,
                 minlength: 5,
-                maxlength: 30
+                
             }
 
         },
@@ -43,6 +50,41 @@ function validacionFormulario() {
         },
         unhighlight: function (element, errorClass, validClass) {
             $(element).addClass("is-valid").removeClass("is-invalid");
+        },
+        submitHandler: function (form,event) {
+            event.preventDefault();
+            enviarDatosLogin();
+            
+            
+         
+            //ahora vaciamos el formulario
+
         }
+    });
+}
+
+
+
+/**
+ * enviaremos los datos al servicio por medio de ajax y jquery
+ */
+function enviarDatosLogin(){
+    $.ajax({
+        type: "POST",
+        url: "http://localhost/TFG/GesprojServicio/Servicio.php",
+        data:{
+            'corre': $('#lCorreo').val(),
+            'contrasenia' :$('#lContrasenia').val()
+        }
+        
+    })
+    .done(function (data){
+        console.log(data);
+        
+
+    })
+    .fail(function ( data){
+        console.log(data.status);
+        
     });
 }
