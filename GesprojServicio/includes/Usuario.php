@@ -81,8 +81,8 @@ class Usuario
         return $this->rol;
     }
 
-    public function __toString()
-    {
-        return "Correo->" . $this->correo . ", Nombre->" . $this->nombre . ", Apellidos->" . $this->apellidos . ", Rol->" . $this->rol;
-    }
+/*  public function __toString()
+   {
+   return "Correo->" . $this->correo . ", Nombre->" . $this->nombre . ", Apellidos->" . $this->apellidos . ", Rol->" . $this->rol;
+    } */
 }

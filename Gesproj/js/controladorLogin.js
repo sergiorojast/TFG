@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
-    
+
 
     validacionFormulario();
 
-    $('#formularioLogin').submit(function(e){
+    $('#formularioLogin').submit(function (e) {
         e.preventDefault();
     })
 
@@ -28,7 +28,7 @@ function validacionFormulario() {
             lContrasenia: {
                 required: true,
                 minlength: 5,
-                
+
             }
 
         },
@@ -43,6 +43,7 @@ function validacionFormulario() {
                 error.insertAfter(element.next("label"));
             } else {
                 error.insertAfter(element);
+
             }
         },
         highlight: function (element, errorClass, validClass) {
@@ -51,12 +52,12 @@ function validacionFormulario() {
         unhighlight: function (element, errorClass, validClass) {
             $(element).addClass("is-valid").removeClass("is-invalid");
         },
-        submitHandler: function (form,event) {
+        submitHandler: function (form, event) {
             event.preventDefault();
             enviarDatosLogin();
-            
-            
-         
+
+
+
             //ahora vaciamos el formulario
 
         }
@@ -68,24 +69,45 @@ function validacionFormulario() {
 /**
  * enviaremos los datos al servicio por medio de ajax y jquery
  */
-function enviarDatosLogin(){
+function enviarDatosLogin() {
     $.ajax({
-        type: "POST",
-        url: "http://localhost/TFG/GesprojServicio/Servicio.php",
-        data:{
-            'accion':'login',
-            'correo': $('#lCorreo').val(),
-            'contrasenia' :$('#lContrasenia').val()
-        }
-        
-    })
-    .done(function (data){
-        console.log(data);
-        
+            type: "GET",
+            url: "http://localhost/TFG/GesprojServicio/servicios/servicioLogin.php",
+            data: {
+                'correo': $('#lCorreo').val(),
+                'contrasenia': $('#lContrasenia').val()
+            }
 
-    })
-    .fail(function ( data){
-        console.log(data.status);
-        
-    });
+        })
+        .done(function (data) {
+            let usuario = JSON.parse(data)
+            // console.dir(usuario)
+            if (isNaN(usuario)) {
+                $('.alertas').empty()
+                //borramos la cookie si existiera
+
+                //convertimos el objeto en un array y lo almacenamos en array
+                document.cookie = "usuario=" + Object.values(usuario);
+
+                let cookie = document.cookie.split(';')
+
+                console.dir(cookie)
+            } else {
+                $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+                    "Los datos introducidos son erroneos" +
+                    " </div>");
+            }
+
+
+
+        })
+        .fail(function (data) {
+            $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+            "Error AJAX" +
+            " </div>");
+
+
+        });
+
+
 }
