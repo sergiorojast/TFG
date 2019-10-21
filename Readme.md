@@ -8,6 +8,7 @@ Para el acceso a los datos de la BD, se hara por medio de un servicio web tipo r
  La aplicación tendra varios roles
 
 #### Roles
+ El apartado de permisos se gestionara por medio de un campo numerico 
     -Administrador
     -Avanzado
     -usuario
