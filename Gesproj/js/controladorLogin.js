@@ -4,12 +4,24 @@ $(document).ready(function () {
 
     validacionFormulario();
 
-    $('#formularioLogin').submit(function (e) {
-        e.preventDefault();
-    })
+    $('#recuerdame').on('click',funcionalidadBotonRecuerdame);
+
 
 
 });
+/**
+ * Controlamos el value del boton switch del formulario
+ */
+function funcionalidadBotonRecuerdame() {
+let $boton  = $('#recuerdame');
+
+    if($boton.val()=='false'){
+        $boton.val('true'); 
+    }else{
+        $boton.val('false'); 
+    }
+  
+}
 
 
 function validacionFormulario() {
@@ -88,12 +100,11 @@ function enviarDatosLogin() {
 
                 document.cookie = 'usuario  =;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 
-                //convertimos el objeto en un array y lo almacenamos en array
-                document.cookie = "usuario=" + Object.values(usuario);
-
+                //si el switch esta en on, se almacenaran los datos en una cookie
+                if($('#recuerdame').val()== 'true'){
+                    document.cookie = "usuario=" + Object.values(usuario);
+                }
                 //let cookie = document.cookie.split(';')
-
-                //console.dir(cookie)
             } else {
                 $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
                     "Los datos introducidos son erroneos" +
@@ -105,8 +116,8 @@ function enviarDatosLogin() {
         })
         .fail(function (data) {
             $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-            "Error AJAX" +
-            " </div>");
+                "Error AJAX" +
+                " </div>");
 
 
         });

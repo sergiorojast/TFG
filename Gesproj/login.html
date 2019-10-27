@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GesProj - Login</title>
-    <link href="lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+   <!--  <link href="lib/bootstrap/bootstrap.min.css" rel="stylesheet"> -->
+   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="css/main.css" rel="stylesheet">
 
 </head>
@@ -27,12 +28,12 @@
         <div class="alert alert-warning alert-dismissible fade show alerta d-none" role="alert">
             <strong>Holy guacamole!</strong> You should check in on some of those fields below.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
             </button>
-          </div>
+        </div>
     </div>
     <div class="container-fluid alertas">
-      
+
     </div>
     <div class="container-fluid ">
 
@@ -40,7 +41,7 @@
 
         <div class="formulario row">
 
-            <div class="col-4 offset-4 text-center contenedorLogin">
+            <div class="col-4 offset-4  contenedorLogin">
 
                 <form action="" method="POST" class="" id="formularioLogin">
 
@@ -58,7 +59,13 @@
                             placeholder="Contraseña">
 
                     </div>
-                    <button id="lEnviar" class="btn btn-outline-primary m-auto" type="submit"> Enviar</button>
+                    <div class="custom-control custom-switch text-white">
+                        <input type="checkbox" class="custom-control-input" value="false" id="recuerdame">
+                        <label class="custom-control-label" for="recuerdame">Recuérdame</label>
+                      </div>
+                    <div class="form-group text-center">
+                        <button id="lEnviar" class="btn btn-outline-primary m-auto" type="submit"> Enviar</button>
+                    </div>
 
                 </form>
             </div>
