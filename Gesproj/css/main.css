@@ -1,20 +1,24 @@
-body{
-background-image: url(https://picsum.photos/1366/768?grayscale);
-background-size: cover;
+.contenedor {
+    background-image: url(https://picsum.photos/1366/768?grayscale);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
 }
 
-.formulario{
+.formulario {
     /* hace referencia al div que contiene el formulario */
-    margin-top:25vh;
+    margin-top: 25vh;
 }
-.formulario form{
-    max-width: 50vh;
+
+.formulario form {
+    max-width: 50vw;
     padding: 3%;
-    margin:1%;
+    margin: 1%;
     margin: auto;
-  
+
 }
-.contenedorLogin{
-    background-color: rgba(0, 0, 0, .8);    
-    border-radius: 15px ;
+
+.contenedorLogin {
+    background-color: rgba(0, 0, 0, .8);
+    border-radius: 15px;
 }
