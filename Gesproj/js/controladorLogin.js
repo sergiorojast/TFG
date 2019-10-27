@@ -71,7 +71,7 @@ function validacionFormulario() {
  */
 function enviarDatosLogin() {
     $.ajax({
-            type: "GET",
+            type: "POST",
             url: "http://localhost/TFG/GesprojServicio/servicios/servicioLogin.php",
             data: {
                 'correo': $('#lCorreo').val(),
@@ -86,12 +86,14 @@ function enviarDatosLogin() {
                 $('.alertas').empty()
                 //borramos la cookie si existiera
 
+                document.cookie = 'usuario  =;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
                 //convertimos el objeto en un array y lo almacenamos en array
                 document.cookie = "usuario=" + Object.values(usuario);
 
-                let cookie = document.cookie.split(';')
+                //let cookie = document.cookie.split(';')
 
-                console.dir(cookie)
+                //console.dir(cookie)
             } else {
                 $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
                     "Los datos introducidos son erroneos" +

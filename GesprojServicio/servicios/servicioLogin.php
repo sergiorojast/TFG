@@ -5,18 +5,26 @@ require('../includes/Usuario.php');
 
 
 
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    login();
+    
+}
+
 /**
  * 
  * @return 0->Usuario,1->usuario no encontrado,2->contraseña no coincide.
  */
-
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    if (isset($_GET['correo']) && isset($_GET['contrasenia'])) {
-        $usuario = consultarUsuario($_GET['correo']);
+function login(){
+    //login
+    if (isset($_POST['correo']) && isset($_POST['contrasenia'])) {
+        $usuario = consultarUsuario($_POST['correo']);
 
         if ($usuario->getCorreo() != null) {
 
-            $passAux = hash('sha256', $_GET['contrasenia']);
+            $passAux = hash('sha256', $_POST['contrasenia']);
 
             if ($usuario->getContrasenia() == $passAux) {
                 session_start();
@@ -36,14 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 
-   // var_dump($_GET);
-    $_GET = null;
+   // var_dump($_POST);
+    $_POST = null;
     $usuario = null;
-    unset($_GET);
-    
+    unset($_POST);
 }
-
-
 
 
 function consultarUsuario($correo): Usuario
