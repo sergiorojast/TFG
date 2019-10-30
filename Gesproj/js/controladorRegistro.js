@@ -4,9 +4,6 @@ $(document).ready(function () {
 
     validacionFormulario();
 
-    $('#recuerdame').on('click', funcionalidadBotonRecuerdame);
-
-
 
 });
 
@@ -89,34 +86,12 @@ function enviarDatosRegistro(){
         type: "POST",
         url: "http://localhost/TFG/GesprojServicio/servicios/servicioLogin.php",
         data: {
-            'accion': 'login',
-            'correo': $('#lCorreo').val(),
-            'contrasenia': $('#lContrasenia').val()
+            'accion': 'registro',
         }
 
     })
     .done(function (data) {
-        let usuario = JSON.parse(data)
-        // console.dir(usuario)
-        if (isNaN(usuario)) {
-            $('.alertas').empty()
-            //borramos la cookie si existiera
-
-            document.cookie = 'usuario  =;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-
-            //si el switch esta en on, se almacenaran los datos en una cookie
-            if($('#recuerdame').val()== 'true'){
-                document.cookie = "usuario=" + Object.values(usuario);
-            }
-            //let cookie = document.cookie.split(';')
-        } else {
-            $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-                "Los datos introducidos son erroneos" +
-                " </div>");
-        }
-
-
-
+       console.log(data)
     })
     .fail(function (data) {
         $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +

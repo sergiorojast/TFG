@@ -2,14 +2,10 @@
 require('../includes/ConectorBD.php');
 require('../includes/Usuario.php');
 
-
-
-
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     login();
+    registro();
 }
 
 /**
@@ -44,15 +40,29 @@ function login()
                 echo 1; //correo no existe en la base de datos
             }
         }
-    }
-
-
-    // var_dump($_POST);
+            // var_dump($_POST);
     $_POST = null;
     $usuario = null;
     unset($_POST);
-}
+    }
 
+
+
+}
+function registro(){
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'registro') {
+        echo "bien";
+
+
+
+
+
+
+
+        
+    }
+}
 
 function consultarUsuario($correo): Usuario
 {

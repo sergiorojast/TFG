@@ -86,14 +86,15 @@ function enviarDatosLogin() {
             type: "POST",
             url: "http://localhost/TFG/GesprojServicio/servicios/servicioLogin.php",
             data: {
+                'accion': 'login',
                 'correo': $('#lCorreo').val(),
                 'contrasenia': $('#lContrasenia').val()
             }
 
         })
         .done(function (data) {
-            let usuario = JSON.parse(data)
-            // console.dir(usuario)
+            let usuario = data
+            // console.dir(usuario
             if (isNaN(usuario)) {
                 $('.alertas').empty()
                 //borramos la cookie si existiera
