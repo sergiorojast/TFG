@@ -1,0 +1,21 @@
+.formulario {
+    /* hace referencia al div que contiene el formulario */
+    margin-top: 25vh;
+}
+
+.formulario form {
+    max-width: 50vw;
+    padding: 3%;
+    margin: 1%;
+    margin: auto;
+
+}
+
+.contenedorLogin {
+    background-color: rgba(0, 0, 0, .6);
+    border-radius: 15px;
+}
+.contenedorLogin:hover {
+    background-color: rgba(0, 0, 0, .9);
+    border-radius: 15px;
+}

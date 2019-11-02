@@ -9,7 +9,7 @@ class ConectorBD
 
     private $servidor = 'localhost';
     private $usuario = 'root';
-    private $pass = '';
+    private $pass = 'platano69';
     private $bd = 'GesProj';
 
     //variable que almacenara el objeto pdo.

@@ -5,7 +5,11 @@ require('includes/Usuario.php');
 
 //crearUsuario();
 
+//controladmos la llamadas para el login
+if (isset($_POST['accion']) && $_POST['accion'] == 'login') {
 
+    gestionarLogin();
+}
 
 /**
  * funcion encargada de crear un nuevo usuario Sergio
@@ -38,13 +42,23 @@ function crearUsuario()
 
 function gestionarLogin()
 {
-    if (isset($_POST['Lenviar'])) {
 
-        $usuario =  consultarUsuario($_POST['Lcorreo']);
+    if (isset($_POST['correo'])) {
+
+
+        $usuario =  consultarUsuario($_POST['correo']);
+
         if ($usuario->getCorreo() != null) {
-            echo 'Usuario en la base de datos. ' . $usuario;
+           
+            $passAux = hash('sha256',$_POST['contrasenia']);
+            
+            if($usuario->getContrasenia() == $passAux){
+                echo JSON_encode($usuario);
+            }else{
+                echo 2;
+            }
         } else {
-            echo 'Usuario no encontrado';
+            echo 1;
         }
     }
 }
@@ -52,17 +66,7 @@ function gestionarLogin()
 /**
  * Funcion encargada de devolver el usuario
  */
-function consultarUsuario($correo): Usuario
-{
-    unset($usuario);
-    $controlador  = new ConectorBD();
-    $consulta = "Select *  from Usuarios where pk_correo ='" . $correo . "'";
-    $rows  = $controlador->consultarBD($consulta);
-    $usuario =  new Usuario();
-    while ($row =  $rows->fetch()) {
 
-        $usuario->constructorArray($row);
-    }
 
-    return $usuario;
-}
+
+

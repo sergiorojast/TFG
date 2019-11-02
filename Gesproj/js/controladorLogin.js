@@ -1,15 +1,27 @@
 $(document).ready(function () {
 
-    
+
 
     validacionFormulario();
 
-    $('#formularioLogin').submit(function(e){
-        e.preventDefault();
-    })
+    $('#recuerdame').on('click',funcionalidadBotonRecuerdame);
+
 
 
 });
+/**
+ * Controlamos el value del boton switch del formulario
+ */
+function funcionalidadBotonRecuerdame() {
+let $boton  = $('#recuerdame');
+
+    if($boton.val()=='false'){
+        $boton.val('true'); 
+    }else{
+        $boton.val('false'); 
+    }
+  
+}
 
 
 function validacionFormulario() {
@@ -28,7 +40,7 @@ function validacionFormulario() {
             lContrasenia: {
                 required: true,
                 minlength: 5,
-                
+
             }
 
         },
@@ -43,6 +55,7 @@ function validacionFormulario() {
                 error.insertAfter(element.next("label"));
             } else {
                 error.insertAfter(element);
+
             }
         },
         highlight: function (element, errorClass, validClass) {
@@ -51,12 +64,12 @@ function validacionFormulario() {
         unhighlight: function (element, errorClass, validClass) {
             $(element).addClass("is-valid").removeClass("is-invalid");
         },
-        submitHandler: function (form,event) {
+        submitHandler: function (form, event) {
             event.preventDefault();
             enviarDatosLogin();
-            
-            
-         
+
+
+
             //ahora vaciamos el formulario
 
         }
@@ -68,23 +81,47 @@ function validacionFormulario() {
 /**
  * enviaremos los datos al servicio por medio de ajax y jquery
  */
-function enviarDatosLogin(){
+function enviarDatosLogin() {
     $.ajax({
-        type: "POST",
-        url: "http://localhost/TFG/GesprojServicio/Servicio.php",
-        data:{
-            'corre': $('#lCorreo').val(),
-            'contrasenia' :$('#lContrasenia').val()
-        }
-        
-    })
-    .done(function (data){
-        console.log(data);
-        
+            type: "POST",
+            url: "http://localhost/TFG/GesprojServicio/servicios/servicioLogin.php",
+            data: {
+                'accion': 'login',
+                'correo': $('#lCorreo').val(),
+                'contrasenia': $('#lContrasenia').val()
+            }
 
-    })
-    .fail(function ( data){
-        console.log(data.status);
-        
-    });
+        })
+        .done(function (data) {
+            let usuario = data
+            // console.dir(usuario
+            if (isNaN(usuario)) {
+                $('.alertas').empty()
+                //borramos la cookie si existiera
+
+                document.cookie = 'usuario  =;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+                //si el switch esta en on, se almacenaran los datos en una cookie
+                if($('#recuerdame').val()== 'true'){
+                    document.cookie = "usuario=" + Object.values(usuario);
+                }
+                //let cookie = document.cookie.split(';')
+            } else {
+                $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+                    "Los datos introducidos son erroneos" +
+                    " </div>");
+            }
+
+
+
+        })
+        .fail(function (data) {
+            $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+                "Error AJAX" +
+                " </div>");
+
+
+        });
+
+
 }
