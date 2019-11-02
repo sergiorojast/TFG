@@ -1,7 +1,23 @@
 .contenedor{
   height: 100vh;
+  
 }
 
-.contenedorBarraLateral{
-padding: 0;
+.columnaContenedora{
+   height: 100vh;
+}
+#barraLateral{
+  width:10%;
+  height: 100vh;
+}
+#btnComprimir{
+  display: inline;
+  margin: auto;
+  margin-right: 1px;
+ 
+}
+.usuarioImg{
+  border-radius: 50%;
+  overflow: hidden;
+  
 }
