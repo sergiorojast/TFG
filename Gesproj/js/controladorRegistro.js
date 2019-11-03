@@ -84,14 +84,34 @@ function validacionFormulario() {
 function enviarDatosRegistro(){
     $.ajax({
         type: "POST",
-        url: "http://localhost/TFG/GesprojServicio/servicios/servicioLogin.php",
+        url: webService,
         data: {
             'accion': 'registro',
+            'correo': $('#rCorreo').val(),
+            'nombre': $('#rNombre').val(),
+            'apellidos': $('#rApellidos').val(),
+            'contrasenia' :$('#rContrasenia').val() 
+            
         }
 
     })
     .done(function (data) {
-       console.log(data)
+       resultado =  parseInt(data);
+       if(resultado === 1){
+        $('.alertas').empty()
+       // setTimeout (function(){
+            window.location = "login.html";
+      //  }, 2000)
+       }else if(resultado === -1){
+        $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+        "Correo invalido" +
+        " </div>");
+
+       }else if( resultado === -2){
+        $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+        "El correo ya esta en uso" +
+        " </div>");
+       }
     })
     .fail(function (data) {
         $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +

@@ -84,7 +84,7 @@ function validacionFormulario() {
 function enviarDatosLogin() {
     $.ajax({
             type: "POST",
-            url: "http://localhost/TFG/GesprojServicio/servicios/servicioLogin.php",
+            url: webService,
             data: {
                 'accion': 'login',
                 'correo': $('#lCorreo').val(),
@@ -94,7 +94,7 @@ function enviarDatosLogin() {
         })
         .done(function (data) {
             let usuario = data
-            // console.dir(usuario
+            console.log(usuario)
             if (isNaN(usuario)) {
                 $('.alertas').empty()
                 //borramos la cookie si existiera
@@ -102,13 +102,18 @@ function enviarDatosLogin() {
                 document.cookie = 'usuario  =;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 
                 //si el switch esta en on, se almacenaran los datos en una cookie
+                
                 if($('#recuerdame').val()== 'true'){
                     document.cookie = "usuario=" + Object.values(usuario);
                 }
+
+                window.location = 'cpanel.html'
+
+
                 //let cookie = document.cookie.split(';')
             } else {
                 $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-                    "Los datos introducidos son erroneos" +
+                    "Los datos introducidos son erróneos" +
                     " </div>");
             }
 
