@@ -1,6 +1,4 @@
 <?php
-require('../includes/ConectorBD.php');
-require('../includes/Usuario.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     session_start();

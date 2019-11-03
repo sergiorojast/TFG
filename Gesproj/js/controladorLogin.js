@@ -1,11 +1,14 @@
 $(document).ready(function () {
 
-
+    comprobarRecuerdame();
 
     validacionFormulario();
 
     $('#recuerdame').on('click',funcionalidadBotonRecuerdame);
 
+
+
+    
 
 
 });
@@ -76,8 +79,6 @@ function validacionFormulario() {
     });
 }
 
-
-
 /**
  * enviaremos los datos al servicio por medio de ajax y jquery
  */
@@ -94,7 +95,7 @@ function enviarDatosLogin() {
         })
         .done(function (data) {
             let usuario = data
-            console.log(usuario)
+            
             if (isNaN(usuario)) {
                 $('.alertas').empty()
                 //borramos la cookie si existiera
@@ -104,10 +105,11 @@ function enviarDatosLogin() {
                 //si el switch esta en on, se almacenaran los datos en una cookie
                 
                 if($('#recuerdame').val()== 'true'){
-                    document.cookie = "usuario=" + Object.values(usuario);
+                    document.cookie = "usuario=" + usuario;
+                   // console.log(document.cookie);
                 }
 
-                window.location = 'cpanel.html'
+               // window.location = 'cpanel.html'
 
 
                 //let cookie = document.cookie.split(';')
@@ -129,4 +131,28 @@ function enviarDatosLogin() {
         });
 
 
+}
+/**
+ * Función encargada de ver si existe la cookie d e usuario, comprobar si los datos son correctos y hacer login automatico
+ */
+function comprobarRecuerdame(){
+
+    let cookiesSinFormato =document.cookie.split(';');
+    let cookisFormateadas= new Array() ;
+    let aux = new Array(); // variable auxiliar, su funcionmiento es hacer de almacen temporal.
+
+    for(let i = 0; i < cookiesSinFormato.length; i++) {
+        aux= cookiesSinFormato[i].split('=');
+      
+       cookisFormateadas[aux[0]] = aux[1];
+       
+    
+}
+    if(cookisFormateadas['usuario']!= undefined){
+        let usuario = cookisFormateadas['usuario'].split(',');
+
+    }
+  
+
+  
 }
