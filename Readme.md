@@ -13,3 +13,4 @@ Para el acceso a los datos de la BD, se hara por medio de un servicio web tipo r
     -Administrador
     -Avanzado
     -usuario
+Para el hash de las contraseñas usamos PASSWORD_BCRYPT.
