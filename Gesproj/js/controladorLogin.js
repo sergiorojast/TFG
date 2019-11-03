@@ -69,7 +69,7 @@ function validacionFormulario() {
         },
         submitHandler: function (form, event) {
             event.preventDefault();
-            enviarDatosLogin();
+            enviarDatosLogin($('#lCorreo').val(),$('#lContrasenia').val());
 
 
 
@@ -82,14 +82,14 @@ function validacionFormulario() {
 /**
  * enviaremos los datos al servicio por medio de ajax y jquery
  */
-function enviarDatosLogin() {
+function enviarDatosLogin(correo , contrasenia) {
     $.ajax({
             type: "POST",
             url: webService,
             data: {
                 'accion': 'login',
-                'correo': $('#lCorreo').val(),
-                'contrasenia': $('#lContrasenia').val()
+                'correo': correo,
+                'contrasenia': contrasenia
             }
 
         })
@@ -101,15 +101,17 @@ function enviarDatosLogin() {
                 //borramos la cookie si existiera
 
                 document.cookie = 'usuario  =;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+                document.cookie = 'recuerdame = ;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+
+                document.cookie = "usuario=" + usuario;
 
                 //si el switch esta en on, se almacenaran los datos en una cookie
-                
                 if($('#recuerdame').val()== 'true'){
-                    document.cookie = "usuario=" + usuario;
+                    document.cookie = "recuerdame=["+$('#lCorreo').val()+","+$('#lContrasenia').val()+"]";
                    // console.log(document.cookie);
                 }
 
-               // window.location = 'cpanel.html'
+                window.location = 'cpanel.html'
 
 
                 //let cookie = document.cookie.split(';')
@@ -144,13 +146,18 @@ function comprobarRecuerdame(){
     for(let i = 0; i < cookiesSinFormato.length; i++) {
         aux= cookiesSinFormato[i].split('=');
       
-       cookisFormateadas[aux[0]] = aux[1];
+        //es necesario hacer el trim, porque le intruduce un espacio delante al indice asociativo
+       cookisFormateadas[aux[0].trim()] = aux[1];
+       
        
     
 }
-    if(cookisFormateadas['usuario']!= undefined){
-        let usuario = cookisFormateadas['usuario'].split(',');
+    if(cookisFormateadas['recuerdame']!= undefined){
+        let recuerdame = cookisFormateadas['recuerdame'].split(',');
+        //llamamos a la funcion de enviar datos
 
+        
+        enviarDatosLogin(recuerdame[0].substr(1),recuerdame[1]);
     }
   
 

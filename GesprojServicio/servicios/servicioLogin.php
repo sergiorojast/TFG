@@ -108,6 +108,12 @@ function ConsultarSession()
         echo  json_encode($_SESSION);
     }
 }
+function eliminarSession(){
+    if (isset($_POST['accion']) && $_POST['accion'] === 'Eliminarsesion') {
+
+        $_SESSION = null;
+    }
+}
 
 /**
  * Funcion auxiliar que nos devuelve un objeto Usuario por medio de la consulta
