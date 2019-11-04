@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GesProj - cpanel</title>
-    <link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../lib/fontAwesome/css/all.css" rel="stylesheet">
 
-    <link href="../css/mainCpanel.css" rel="stylesheet">
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="lib/fontAwesome/css/all.css" rel="stylesheet">
+
+    <link href="css/mainCpanel.css" rel="stylesheet">
 
 
-    <script src="../lib/fontAwesome/js/all.js" async></script>
+    <script src="lib/fontAwesome/js/all.js" async></script>
 
 </head>
 
@@ -25,11 +26,11 @@
                         <div class="row">
 
                             <a id='btnComprimir' class="btn btn-dark"><span id="iconoComprimir"
-                                    class="fa fa-chevron-left"></span>
+                                    class="fa fa-times"></span>
                             </a>
                         </div>
                         <div class="row ">
-                            <img src="../img/usuario1.png" class="img-fluid img-thumbnail m-auto w-50 usuarioImg"
+                            <img src="img/usuario1.png" class="img-fluid img-thumbnail m-auto w-50 usuarioImg"
                                 alt="imagen usuarios">
 
                         </div>
@@ -42,7 +43,7 @@
                         <hr class="bg-light">
                         <div class="row ">
                             <p class="m-auto">
-                                <a class="text-light btn botonesBarraLateral">
+                                <a class="text-light btn botonesBarraLateral" id="crudUsuarios"> 
                                     <span class="fa fa-user" data-toggle="tooltip" data-placement="right"
                                         title="Usuarios">
 
@@ -101,13 +102,9 @@
                     </div>
 
                 </div>
-                <div class="container-fluid">
+                <div class="container-fluid " id='contenido'>
 
-
-                    <div class="row">
-                        <div class="col" id="alertas">
-                        </div>
-                    </div>
+                  
                 </div>
 
 
@@ -118,10 +115,11 @@
         </div>
     </div>
 
-    <script src="../lib/jquery-3.4.1.js"></script>
-    <script src="../lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/main.js"></script>
-    <script src="../js/controladorCpanel.js" async></script>
+    <script src="lib/jquery-3.4.1.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/bootbox/bootbox.all.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/controladorCpanel.js" async></script>
 
 </body>
 

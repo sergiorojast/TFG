@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ConsultarSession();
     login();
     registro();
+    eliminarSession();
 }
 
 /**
@@ -29,9 +30,9 @@ function login()
                 if (password_verify($_POST['contrasenia'],$usuario->getContrasenia())) {
 
                     $_SESSION['correo'] = $usuario->getCorreo();
-                    $_SESSION['nombre'] = $usuario->getNombre();
-                    $_SESSION['apellidos'] = $usuario->getApellidos();
-                    $_SESSION['contrasenia'] = $usuario->getContrasenia();
+                    //$_SESSION['nombre'] = $usuario->getNombre();
+                    //$_SESSION['apellidos'] = $usuario->getApellidos();
+                   // $_SESSION['contrasenia'] = $usuario->getContrasenia();
                     $_SESSION['rol'] = $usuario->getRol();
                     
                         echo json_encode($_SESSION);
@@ -104,15 +105,16 @@ function ConsultarSession()
 {
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'sesion') {
-
+        // CAMBIARLO
         echo  json_encode($_SESSION);
     }
 }
 function eliminarSession(){
     if (isset($_POST['accion']) && $_POST['accion'] === 'Eliminarsesion') {
-
-        $_SESSION = null;
-    }
+        $_SESSION = [];
+        session_destroy();
+       
+        }
 }
 
 /**

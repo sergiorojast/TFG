@@ -99,9 +99,18 @@ function enviarDatosRegistro(){
        resultado =  parseInt(data);
        if(resultado === 1){
         $('.alertas').empty()
-       // setTimeout (function(){
-            window.location = "login.html";
-      //  }, 2000)
+   
+        bootbox.alert({
+            message: "Usuario creado con exito, se le redireccionara al login.",
+            backdrop: true,
+         
+            callback: function () {
+                window.location = "login.html";
+            }
+        })
+
+          
+    
        }else if(resultado === -1){
         $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
         "Correo invalido" +
