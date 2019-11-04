@@ -61,7 +61,7 @@ function registro()
 {
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'registro') {
-
+        
         $controlador = new ConectorBD();
 
         $correo = filter_var($_POST['correo'], FILTER_SANITIZE_EMAIL);
