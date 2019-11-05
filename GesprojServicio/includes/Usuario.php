@@ -7,17 +7,19 @@ class Usuario
     private $apellidos;
     private $contrasenia;
     private $rol;
+    private $imagen;
 
     /**
      * Constructores
      */
     public function __construct()
     { }
-    public function constructor($correo, $nombre, $apellidos, $contrasenia, $rol)
+    public function constructor($correo, $nombre, $apellidos, $imagen, $contrasenia, $rol)
     {
         $this->correo = $correo;
         $this->nombre = $nombre;
         $this->apellidos = $apellidos;
+        $this->imagen =  $imagen;
         $this->contrasenia = $contrasenia;
         $this->rol = $rol;
     }
@@ -28,8 +30,9 @@ class Usuario
 
             $this->nombre = $array[1];
             $this->apellidos = $array[2];
-            $this->contrasenia = $array[3];
-            $this->rol = $array[4];
+            $this->imagen = $array[3];
+            $this->contrasenia = $array[4];
+            $this->rol = $array[5];
         }
     }
 
@@ -56,6 +59,9 @@ class Usuario
     {
         $this->rol = $rol;
     }
+    private function setImagen($imagen){
+        $this->imagen = $imagen;
+    }
     /**
      * Zona de getters
      */
@@ -80,8 +86,11 @@ class Usuario
     {
         return $this->rol;
     }
+    public function getImagen(){
+        return $this->imagen;
+    }
 
-/*  public function __toString()
+    /*  public function __toString()
    {
    return "Correo->" . $this->correo . ", Nombre->" . $this->nombre . ", Apellidos->" . $this->apellidos . ", Rol->" . $this->rol;
     } */

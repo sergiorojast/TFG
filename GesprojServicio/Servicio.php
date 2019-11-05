@@ -4,6 +4,7 @@
 
 include("./includes/ConectorBD.php");
 include("./includes/Usuario.php");
+include("./function.php");
 
 session_start();     
 

@@ -2,12 +2,11 @@
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  
+
     //llamadas a las funciones
- 
+
     login();
     registro();
-
 }
 
 /**
@@ -19,7 +18,7 @@ function login()
 {
     //login
     if (isset($_POST['accion']) && $_POST['accion'] === 'login') {
-       
+
         if (isset($_POST['correo']) && isset($_POST['contrasenia'])) {
             $usuario = consultarUsuario($_POST['correo']);
 
@@ -27,16 +26,15 @@ function login()
 
                 $passAux = hash('sha256', $_POST['contrasenia']);
 
-                if (password_verify($_POST['contrasenia'],$usuario->getContrasenia())) {
+                if (password_verify($_POST['contrasenia'], $usuario->getContrasenia())) {
 
                     $_SESSION['correo'] = $usuario->getCorreo();
                     //$_SESSION['nombre'] = $usuario->getNombre();
                     //$_SESSION['apellidos'] = $usuario->getApellidos();
-                   // $_SESSION['contrasenia'] = $usuario->getContrasenia();
+                    // $_SESSION['contrasenia'] = $usuario->getContrasenia();
                     $_SESSION['rol'] = $usuario->getRol();
-                    
-                        echo json_encode($_SESSION);
-                    
+
+                    echo json_encode($_SESSION);
                 } else {
                     echo 2; // contraseña no coinciden
                 }
@@ -56,45 +54,77 @@ function login()
  * @return =  -1; //correo no valido
  * @return = -2 // error en la consulta, usuario en la bd.
  * @return = 1; // Usuario insertado con exito
+ * @return = -3 // faltan datos
+ * @return =  -4 // sin imagen
+ * @return = -5 // tamaño indevido
  */
 function registro()
 {
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'registro') {
-        
-        $controlador = new ConectorBD();
 
-        $correo = filter_var($_POST['correo'], FILTER_SANITIZE_EMAIL);
-        $nombre = $_POST['nombre'];
-        $apellidos =  $_POST['apellidos'];
-        $contrasenia = password_hash($_POST['contrasenia'], PASSWORD_BCRYPT);
-        $rol  = 0;
+        if (isset($_POST['rCorreo']) && isset($_POST['rNombre']) && isset($_POST['rApellidos']) && isset($_POST['rContrasenia'])) {
 
-        //procesamos los datos 
-        if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            var_dump($_FILES);
+            if (count($_FILES) === 1) {
 
-            $consulta =  "INSERT INTO Usuarios(pk_correo,nombre,apellidos,contrasenia,rol)" .
-                " VALUES('" . $correo . "','"
-                . $nombre . "','"
-                . $apellidos . "','"
-                . $contrasenia . "',"
-                . $rol . ")";
-           
+                if ($_FILES['rImagen']['size'] <= 1000000) {
 
-            if ($controlador->actualizarBD($consulta)) {
-                echo 1;
-            }else{
-                echo -2;
+                    $nombreImagen = hash('md5', $_FILES['rImagen']['tmp_name']) . rand(0, 10000) . "." . explode('/', $_FILES['rImagen']['type'])[1];
+                    //echo $nombreImagen;
+
+
+
+                    $controlador = new ConectorBD();
+
+                    $correo = filter_var($_POST['rCorreo'], FILTER_SANITIZE_EMAIL);
+                    $nombre = filtrado($_POST['rNombre']);
+                    $apellidos =  filtrado($_POST['rApellidos']);
+                    $contrasenia = password_hash($_POST['rContrasenia'], PASSWORD_BCRYPT);
+                    $rol  = 0;
+                    //var_dump($_FILES);
+
+
+
+                    //procesamos los datos 
+                    if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+
+                        $consulta =  "INSERT INTO Usuarios(pk_correo,nombre,apellidos,imagen,contrasenia,rol)" .
+                            " VALUES('" . $correo . "','"
+                            . $nombre . "','"
+                            . $apellidos . "','"
+                            . $nombreImagen . "','"
+                            . $contrasenia . "',"
+                            . $rol . ")";
+
+
+                        if ($controlador->actualizarBD($consulta)) {
+                            move_uploaded_file($_FILES['rImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
+                            echo 1;
+
+
+                            header('Location: http://localhost/TFG/Gesproj/login.html');
+                        } else {
+                            echo -2;
+                        }
+                    } else {
+                        echo -1; //error en el correo
+
+                    }
+
+
+
+
+                    $controlador->cerrarBD();
+                } else {
+                    echo -5; // tamaño de la imagen demasiado grande
+                }
+            } else {
+                echo -4; // sin imagen.
             }
         } else {
-            echo -1; //error en el correo
-
+            echo -3; // faltan datos.
         }
-
-
-
-
-        $controlador->cerrarBD();
     }
 }
 

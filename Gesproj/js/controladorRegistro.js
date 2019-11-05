@@ -41,12 +41,19 @@ function validacionFormulario() {
                 required :true,
                 minlength: 5,
                 equalTo: "#rContrasenia"
+            },
+            rImagen:{
+                required: true,
+                extension: "png|jpeg|jpg|svg"
             }
 
         },
         messages:{
             rContrasenia2:{
                 equalTo : 'Por favor, escribe la misma contraseña.'
+            },
+            rImagen:{
+                extension: 'El fichero introducido no tiene una extensión permitida.Las extensiones permitidas son --> png, jpeg,jpg,svg.' 
             }
         },
 
@@ -70,8 +77,14 @@ function validacionFormulario() {
             $(element).addClass("is-valid").removeClass("is-invalid");
         },
         submitHandler: function (form, event) {
-            event.preventDefault();
-            enviarDatosRegistro();
+    
+            //event.preventDefault();
+            $('#lEnviar').addClass('disabled');
+            $('#lEnviar').html(preload);
+            $(form)[0].submit();
+            
+          
+            //enviarDatosRegistro(form);
 
 
 
@@ -81,18 +94,28 @@ function validacionFormulario() {
     });
 }
 
-function enviarDatosRegistro(){
+function enviarDatosRegistro(form){
+    //let imagen =$('#rImagen').prop('files')[0];
+    //console.dir(form);
+
+    let datos = new FormData();
+    datos.append('nombre',$('#rCorreo').val());
+    datos.append('imagen',$('#rImagen')[0].files[0]);
+    console.log(datos);
+    
     $.ajax({
         type: "POST",
         url: webService,
-        data: {
-            'accion': 'registro',
-            'correo': $('#rCorreo').val(),
+        data : datos, //{
+            //'accion': 'registro',
+            
+            /* 'correo': $('#rCorreo').val(),
             'nombre': $('#rNombre').val(),
             'apellidos': $('#rApellidos').val(),
-            'contrasenia' :$('#rContrasenia').val() 
+            'contrasenia' :$('#rContrasenia').val(),
+           'imagen': imagen */
             
-        }
+      //  }
 
     })
     .done(function (data) {

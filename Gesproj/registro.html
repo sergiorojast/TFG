@@ -6,9 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GesProj - Registro</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cyborg/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-mtS696VnV9qeIoC8w/PrPoRzJ5gwydRVn0oQ9b+RJOPxE1Z1jXuuJcyeNxvNZhdx" crossorigin="anonymous">
-    <!-- <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
     <link href="css/mainRegistro.css" rel="stylesheet">
 
@@ -35,7 +34,9 @@
             <div class="formulario row">
 
                 <div class="col-4 offset-4  contenedorRegistro">
-                    <form action="" method="POST" class="m-2" id="formularioLogin" enctype="multipart/form-data">
+                    <form action="http://localhost/TFG/GesprojServicio/Servicio.php" method="POST"
+                        class="m-2" id="formularioLogin" enctype="multipart/form-data">
+                        <input type="hidden" name="accion" value="registro">
                         <div class="form-group">
                             <label for="rCorreo" class="sr-only col-sm-2 col-form-label">Email</label>
 
@@ -79,20 +80,19 @@
                                 </div>
 
                             </div>
-                          
+
 
                         </div>
-                        <div class="form-group">
-                                <label for="imagen" class=" sr-only col-sm-2 col-form-label">imagen</label>
-    
-                                <input type="file" class="form-control-file" id="rIMagen" name="rImagen"
-                                    placeholder="Introduce una imagen">
-    
-                            </div>
-                            <div class="form-group text-center">
-                                    <button id="lEnviar" class="btn btn-outline-primary btn-block" type="submit">
-                                        Enviar</button>
-                                </div>
+                        <div class="form-group text-white">
+                            <label for="rImagen" class=" sr-only col-sm-2 col-form-label">imagen</label>
+
+                            <input type="file" class="form-control-file" id="rImagen" name="rImagen" accept="image/*">
+
+                        </div>
+                        <div class="form-group text-center">
+                            <button id="lEnviar" class="btn btn-outline-primary btn-block" type="submit">
+                                Enviar</button>
+                        </div>
                     </form>
                 </div>
 
@@ -103,6 +103,7 @@
 
     <script src="lib/jquery-3.4.1.js"></script>
     <script src="lib/jqueryValidate/dist/jquery.validate.js"></script>
+    <script src="lib/jqueryValidate/dist/additional-methods.js"></script>
     <script src="lib/jqueryValidate/dist/localization/messages_es.js"></script>
     <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="lib/bootbox/bootbox.all.js"></script>
