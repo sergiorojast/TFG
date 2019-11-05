@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>GesProj - Registro</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cyborg/bootstrap.min.css" rel="stylesheet" integrity="sha384-mtS696VnV9qeIoC8w/PrPoRzJ5gwydRVn0oQ9b+RJOPxE1Z1jXuuJcyeNxvNZhdx" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cyborg/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-mtS696VnV9qeIoC8w/PrPoRzJ5gwydRVn0oQ9b+RJOPxE1Z1jXuuJcyeNxvNZhdx" crossorigin="anonymous">
     <!-- <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="css/main.css" rel="stylesheet">
     <link href="css/mainRegistro.css" rel="stylesheet">
@@ -26,22 +27,15 @@
             <a href="login.html" class="btn btn-primary my-2 my-sm-0" type="button">login</a>
 
         </nav>
-        <div class="container-fluid">
 
-        </div>
         <div class="container-fluid alertas">
 
         </div>
         <div class="container-fluid ">
-
-
-
             <div class="formulario row">
 
                 <div class="col-4 offset-4  contenedorRegistro">
-
-                    <form action="" method="POST" class="" id="formularioLogin">
-
+                    <form action="" method="POST" class="m-2" id="formularioLogin" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="rCorreo" class="sr-only col-sm-2 col-form-label">Email</label>
 
@@ -49,44 +43,63 @@
                                 placeholder="Direccion de correo">
 
                         </div>
-                        <div class="form-group">
-                            <label for="rNombre" class="sr-only col-sm-2 col-form-label">Email</label>
+                        <div class="row">
 
-                            <input type="text" class="form-control" id="rNombre" name="rNombre" placeholder="Nombre">
+                            <div class="col ">
+                                <div class="form-group">
+                                    <label for="rNombre" class="sr-only col-sm-2 col-form-label">Email</label>
+
+                                    <input type="text" class="form-control" id="rNombre" name="rNombre"
+                                        placeholder="Nombre">
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="rContrasenia" class=" sr-only col-sm-2 col-form-label">Password</label>
+
+                                    <input type="password" class="form-control" id="rContrasenia" name="rContrasenia"
+                                        placeholder="Contraseña">
+
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="rApellidos" class="sr-only col-sm-2 col-form-label">Email</label>
+
+                                    <input type="text" class="form-control" id="rApellidos" name="rApellidos"
+                                        placeholder="Apellidos">
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="rContrasenia2" class=" sr-only col-sm-2 col-form-label">Password</label>
+
+                                    <input type="password" class="form-control" id="rContrasenia2" name="rContrasenia2"
+                                        placeholder="Repite Contraseña">
+
+                                </div>
+
+                            </div>
+                          
 
                         </div>
                         <div class="form-group">
-                            <label for="rApellidos" class="sr-only col-sm-2 col-form-label">Email</label>
-
-                            <input type="text" class="form-control" id="rApellidos" name="rApellidos"
-                                placeholder="Apellidos">
-
-                        </div>
-                        <div class="form-group">
-                            <label for="rContrasenia" class=" sr-only col-sm-2 col-form-label">Password</label>
-
-                            <input type="password" class="form-control" id="rContrasenia" name="rContrasenia"
-                                placeholder="Contraseña">
-
-                        </div>
-                        <div class="form-group">
-                            <label for="rContrasenia2" class=" sr-only col-sm-2 col-form-label">Password</label>
-
-                            <input type="password" class="form-control" id="rContrasenia2" name="rContrasenia2"
-                                placeholder="Repite Contraseña">
-
-                        </div>
-                   
-                        <div class="form-group text-center">
-                            <button id="lEnviar" class="btn btn-outline-primary btn-block" type="submit">
-                                Enviar</button>
-                        </div>
-
+                                <label for="imagen" class=" sr-only col-sm-2 col-form-label">imagen</label>
+    
+                                <input type="file" class="form-control-file" id="rIMagen" name="rImagen"
+                                    placeholder="Introduce una imagen">
+    
+                            </div>
+                            <div class="form-group text-center">
+                                    <button id="lEnviar" class="btn btn-outline-primary btn-block" type="submit">
+                                        Enviar</button>
+                                </div>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
+
 
     <script src="lib/jquery-3.4.1.js"></script>
     <script src="lib/jqueryValidate/dist/jquery.validate.js"></script>

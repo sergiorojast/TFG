@@ -96,10 +96,12 @@ function enviarDatosRegistro(){
 
     })
     .done(function (data) {
-       resultado =  parseInt(data);
+        console.log(data)
+         resultado =  parseInt(data);
+  
        if(resultado === 1){
         $('.alertas').empty()
-   
+        
         bootbox.alert({
             message: "Usuario creado con exito, se le redireccionara al login.",
             backdrop: true,

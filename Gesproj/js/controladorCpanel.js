@@ -80,8 +80,8 @@ function aniadeFuncionalidadBotonesBarraLateral() {
 
       })
       .done(function (data) {
-
-        window.location = 'login.html';
+        console.log(data)
+      window.location = 'login.html';
       })
       .fail(function (data) {
         bootbox.alert({
@@ -103,10 +103,10 @@ function comprobarSesion() {
     })
     .done(function (data) {
       //si la llamada ajax nos devuelve un string con dos corchetes quiere decir que no existe sesion alguna.
-      if (data === '[]') {
+      if (data == "-1") {
         window.location = 'login.html';
       }
-
+      console.log(data)
     })
     .fail(function (data) {
 

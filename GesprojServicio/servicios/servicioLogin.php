@@ -1,13 +1,13 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    session_start();
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  
     //llamadas a las funciones
-    ConsultarSession();
+ 
     login();
     registro();
-    eliminarSession();
+
 }
 
 /**
@@ -98,24 +98,6 @@ function registro()
     }
 }
 
-/**
- * Funcion encargada de devolver la session de php
- */
-function ConsultarSession()
-{
-
-    if (isset($_POST['accion']) && $_POST['accion'] === 'sesion') {
-        // CAMBIARLO
-        echo  json_encode($_SESSION);
-    }
-}
-function eliminarSession(){
-    if (isset($_POST['accion']) && $_POST['accion'] === 'Eliminarsesion') {
-        $_SESSION = [];
-        session_destroy();
-       
-        }
-}
 
 /**
  * Funcion auxiliar que nos devuelve un objeto Usuario por medio de la consulta
