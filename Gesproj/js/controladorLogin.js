@@ -94,7 +94,8 @@ function enviarDatosLogin(correo , contrasenia) {
 
         })
         .done(function (data) {
-            let usuario = data
+            let usuario = data;
+           // console.log(data);
             
             if (isNaN(usuario)) {
                 $('.alertas').empty()

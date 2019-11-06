@@ -1,7 +1,7 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
+
 
     //llamadas a las funciones
     ConsultarSession();
@@ -26,6 +26,9 @@ function ConsultarSession()
 function eliminarSession()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'Eliminarsesion') {
+
+        $_SESSION['usuario']= null;
+        unset($_SESSION['usuario']);
         $_SESSION = [];
         session_destroy();
     }

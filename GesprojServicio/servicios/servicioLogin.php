@@ -1,6 +1,9 @@
 <?php
 
 
+//direccion del login
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //llamadas a las funciones
@@ -16,24 +19,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
  */
 function login()
 {
+
     //login
     if (isset($_POST['accion']) && $_POST['accion'] === 'login') {
 
         if (isset($_POST['correo']) && isset($_POST['contrasenia'])) {
-            $usuario = consultarUsuario(filtrado($_POST['correo']));
+            $_SESSION['usuario'] = consultarUsuario(filtrado($_POST['correo']));
 
-            if ($usuario->getCorreo() != null) {
+            if ($_SESSION['usuario']->getCorreo() != null) {
 
-                
-                if (password_verify(filtrado($_POST['contrasenia']), $usuario->getContrasenia())) {
 
-                    $_SESSION['correo'] = $usuario->getCorreo();
-                    //$_SESSION['nombre'] = $usuario->getNombre();
-                    //$_SESSION['apellidos'] = $usuario->getApellidos();
-                    // $_SESSION['contrasenia'] = $usuario->getContrasenia();
-                    $_SESSION['rol'] = $usuario->getRol();
+                if (password_verify(filtrado($_POST['contrasenia']), $_SESSION['usuario']->getContrasenia())) {
+
+                    $_SESSION['correo'] = $_SESSION['usuario']->getCorreo();
+                    //$_SESSION['nombre'] = $_SESSION['usuario']->getNombre();
+                    //$_SESSION['apellidos'] = $_SESSION['usuario']->getApellidos();
+                    // $_SESSION['contrasenia'] = $_SESSION['usuario']->getContrasenia();
+                    $_SESSION['rol'] = $_SESSION['usuario']->getRol();
 
                     echo json_encode($_SESSION);
+
+                    var_dump($_SESSION['usuario']);
                 } else {
                     echo 2; // contraseña no coinciden
                 }
@@ -43,7 +49,7 @@ function login()
         }
         // var_dump($_POST);
         $_POST = null;
-        $usuario = null;
+
         unset($_POST);
     }
 }
@@ -59,12 +65,12 @@ function login()
  */
 function registro()
 {
-
+    $login = 'http://localhost/TFG/Gesproj/login.html';
     if (isset($_POST['accion']) && $_POST['accion'] === 'registro') {
 
         if (isset($_POST['rCorreo']) && isset($_POST['rNombre']) && isset($_POST['rApellidos']) && isset($_POST['rContrasenia'])) {
 
-            var_dump($_FILES);
+            // var_dump($_FILES);
             if (count($_FILES) === 1) {
 
                 if ($_FILES['rImagen']['size'] <= 1000000) {
@@ -99,10 +105,10 @@ function registro()
 
                         if ($controlador->actualizarBD($consulta)) {
                             move_uploaded_file($_FILES['rImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
+
                             echo 1;
 
-
-                            header('Location: http://localhost/TFG/Gesproj/login.html');
+                            header('Location:' . $login);
                         } else {
                             echo -2;
                         }

@@ -3,9 +3,9 @@ window.addEventListener('load', function () {
   comprobarSesion();
   controladorBarraLateral();
   aniadeFuncionalidadBotonesBarraLateral();
+  dibujarDatosUsarioBarraLateral();
 
 })
-
 
 /**
  * Función encargada de darle animacion a la barra lateral del cpanel.
@@ -57,7 +57,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
   function botonUsuarios() {
     $('#contenido').empty();
     $('#contenido').html(preload);
-    
+
 
     $.post('vistas/usuarios/usuarios.html', function (htmle) {
       $('#contenido').html(htmle);
@@ -81,7 +81,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
       })
       .done(function (data) {
         console.log(data)
-      window.location = 'login.html';
+        window.location = 'login.html';
       })
       .fail(function (data) {
         bootbox.alert({
@@ -106,9 +106,33 @@ function comprobarSesion() {
       if (data == "-1") {
         window.location = 'login.html';
       }
-      console.log(data)
+
     })
     .fail(function (data) {
 
     });
+}
+
+/**
+ * ponemos la imagen del usuario y el nombre en la barra lateral.
+ */
+function dibujarDatosUsarioBarraLateral() {
+  $.ajax({
+    type: "POST",
+    url: webService,
+    data:{
+      'accion':'datosUsuarioIniciales'
+    },
+  })
+  .done(function(data){
+  
+    let datos = JSON.parse(data);
+    //console.dir(datos);
+    $('.usuarioImg').attr('src',repositorioImagenes+"/"+datos['imagen']);
+    $('.nombreUsuario').html(datos['nombre']);
+    $('.apellidosUsuario').html(datos['apellidos']);
+  })
+  .fail(function(data){
+
+  })
 }
