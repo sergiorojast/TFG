@@ -20,13 +20,12 @@ function login()
     if (isset($_POST['accion']) && $_POST['accion'] === 'login') {
 
         if (isset($_POST['correo']) && isset($_POST['contrasenia'])) {
-            $usuario = consultarUsuario($_POST['correo']);
+            $usuario = consultarUsuario(filtrado($_POST['correo']));
 
             if ($usuario->getCorreo() != null) {
 
-                $passAux = hash('sha256', $_POST['contrasenia']);
-
-                if (password_verify($_POST['contrasenia'], $usuario->getContrasenia())) {
+                
+                if (password_verify(filtrado($_POST['contrasenia']), $usuario->getContrasenia())) {
 
                     $_SESSION['correo'] = $usuario->getCorreo();
                     //$_SESSION['nombre'] = $usuario->getNombre();
