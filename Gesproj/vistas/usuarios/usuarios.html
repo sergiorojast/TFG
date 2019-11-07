@@ -9,35 +9,102 @@
 <div class="row m-2">
     <div class="col-4">
         <div class="card carta p-2">
-            <p> Número total usuarios: X</p>
-            <p>Número usuarios Administradores: X</p>
-            <p>Número usuarios avanzados: X</p>
-            <p>Número usuarios normlaes : X</p>
+            <p> Número total usuarios: <span id="usuariosTotales"></span></p>
+            <p>Número usuarios Administradores: <span id="usuariosAdministradores"></span></p>
+            <p>Número usuarios avanzados: <span id="usuariosAvanzados"></span></p>
+            <p>Número usuarios normlaes :<span id="usuariosNormales"></span></p>
         </div>
     </div>
     <div class="col-8">
         <div class="card carta">
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                        <thead>
-                                <tr>
-                                  <th scope="col">Correo</th>
-                                  <th scope="col">Nombre</th>
-                                  <th scope="col">Apellidos</th>
-                                  <th scope="col">Acciones</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <th>1</th>
-                                  <td>Mark</td>
-                                  <td>Otto</td>
-                                  <td>@mdo</td>
-                                </tr>
-                              </tbody>
+                <table class="table table-striped table-hover ">
+                    <thead class="text-center">
+                        <tr>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Nombre y apellidos</th>
+                            <th scope="col"> imagen</th>
+                            <th scope="col"> rol</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla" class="text-center">
+
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 
 </div>
+
+<script>
+    // cargamos los datos de los usuarios
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'usuarios'
+            }
+        })
+        .done(function (data) {
+            let usuarioAdministrador = 0;
+            let usuarioAvanzado = 0;
+            let usuarioNormal = 0;
+            let rolEnTexto = "";
+            let usuarios = JSON.parse(data)
+            if (usuarios.length > 0) {
+                $(usuarios).each(function (i, e) {
+                    let columna = "";
+                    let celda = ""
+                    columna = document.createElement('tr');
+                    celda = document.createElement("td");
+                    $(celda).html(e.correo);
+                    columna.appendChild(celda);
+                    celda = document.createElement("td");
+                    $(celda).html(e.nombre + ", " + e.apellidos);
+                    columna.appendChild(celda);
+                    celda = document.createElement("td");
+                    $(celda).html("<img src='" + repositorioImagenes + "/" + e.imagen +
+                        "' class='img-fluid imagenCrud'>");
+                    columna.appendChild(celda);
+                    if (e.rol >= 90) {
+                        usuarioAdministrador++;
+                        rolEnTexto = "<span class='text-danger'>Administrador</span>";
+                    } else if (e.rol >= 50 && e.rol < 90) {
+                        usuarioAvanzado++;
+                        rolEnTexto = "<span class='text-warning'>Avanzado</span>";
+
+                    } else {
+                        usuarioNormal++;
+                        rolEnTexto = "<span class='text-primary'>Normal</span>";
+
+                    }
+                    celda = document.createElement("td");
+                    $(celda).html(rolEnTexto);
+                    columna.appendChild(celda);
+
+
+                    celda = document.createElement("td");
+                    $(celda).html("acciones");
+
+                    columna.appendChild(celda);
+
+                    $('#cuerpoTabla').append(columna);
+
+
+
+
+                })
+
+                $('#usuariosTotales').html(usuarios.length);
+
+                $('#usuariosAdministradores').html(usuarioAdministrador);
+                $('#usuariosAvanzados').html(usuarioAvanzado);
+                $('#usuariosNormales').html(usuarioNormal);
+            }
+
+        }).fail(function () {
+
+        })
+</script>

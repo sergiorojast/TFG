@@ -59,7 +59,8 @@ class Usuario
     {
         $this->rol = $rol;
     }
-    private function setImagen($imagen){
+    private function setImagen($imagen)
+    {
         $this->imagen = $imagen;
     }
     /**
@@ -86,8 +87,22 @@ class Usuario
     {
         return $this->rol;
     }
-    public function getImagen(){
+    public function getImagen()
+    {
         return $this->imagen;
+    }
+
+    public function devolverDatosArray()
+    {
+        $resultado = [
+            'correo'=>$this->correo,
+            'nombre'=>$this->nombre,
+            'apellidos'=>$this->apellidos,
+            'imagen'=>$this->imagen,
+            'rol'=>$this->rol,
+        ];
+
+        return $resultado;
     }
 
     /*  public function __toString()
