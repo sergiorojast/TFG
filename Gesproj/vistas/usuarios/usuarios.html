@@ -2,57 +2,97 @@
     <div class="col">
         <div class="card carta">
             <h1 class="text-center">Resumen Usuarios</h1>
-        </div>
-    </div>
+            <div class="row m-2">
+                <div class="col-4">
+                    <div class="card carta p-2">
+                        <p> Número total usuarios: <span id="usuariosTotales"></span></p>
+                        <p>Número usuarios Administradores: <span id="usuariosAdministradores"></span></p>
+                        <p>Número usuarios avanzados: <span id="usuariosAvanzados"></span></p>
+                        <p>Número usuarios normlaes :<span id="usuariosNormales"></span></p>
+                    </div>
+                </div>
+                <div class="col-8 mb-5 ">
+                    <div class="card carta" id="tabla">
 
-</div>
-<div class="row m-2">
-    <div class="col-4">
-        <div class="card carta p-2">
-            <p> Número total usuarios: <span id="usuariosTotales"></span></p>
-            <p>Número usuarios Administradores: <span id="usuariosAdministradores"></span></p>
-            <p>Número usuarios avanzados: <span id="usuariosAvanzados"></span></p>
-            <p>Número usuarios normlaes :<span id="usuariosNormales"></span></p>
-        </div>
-    </div>
-    <div class="col-8">
-        <div class="card carta">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover ">
-                    <thead class="text-center">
-                        <tr>
-                            <th scope="col">Correo</th>
-                            <th scope="col">Nombre y apellidos</th>
-                            <th scope="col"> imagen</th>
-                            <th scope="col"> rol</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cuerpoTabla" class="text-center">
+                        <div class="table-responsive">
 
-                    </tbody>
-                </table>
+                            <table class="table table-striped table-hover ">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th scope="col">Correo</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col"> imagen</th>
+                                        <th scope="col"> rol</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTabla" class="text-center">
+
+                                </tbody>
+                            </table>
+                            <div class='btn-group btn-group-sm m-5 float-right' role='group'>
+                                <button type='button' class='btn btn-primary' id='botonAlPrincipio'><span
+                                        class='fa fa-chevron-left'></span><span
+                                        class='fa fa-chevron-left'></span></button>
+
+
+                                <button type='button' class='btn btn-primary' id='botonAnterior'><span
+                                        class='fa fa-chevron-left'></span>
+                                </button>
+                                <span id='paginas' class="bg-primary"></span>
+
+                                <button type='button' class='btn btn-primary' id="botonSiguiente"><span
+                                        class='fa fa-chevron-right'></span>
+                                    <button type='button' class='btn btn-primary' id="botonAlFinal"><span
+                                            class='fa fa-chevron-right'></span><span
+                                            class='fa fa-chevron-right'></span></button>
+
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
 </div>
 
+
 <script>
+    solicitarYPintarDatos();
+
+
     // cargamos los datos de los usuarios
-    $.ajax({
-            type: "POST",
-            url: webService,
-            data: {
-                'accion': 'usuarios'
-            }
-        })
-        .done(function (data) {
+    function solicitarYPintarDatos() {
+        $.ajax({
+                type: "POST",
+                url: webService,
+                data: {
+                    'accion': 'usuarios'
+                }
+            })
+            .done(function (data) {
+                pintarTabla(data)
+
+            }).fail(function () {
+                bootbox.alert("Fallo en AJAX¡", function () {
+                    setTimeout(function () {
+                        window.location = LOGIN;
+                    }, 2000)
+                });
+            })
+
+
+        function pintarTabla(data) {
+
             let usuarioAdministrador = 0;
             let usuarioAvanzado = 0;
             let usuarioNormal = 0;
             let rolEnTexto = "";
-            let usuarios = JSON.parse(data)
+            let usuarios = JSON.parse(data);
             if (usuarios.length > 0) {
                 $(usuarios).each(function (i, e) {
                     let columna = "";
@@ -86,25 +126,161 @@
 
 
                     celda = document.createElement("td");
-                    $(celda).html("acciones");
+                    $(celda).html("" +
+                        "<div class='btn-group btn-group-sm' role='group'>" +
+                        "<button type='button' class='btn btn-primary'  data-toggle='tooltip' data-placement='top'title='Visualizar'><span class='fa fa-eye'></span></button>" +
+                        "<button type='button' class='btn btn-warning '   data-toggle='tooltip' data-placement='top'title='Modificar'><span class='fa fa-pencil-alt'></span></button>" +
+                        "<button type='button' class='btn btn-danger' data-toggle='tooltip' data-placement='top'title='Eliminar'><span class='fa fa-trash'  ></span></button>" +
+
+                        "<div class='btn-group btn-group-sm' role='group'>" +
+                        "<button id='btnGroupDrop1' type='button' class='btn btn-secondary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>" +
+                        "" +
+                        "</button>" +
+                        "<div class='dropdown-menu' >" +
+                        "<a class='dropdown-item' href='#'>Ver proyectos asignados</a>" +
+                        "<a class='dropdown-item' href='#'>Ver tareas Asignadas</a>" +
+                        "<a class='dropdown-item' href='#'>Ver anotaciones del usuario</a>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>");
 
                     columna.appendChild(celda);
 
+                    $(columna).addClass('d-none');
+                    $(columna).attr('id', i);
+
                     $('#cuerpoTabla').append(columna);
 
-
-
-
                 })
+
 
                 $('#usuariosTotales').html(usuarios.length);
 
                 $('#usuariosAdministradores').html(usuarioAdministrador);
                 $('#usuariosAvanzados').html(usuarioAvanzado);
                 $('#usuariosNormales').html(usuarioNormal);
+
+
+
+                $('button[data-toggle="tooltip"]').tooltip();
+                paginacion();
+            }
+        };
+
+
+        function paginacion() {
+            let numeroElementosPorPagina = 2;
+            let cantidadElmentosTotales = $('tbody tr').length;
+            let idUltimoElementovisible = 0;
+            // idUltimoElementovisible=  $('tbody tr:not(d-none)').attr('id');
+
+
+
+            for (let i = idUltimoElementovisible; i < idUltimoElementovisible + numeroElementosPorPagina; i++) {
+                if (i <= cantidadElmentosTotales) {
+                    $('#' + i).removeClass('d-none');
+                }
+
+            }
+            $('#botonSiguiente').click(function (e) {
+
+                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
+                console.log(idUltimoElementovisible);
+                for (let i = idUltimoElementovisible  ; i <
+                    numeroElementosPorPagina + idUltimoElementovisible ; i++) {
+
+                    $('#' + i).addClass('d-none');
+                    console.log('columnas-->'+i)
+                }
+                for (let i = (idUltimoElementovisible + 1); i < (idUltimoElementovisible +
+                        numeroElementosPorPagina); i++) {
+
+                    if (i <= cantidadElmentosTotales) {
+                        $('#' + i).removeClass('d-none');
+                    }
+                }
+                comprobarBotonesActivos();
+            })
+            $('#botonAnterior').click(function (e) {
+                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
+
+
+                for (let i = idUltimoElementovisible; i > idUltimoElementovisible -
+                    numeroElementosPorPagina; i--) {
+                    if (i >= 5) {
+
+                        $('#' + i).addClass('d-none');
+
+
+                    }
+                }
+                if (idUltimoElementovisible - numeroElementosPorPagina < 5) {
+                    idUltimoElementovisible = 4;
+                }
+
+
+                for (let i = idUltimoElementovisible - numeroElementosPorPagina + 1; i <=
+                    idUltimoElementovisible; i++) {
+
+                    $('#' + i).removeClass('d-none');
+
+
+
+
+                }
+                comprobarBotonesActivos();
+
+
+            })
+            $('#botonAlPrincipio').click(function (e) {
+
+                $('tbody tr').addClass('d-none');
+
+                for (let i = 0; i < numeroElementosPorPagina; i++) {
+                    $('#' + i).removeClass('d-none');
+
+                }
+                comprobarBotonesActivos();
+            });
+            $('#botonAlFinal').click(function (e) {
+
+                $('tbody tr').addClass('d-none');
+
+                for (let i = cantidadElmentosTotales - numeroElementosPorPagina; i <cantidadElmentosTotales; i++) {
+                    $('#' + i).removeClass('d-none');
+
+                }
+                comprobarBotonesActivos();
+            });
+
+            comprobarBotonesActivos();
+
+
+            function comprobarBotonesActivos() {
+
+
+                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
+
+
+                if (idUltimoElementovisible == 0 || idUltimoElementovisible < numeroElementosPorPagina) {
+                    $('#botonAnterior').addClass('disabled');
+                    $('#botonAlPrincipio').addClass('disabled');
+                } else {
+                    $('#botonAnterior').removeClass('disabled');
+                    $('#botonAlPrincipio').removeClass('disabled');
+                }
+                cambiarNumeracion();
             }
 
-        }).fail(function () {
+            function cambiarNumeracion() {
+                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
 
-        })
+
+
+                let cantidadPaginas = Math.round((cantidadElmentosTotales - idUltimoElementovisible) /
+                    numeroElementosPorPagina);
+                console.log(cantidadPaginas);
+            }
+        }
+    }
 </script>

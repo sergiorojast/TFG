@@ -1,29 +1,46 @@
-.contenedor{
+.contenedor {
   height: 100vh;
-  
+
 }
 
-.columnaContenedora{
-   height: 100vh;
-}
-#barraLateral{
-  width:10%;
+.columnaContenedora {
   height: 100vh;
 }
-#btnComprimir{
+
+#barraLateral {
+  width: 10%;
+  height: 100vh;
+  position: fixed;
+  z-index: 1;
+ 
+}
+
+#btnComprimir {
   display: inline;
   margin: auto;
   margin-right: 1px;
- 
+
 }
-.usuarioImg{
+#btnComprimir{
+  width: 100%;
+}
+#filaContenidoPrincipal{
+  padding-left:10%;
+}
+.usuarioImg {
   border-radius: 50%;
   overflow: hidden;
-  
+
 }
-.carta{
-  box-shadow: 3px 3px 5px rgba(0,0,0,.5);
-}
-.imagenCrud{
+
+
+.imagenCrud {
   max-width: 50px;
+}
+
+.separadorClaro{
+  filter: brightness(90%);
+}
+.separadorOscuro{
+  filter: brightness(60%);
 }

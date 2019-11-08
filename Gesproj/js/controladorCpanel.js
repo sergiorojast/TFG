@@ -14,23 +14,72 @@ function controladorBarraLateral() {
   //variable con la que controlaremos si la barra lateral esta colapsada o no.
 
   var estadoBarraLateral = true;
+  //variable para girar el aspa al comprimir la barra
+  let contadorGiroIcono = 0;
 
   $('#btnComprimir').click(function () {
+    contadorGiroIcono = 0;
 
     if (estadoBarraLateral) {
       $('#barraLateral').animate({
         width: '5%'
+      }, {
+        step: function () {
+          contadorGiroIcono = parseInt(contadorGiroIcono + 5);
+
+          if (contadorGiroIcono <= 45) {
+
+            $('#iconoComprimir').css({
+              '-webkit-transform': 'rotate(' + contadorGiroIcono + 'deg)',
+              '-moz-transform': 'rotate(' + contadorGiroIcono + 'deg)',
+              '-ms-transform': 'rotate(' + contadorGiroIcono + 'deg)',
+              'transform': 'rotate(' + contadorGiroIcono + 'deg)'
+            })
+          } else {
+            // contadorGiroIcono = 0;
+          }
+        },
+        start: function () {
+          $('#filaContenidoPrincipal').animate({
+            paddingLeft:'5%',
+          }, 300)
+        }
       }, 300)
-      $('#iconoComprimir').attr('class', 'fa fa-bars');
+
+
+
 
       $('svg[data-toggle="tooltip"]').tooltip();
 
       estadoBarraLateral = !estadoBarraLateral;
 
     } else {
+      contadorGiroIcono = 45;
       $('#barraLateral').animate({
         width: '10%'
+      }, {
+        step: function () {
+          contadorGiroIcono = parseInt(contadorGiroIcono + 5);
+
+          if (contadorGiroIcono <= 90) {
+
+            $('#iconoComprimir').css({
+              '-webkit-transform': 'rotate(' + contadorGiroIcono + 'deg)',
+              '-moz-transform': 'rotate(' + contadorGiroIcono + 'deg)',
+              '-ms-transform': 'rotate(' + contadorGiroIcono + 'deg)',
+              'transform': 'rotate(' + contadorGiroIcono + 'deg)'
+            })
+          } else {
+            // contadorGiroIcono = 0;
+          }
+        },
+        start: function () {
+          $('#filaContenidoPrincipal').animate({
+            paddingLeft:'10%',
+          }, 300)
+        }
       }, 300)
+
       $('#iconoComprimir').attr('class', 'fa fa-times')
       estadoBarraLateral = !estadoBarraLateral;
       $('svg[data-toggle="tooltip"]').tooltip('dispose');
@@ -118,21 +167,21 @@ function comprobarSesion() {
  */
 function dibujarDatosUsarioBarraLateral() {
   $.ajax({
-    type: "POST",
-    url: webService,
-    data:{
-      'accion':'datosUsuarioIniciales'
-    },
-  })
-  .done(function(data){
-  
-    let datos = JSON.parse(data);
-    //console.dir(datos);
-    $('.usuarioImg').attr('src',repositorioImagenes+"/"+datos['imagen']);
-    $('.nombreUsuario').html(datos['nombre']);
-    $('.apellidosUsuario').html(datos['apellidos']);
-  })
-  .fail(function(data){
+      type: "POST",
+      url: webService,
+      data: {
+        'accion': 'datosUsuarioIniciales'
+      },
+    })
+    .done(function (data) {
 
-  })
+      let datos = JSON.parse(data);
+      //console.dir(datos);
+      $('.usuarioImg').attr('src', repositorioImagenes + "/" + datos['imagen']);
+      $('.nombreUsuario').html(datos['nombre']);
+      $('.apellidosUsuario').html(datos['apellidos']);
+    })
+    .fail(function (data) {
+
+    })
 }

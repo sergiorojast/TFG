@@ -126,11 +126,7 @@ function enviarDatosLogin(correo , contrasenia) {
 
         })
         .fail(function (data) {
-            $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-                "Error AJAX" +
-                " </div>");
-
-
+            falloAjax();
         });
 
 
