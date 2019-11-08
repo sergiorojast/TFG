@@ -10,9 +10,14 @@
 
 
     <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="lib/fontAwesome/css/all.css" rel="stylesheet">
     <link href="css/main.css" rel="stylesheet">
     <link href="css/mainLogin.css" rel="stylesheet">
+
+
+
+    <script src="lib/fontAwesome/js/all.js" async></script>
+
 
 
 </head>
@@ -42,22 +47,32 @@
 
             <div class="formulario row">
 
+
                 <div class="col-4 offset-4  contenedorLogin">
+
+                    <!--  <div class=" contenedorImagen text-center">
+                                <img class="imagenUsuario" src="img/usuario7.png">
+                            </div> -->
 
                     <form action="" method="POST" class="" id="formularioLogin">
 
                         <div class="form-group">
-                            <label for="lCorreo" class="sr-only col-sm-2 col-form-label">Email</label>
+                            <label for="lCorreo" class="text-white col-sm-2 col-form-label">Email</label>
 
-                            <input type="email" class="form-control" id="lCorreo" name="lCorreo"
-                                placeholder="Direccion de correo">
+                            <input type="email" class="form-control" id="lCorreo" name="lCorreo" placeholder="">
 
                         </div>
                         <div class="form-group">
-                            <label for="lContrasenia" class=" sr-only col-sm-2 col-form-label">Password</label>
+                            <label for="lContrasenia" class="text-white col-sm-2 col-form-label">Password</label>
 
-                            <input type="password" class="form-control" id="lContrasenia" name="lContrasenia"
-                                placeholder="Contraseña">
+                          
+                                  <div class="col10"> <input type="password" class="form-control" id="lContrasenia"
+                                        name="lContrasenia" placeholder="">
+                                        </div> 
+                         
+
+
+
 
                         </div>
                         <div class="custom-control custom-switch text-white">
@@ -65,7 +80,7 @@
                             <label class="custom-control-label" for="recuerdame">Recuérdame</label>
                         </div>
                         <div class="form-group text-center">
-                            <button id="lEnviar" class="btn btn-outline-primary btn-block" type="submit">
+                            <button id="lEnviar" class="btn btn-primary btn-block" type="submit">
                                 Enviar</button>
                         </div>
 

@@ -4,11 +4,11 @@ $(document).ready(function () {
 
     validacionFormulario();
 
-    $('#recuerdame').on('click',funcionalidadBotonRecuerdame);
+    $('#recuerdame').on('click', funcionalidadBotonRecuerdame);
 
 
 
-    
+
 
 
 });
@@ -16,14 +16,14 @@ $(document).ready(function () {
  * Controlamos el value del boton switch del formulario
  */
 function funcionalidadBotonRecuerdame() {
-let $boton  = $('#recuerdame');
+    let $boton = $('#recuerdame');
 
-    if($boton.val()=='false'){
-        $boton.val('true'); 
-    }else{
-        $boton.val('false'); 
+    if ($boton.val() == 'false') {
+        $boton.val('true');
+    } else {
+        $boton.val('false');
     }
-  
+
 }
 
 
@@ -69,7 +69,7 @@ function validacionFormulario() {
         },
         submitHandler: function (form, event) {
             event.preventDefault();
-            enviarDatosLogin($('#lCorreo').val(),$('#lContrasenia').val());
+            enviarDatosLogin($('#lCorreo').val(), $('#lContrasenia').val());
 
 
 
@@ -82,7 +82,7 @@ function validacionFormulario() {
 /**
  * enviaremos los datos al servicio por medio de ajax y jquery
  */
-function enviarDatosLogin(correo , contrasenia) {
+function enviarDatosLogin(correo, contrasenia) {
     $.ajax({
             type: "POST",
             url: webService,
@@ -95,21 +95,21 @@ function enviarDatosLogin(correo , contrasenia) {
         })
         .done(function (data) {
             let usuario = data;
-           // console.log(data);
-            
+            // console.log(data);
+
             if (isNaN(usuario)) {
                 $('.alertas').empty()
                 //borramos la cookie si existiera
 
                 document.cookie = 'usuario  =;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-                document.cookie = 'recuerdame = ;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+             //   document.cookie = 'recuerdame = ;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
 
                 document.cookie = "usuario=" + usuario;
 
                 //si el switch esta en on, se almacenaran los datos en una cookie
-                if($('#recuerdame').val()== 'true'){
-                    document.cookie = "recuerdame=["+$('#lCorreo').val()+","+$('#lContrasenia').val()+"]";
-                   // console.log(document.cookie);
+                if ($('#recuerdame').val() == 'true') {
+                    document.cookie = "recuerdame=[" + $('#lCorreo').val() + "," + $('#lContrasenia').val() + "]";
+                    // console.log(document.cookie);
                 }
 
                 window.location = 'cpanel.html'
@@ -134,29 +134,29 @@ function enviarDatosLogin(correo , contrasenia) {
 /**
  * Función encargada de ver si existe la cookie d e usuario, comprobar si los datos son correctos y hacer login automatico
  */
-function comprobarRecuerdame(){
+function comprobarRecuerdame() {
 
-    let cookiesSinFormato =document.cookie.split(';');
-    let cookisFormateadas= new Array() ;
+    let cookiesSinFormato = document.cookie.split(';');
+    let cookisFormateadas = new Array();
     let aux = new Array(); // variable auxiliar, su funcionmiento es hacer de almacen temporal.
 
-    for(let i = 0; i < cookiesSinFormato.length; i++) {
-        aux= cookiesSinFormato[i].split('=');
-      
+    for (let i = 0; i < cookiesSinFormato.length; i++) {
+        aux = cookiesSinFormato[i].split('=');
+
         //es necesario hacer el trim, porque le intruduce un espacio delante al indice asociativo
-       cookisFormateadas[aux[0].trim()] = aux[1];
-       
-       
-    
-}
-    if(cookisFormateadas['recuerdame']!= undefined){
+        cookisFormateadas[aux[0].trim()] = aux[1];
+
+
+
+    }
+    if (cookisFormateadas['recuerdame'] != undefined) {
         let recuerdame = cookisFormateadas['recuerdame'].split(',');
         //llamamos a la funcion de enviar datos
 
-        
-        enviarDatosLogin(recuerdame[0].substr(1),recuerdame[1]);
-    }
-  
 
-  
+        enviarDatosLogin(recuerdame[0].substr(1), recuerdame[1].slice(0, -1));
+    }
+
+
+
 }

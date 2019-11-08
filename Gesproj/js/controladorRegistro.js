@@ -3,8 +3,8 @@ $(document).ready(function () {
 
 
     validacionFormulario();
-
-
+    //modificarBotonFile();
+ 
 });
 
 
@@ -26,7 +26,7 @@ function validacionFormulario() {
                 minlength: 3,
                 maxlength: 100
             },
-            rApellidos:{
+            rApellidos: {
                 required: true,
                 minlength: 3,
                 maxlength: 100
@@ -37,23 +37,23 @@ function validacionFormulario() {
                 minlength: 5,
 
             },
-            rContrasenia2:{
-                required :true,
+            rContrasenia2: {
+                required: true,
                 minlength: 5,
                 equalTo: "#rContrasenia"
             },
-            rImagen:{
+            rImagen: {
                 required: true,
                 extension: "png|jpeg|jpg|svg"
             }
 
         },
-        messages:{
-            rContrasenia2:{
-                equalTo : 'Por favor, escribe la misma contraseña.'
+        messages: {
+            rContrasenia2: {
+                equalTo: 'Por favor, escribe la misma contraseña.'
             },
-            rImagen:{
-                extension: 'El fichero introducido no tiene una extensión permitida.Las extensiones permitidas son --> png, jpeg,jpg,svg.' 
+            rImagen: {
+                extension: 'El fichero introducido no tiene una extensión permitida.Las extensiones permitidas son --> png, jpeg,jpg,svg.'
             }
         },
 
@@ -77,81 +77,86 @@ function validacionFormulario() {
             $(element).addClass("is-valid").removeClass("is-invalid");
         },
         submitHandler: function (form, event) {
-    
+
             //event.preventDefault();
             $('#lEnviar').addClass('disabled');
             $('#lEnviar').html(preload);
             $(form)[0].submit();
-            
-          
+
+
             //enviarDatosRegistro(form);
 
 
 
-           
+
 
         }
     });
 }
 
-function enviarDatosRegistro(form){
+function enviarDatosRegistro(form) {
     //let imagen =$('#rImagen').prop('files')[0];
     //console.dir(form);
 
     let datos = new FormData();
-    datos.append('nombre',$('#rCorreo').val());
-    datos.append('imagen',$('#rImagen')[0].files[0]);
+    datos.append('nombre', $('#rCorreo').val());
+    datos.append('imagen', $('#rImagen')[0].files[0]);
     console.log(datos);
-    
+
     $.ajax({
-        type: "POST",
-        url: webService,
-        data : datos, //{
+            type: "POST",
+            url: webService,
+            data: datos, //{
             //'accion': 'registro',
-            
+
             /* 'correo': $('#rCorreo').val(),
             'nombre': $('#rNombre').val(),
             'apellidos': $('#rApellidos').val(),
             'contrasenia' :$('#rContrasenia').val(),
            'imagen': imagen */
-            
-      //  }
 
-    })
-    .done(function (data) {
-        console.log(data)
-         resultado =  parseInt(data);
-  
-       if(resultado === 1){
-        $('.alertas').empty()
-        
-        bootbox.alert({
-            message: "Usuario creado con exito, se le redireccionara al login.",
-            backdrop: true,
-         
-            callback: function () {
-                window.location = "login.html";
+            //  }
+
+        })
+        .done(function (data) {
+            console.log(data)
+            resultado = parseInt(data);
+
+            if (resultado === 1) {
+                $('.alertas').empty()
+
+                bootbox.alert({
+                    message: "Usuario creado con exito, se le redireccionara al login.",
+                    backdrop: true,
+
+                    callback: function () {
+                        window.location = "login.html";
+                    }
+                })
+
+
+
+            } else if (resultado === -1) {
+                $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+                    "Correo invalido" +
+                    " </div>");
+
+            } else if (resultado === -2) {
+                $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+                    "El correo ya esta en uso" +
+                    " </div>");
             }
         })
-
-          
-    
-       }else if(resultado === -1){
-        $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-        "Correo invalido" +
-        " </div>");
-
-       }else if( resultado === -2){
-        $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-        "El correo ya esta en uso" +
-        " </div>");
-       }
-    })
-    .fail(function (data) {
-        $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-            "Error AJAX" +
-            " </div>");
+        .fail(function (data) {
+            $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
+                "Error AJAX" +
+                " </div>");
 
 
-    });
+        });
+}
+
+function modificarBotonFile(){
+    var fichero = document.getElementById('rImagen').files[0].name;
+    document.getElementById('file-up').innerHTML = fichero;
 }
