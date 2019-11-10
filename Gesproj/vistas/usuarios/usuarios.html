@@ -24,22 +24,25 @@
 
                                 </tbody>
                             </table>
-                            <div class='btn-group btn-group-sm m-5 float-right' role='group'>
+                            <div class='btn-group btn-group-sm m-5 float-right' id="botonesPaginacion" role='group'>
                                 <button type='button' class='btn btn-primary' id='botonAlPrincipio'><span
                                         class='fa fa-chevron-left'></span><span
                                         class='fa fa-chevron-left'></span></button>
+                                        <span id='paginasIniciales' class="btn btn-primary"></span>
 
 
                                 <button type='button' class='btn btn-primary' id='botonAnterior'><span
                                         class='fa fa-chevron-left'></span>
                                 </button>
-                                <span id='paginas' class="bg-primary"></span>
+                                <span id='paginasActuales' class="btn btn-primary"></span>
 
                                 <button type='button' class='btn btn-primary' id="botonSiguiente"><span
                                         class='fa fa-chevron-right'></span>
-                                    <button type='button' class='btn btn-primary' id="botonAlFinal"><span
-                                            class='fa fa-chevron-right'></span><span
-                                            class='fa fa-chevron-right'></span></button>
+                                </button>
+                                <span id='paginasFinales' class="btn btn-primary"></span>
+                                <button type='button' class='btn btn-primary' id="botonAlFinal"><span
+                                        class='fa fa-chevron-right'></span><span
+                                        class='fa fa-chevron-right'></span></button>
 
                                 </button>
 
@@ -100,6 +103,7 @@
             let rolEnTexto = "";
             let usuarios = JSON.parse(data);
             if (usuarios.length > 0) {
+                $('#botonesPaginacion').removeClass('d-none')
                 $(usuarios).each(function (i, e) {
                     let columna = "";
                     let celda = ""
@@ -173,12 +177,14 @@
 
                 $('button[data-toggle="tooltip"]').tooltip();
                 paginacion();
+            } else {
+                $('#botonesPaginacion').addClass('d-none')
             }
         };
 
 
         function paginacion() {
-            let numeroElementosPorPagina = 4;
+            let numeroElementosPorPagina = 5;
             let cantidadElmentosTotales = $('tbody tr').length;
             let idUltimoElementovisible = 1;
             // idUltimoElementovisible=  $('tbody tr:not(d-none)').attr('id');
@@ -194,14 +200,14 @@
             comprobarBotonesActivos();
 
             $('#botonSiguiente').click(botonSiguiente);
-            $('#botonAnterior').click(botonAnterior)
-            $('#botonAlPrincipio').click(botonAlPrincipio);
+            //$('#botonAnterior').click(botonAnterior)
+            //$('#botonAlPrincipio').click(botonAlPrincipio);
             $('#botonAlFinal').click(botonAlFinal);
 
 
 
             function comprobarBotonesActivos() {
-                //  console.log($('tbody tr:not(.d-none):last').attr('id'));
+
 
                 idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
 
@@ -209,37 +215,50 @@
                 if (idUltimoElementovisible == 1 || idUltimoElementovisible <= numeroElementosPorPagina) {
                     $('#botonAnterior').addClass('disabled');
                     $('#botonAlPrincipio').addClass('disabled');
+                    $('#paginasIniciales').addClass('disabled');
+
                     $('#botonAnterior').off('click');
                     $('#botonAlPrincipio').off('click');
                 } else {
                     $('#botonAnterior').removeClass('disabled');
                     $('#botonAlPrincipio').removeClass('disabled');
-                    $('#botonAnterior').click(botonAnterior);
-                    $('#botonAlPrincipio').click(botonAlPrincipio);
+                    $('#paginasIniciales').remove('disabled');
+
+                    if ($('#botonAnterior').attr('class') !== 'btn btn-primary disabled') {
+
+                        $('#botonAnterior').off('click');
+                        $('#botonAlPrincipio').off('click');
+                        $('#botonAnterior').click(botonAnterior);
+                        $('#botonAlPrincipio').click(botonAlPrincipio);
+                    }
+
 
                 }
                 if (idUltimoElementovisible >= cantidadElmentosTotales) {
                     $('#botonSiguiente').addClass('disabled');
                     $('#botonAlFinal').addClass('disabled');
+                    $('#paginasFinales').addClass('disabled');
                     $('#botonSiguiente').off('click');
                     $('#botonAlFinal').off('click');
                 } else {
                     if ($('#botonSiguiente').attr('class') !== 'btn btn-primary') {
-                        console.log('dentro')
+
                         $('#botonSiguiente').removeClass('disabled');
+                        $('#paginasFinales').removeClass('disabled');
                         $('#botonAlFinal').removeClass('disabled');
+                        $('#botonSiguiente').off('click');
+                        $('#botonAlFinal').off('click');
                         $('#botonSiguiente').click(botonSiguiente);
                         $('#botonAlFinal').click(botonAlFinal);
                     }
 
                 }
-                // cambiarNumeracion();
+                cambiarNumeracion();
             }
 
             function botonSiguiente() {
 
                 idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
-                // console.log("ultimo visible " + idUltimoElementovisible);
                 for (let i = idUltimoElementovisible; i > idUltimoElementovisible -
                     numeroElementosPorPagina; i--) {
                     $('#' + i).removeClass('d-none');
@@ -251,24 +270,38 @@
 
                     $('#' + i).removeClass('d-none');
 
+
                 }
                 comprobarBotonesActivos();
             }
 
             function botonAnterior() {
-                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
-                // console.log(idUltimoElementovisible)
+                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):first').attr('id'));
+                console.log(idUltimoElementovisible)
+                $('#cuerpoTabla tr').addClass('d-none');
+
+
+
+                if (idUltimoElementovisible % numeroElementosPorPagina != 0) {
+                    idUltimoElementovisible = parseInt(idUltimoElementovisible - idUltimoElementovisible %
+                        numeroElementosPorPagina);
+                }
+                console.log(idUltimoElementovisible);
+
+
                 for (let i = idUltimoElementovisible; i > idUltimoElementovisible -
                     numeroElementosPorPagina; i--) {
-                    console.log(i);
+                    console.log("Usuarios mostrados-->" + i);
+                    $('#' + i).removeClass('d-none');
 
-                    $('#' + i).removeClass('d-none');
-                    $('#' + i).addClass('d-none');
-                }
-                for (let i = idUltimoElementovisible - numeroElementosPorPagina; i > idUltimoElementovisible -
-                    numeroElementosPorPagina - numeroElementosPorPagina; i--) {
-                    console.log(i);
-                    $('#' + i).removeClass('d-none');
+
+                    if (i <= 1) {
+                        for (let u = i; u <= numeroElementosPorPagina; u++) {
+                            $('#' + u).removeClass('d-none');
+
+
+                        }
+                    }
                 }
 
                 comprobarBotonesActivos();
@@ -291,17 +324,28 @@
 
             function botonAlFinal() {
 
+                cantidadElementosMostrar = parseInt(cantidadElmentosTotales % numeroElementosPorPagina);
+                if (cantidadElementosMostrar == 0) {
+                    cantidadElementosMostrar = numeroElementosPorPagina;
+                }
+
                 $('tbody tr').addClass('d-none');
 
-                for (let i = cantidadElmentosTotales - numeroElementosPorPagina; i <
-                    cantidadElmentosTotales; i++) {
+                for (let i = cantidadElmentosTotales; i >
+                    cantidadElmentosTotales - cantidadElementosMostrar; i--) {
                     $('#' + i).removeClass('d-none');
 
                 }
                 comprobarBotonesActivos();
             }
 
-
+            function cambiarNumeracion() {
+                $('#paginasActuales').html(parseInt($('tbody tr:not(.d-none):first').attr('id')) + "···" + parseInt($(
+                    'tbody tr:not(.d-none):last').attr('id')))
+                $('#paginasFinales').html(cantidadElmentosTotales - numeroElementosPorPagina + "···" +
+                    cantidadElmentosTotales)
+                    $('#paginasIniciales').html(1+ "···" +numeroElementosPorPagina)
+            }
 
         }
     }
