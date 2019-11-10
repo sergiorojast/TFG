@@ -3,25 +3,19 @@
         <div class="card carta">
             <h1 class="text-center">Resumen Usuarios</h1>
             <div class="row m-2">
-                <div class="col-4">
-                    <div class="card carta p-2">
-                        <p> Número total usuarios: <span id="usuariosTotales"></span></p>
-                        <p>Número usuarios Administradores: <span id="usuariosAdministradores"></span></p>
-                        <p>Número usuarios avanzados: <span id="usuariosAvanzados"></span></p>
-                        <p>Número usuarios normlaes :<span id="usuariosNormales"></span></p>
-                    </div>
-                </div>
-                <div class="col-8 mb-5 ">
+
+                <div class="col mb-5 ">
                     <div class="card carta" id="tabla">
 
                         <div class="table-responsive">
 
                             <table class="table table-striped table-hover ">
-                                <thead class="text-center">
+                                <thead class="text-center thead-dark">
                                     <tr>
+
+                                        <th scope="col"> imagen</th>
                                         <th scope="col">Correo</th>
                                         <th scope="col">Nombre</th>
-                                        <th scope="col"> imagen</th>
                                         <th scope="col"> rol</th>
                                         <th scope="col"></th>
                                     </tr>
@@ -54,7 +48,19 @@
                     </div>
                 </div>
 
+
             </div>
+            <div class="row m-2">
+                <div class="col-4">
+                    <div class="card carta p-2">
+                        <p> Número total usuarios: <span id="usuariosTotales"></span></p>
+                        <p>Número usuarios Administradores: <span id="usuariosAdministradores"></span></p>
+                        <p>Número usuarios avanzados: <span id="usuariosAvanzados"></span></p>
+                        <p>Número usuarios normlaes :<span id="usuariosNormales"></span></p>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -98,16 +104,19 @@
                     let columna = "";
                     let celda = ""
                     columna = document.createElement('tr');
+
+                    celda = document.createElement("td");
+                    $(celda).html("<img src='" + repositorioImagenes + "/" + e.imagen +
+                        "' class='img-fluid imagenCrud'>");
+                    columna.appendChild(celda);
+
                     celda = document.createElement("td");
                     $(celda).html(e.correo);
                     columna.appendChild(celda);
                     celda = document.createElement("td");
                     $(celda).html(e.nombre + ", " + e.apellidos);
                     columna.appendChild(celda);
-                    celda = document.createElement("td");
-                    $(celda).html("<img src='" + repositorioImagenes + "/" + e.imagen +
-                        "' class='img-fluid imagenCrud'>");
-                    columna.appendChild(celda);
+
                     if (e.rol >= 90) {
                         usuarioAdministrador++;
                         rolEnTexto = "<span class='text-danger'>Administrador</span>";
@@ -147,7 +156,7 @@
                     columna.appendChild(celda);
 
                     $(columna).addClass('d-none');
-                    $(columna).attr('id', i);
+                    $(columna).attr('id', i + 1);
 
                     $('#cuerpoTabla').append(columna);
 
@@ -169,118 +178,131 @@
 
 
         function paginacion() {
-            let numeroElementosPorPagina = 2;
+            let numeroElementosPorPagina = 4;
             let cantidadElmentosTotales = $('tbody tr').length;
-            let idUltimoElementovisible = 0;
+            let idUltimoElementovisible = 1;
             // idUltimoElementovisible=  $('tbody tr:not(d-none)').attr('id');
 
 
-
+            //muestra los primeros datos 
             for (let i = idUltimoElementovisible; i < idUltimoElementovisible + numeroElementosPorPagina; i++) {
                 if (i <= cantidadElmentosTotales) {
                     $('#' + i).removeClass('d-none');
                 }
 
             }
-            $('#botonSiguiente').click(function (e) {
-
-                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
-                console.log(idUltimoElementovisible);
-                for (let i = idUltimoElementovisible  ; i <
-                    numeroElementosPorPagina + idUltimoElementovisible ; i++) {
-
-                    $('#' + i).addClass('d-none');
-                    console.log('columnas-->'+i)
-                }
-                for (let i = (idUltimoElementovisible + 1); i < (idUltimoElementovisible +
-                        numeroElementosPorPagina); i++) {
-
-                    if (i <= cantidadElmentosTotales) {
-                        $('#' + i).removeClass('d-none');
-                    }
-                }
-                comprobarBotonesActivos();
-            })
-            $('#botonAnterior').click(function (e) {
-                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
-
-
-                for (let i = idUltimoElementovisible; i > idUltimoElementovisible -
-                    numeroElementosPorPagina; i--) {
-                    if (i >= 5) {
-
-                        $('#' + i).addClass('d-none');
-
-
-                    }
-                }
-                if (idUltimoElementovisible - numeroElementosPorPagina < 5) {
-                    idUltimoElementovisible = 4;
-                }
-
-
-                for (let i = idUltimoElementovisible - numeroElementosPorPagina + 1; i <=
-                    idUltimoElementovisible; i++) {
-
-                    $('#' + i).removeClass('d-none');
-
-
-
-
-                }
-                comprobarBotonesActivos();
-
-
-            })
-            $('#botonAlPrincipio').click(function (e) {
-
-                $('tbody tr').addClass('d-none');
-
-                for (let i = 0; i < numeroElementosPorPagina; i++) {
-                    $('#' + i).removeClass('d-none');
-
-                }
-                comprobarBotonesActivos();
-            });
-            $('#botonAlFinal').click(function (e) {
-
-                $('tbody tr').addClass('d-none');
-
-                for (let i = cantidadElmentosTotales - numeroElementosPorPagina; i <cantidadElmentosTotales; i++) {
-                    $('#' + i).removeClass('d-none');
-
-                }
-                comprobarBotonesActivos();
-            });
-
             comprobarBotonesActivos();
+
+            $('#botonSiguiente').click(botonSiguiente);
+            $('#botonAnterior').click(botonAnterior)
+            $('#botonAlPrincipio').click(botonAlPrincipio);
+            $('#botonAlFinal').click(botonAlFinal);
+
 
 
             function comprobarBotonesActivos() {
-
+                //  console.log($('tbody tr:not(.d-none):last').attr('id'));
 
                 idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
 
 
-                if (idUltimoElementovisible == 0 || idUltimoElementovisible < numeroElementosPorPagina) {
+                if (idUltimoElementovisible == 1 || idUltimoElementovisible <= numeroElementosPorPagina) {
                     $('#botonAnterior').addClass('disabled');
                     $('#botonAlPrincipio').addClass('disabled');
+                    $('#botonAnterior').off('click');
+                    $('#botonAlPrincipio').off('click');
                 } else {
                     $('#botonAnterior').removeClass('disabled');
                     $('#botonAlPrincipio').removeClass('disabled');
+                    $('#botonAnterior').click(botonAnterior);
+                    $('#botonAlPrincipio').click(botonAlPrincipio);
+
                 }
-                cambiarNumeracion();
+                if (idUltimoElementovisible >= cantidadElmentosTotales) {
+                    $('#botonSiguiente').addClass('disabled');
+                    $('#botonAlFinal').addClass('disabled');
+                    $('#botonSiguiente').off('click');
+                    $('#botonAlFinal').off('click');
+                } else {
+                    if ($('#botonSiguiente').attr('class') !== 'btn btn-primary') {
+                        console.log('dentro')
+                        $('#botonSiguiente').removeClass('disabled');
+                        $('#botonAlFinal').removeClass('disabled');
+                        $('#botonSiguiente').click(botonSiguiente);
+                        $('#botonAlFinal').click(botonAlFinal);
+                    }
+
+                }
+                // cambiarNumeracion();
             }
 
-            function cambiarNumeracion() {
+            function botonSiguiente() {
+
                 idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
+                // console.log("ultimo visible " + idUltimoElementovisible);
+                for (let i = idUltimoElementovisible; i > idUltimoElementovisible -
+                    numeroElementosPorPagina; i--) {
+                    $('#' + i).removeClass('d-none');
+                    $('#' + i).addClass('d-none');
 
+                }
+                for (let i = idUltimoElementovisible + 1; i < idUltimoElementovisible +
+                    numeroElementosPorPagina + 1; i++) {
 
+                    $('#' + i).removeClass('d-none');
 
-                let cantidadPaginas = Math.round((cantidadElmentosTotales - idUltimoElementovisible) /
-                    numeroElementosPorPagina);
-                console.log(cantidadPaginas);
+                }
+                comprobarBotonesActivos();
             }
+
+            function botonAnterior() {
+                idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):last').attr('id'));
+                // console.log(idUltimoElementovisible)
+                for (let i = idUltimoElementovisible; i > idUltimoElementovisible -
+                    numeroElementosPorPagina; i--) {
+                    console.log(i);
+
+                    $('#' + i).removeClass('d-none');
+                    $('#' + i).addClass('d-none');
+                }
+                for (let i = idUltimoElementovisible - numeroElementosPorPagina; i > idUltimoElementovisible -
+                    numeroElementosPorPagina - numeroElementosPorPagina; i--) {
+                    console.log(i);
+                    $('#' + i).removeClass('d-none');
+                }
+
+                comprobarBotonesActivos();
+
+
+            }
+
+            function botonAlPrincipio() {
+
+
+                $('tbody tr').addClass('d-none');
+
+                for (let i = 1; i <= numeroElementosPorPagina; i++) {
+                    $('#' + i).removeClass('d-none');
+
+
+                }
+                comprobarBotonesActivos();
+            }
+
+            function botonAlFinal() {
+
+                $('tbody tr').addClass('d-none');
+
+                for (let i = cantidadElmentosTotales - numeroElementosPorPagina; i <
+                    cantidadElmentosTotales; i++) {
+                    $('#' + i).removeClass('d-none');
+
+                }
+                comprobarBotonesActivos();
+            }
+
+
+
         }
     }
 </script>
