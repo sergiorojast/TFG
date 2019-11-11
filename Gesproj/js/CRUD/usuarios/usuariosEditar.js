@@ -3,6 +3,7 @@ $(function () {
 
 
     $('#volverResumenUsuario').click(botonUsuarios);
+    $('#volverAtras').click(botonUsuarios);
 
 
     if (correo == undefined || correo == "") {
@@ -25,7 +26,6 @@ $(function () {
         })
         .done(function (datos) {
             let usuario = JSON.parse(datos)[0];
-            console.log(usuario)
             cargarDatosVista(usuario);
 
         })
@@ -34,10 +34,40 @@ $(function () {
         });
 
 
-        $('#eRange').mousemove(function(){
-            $('#numeroPermisos').html($(this).val());
-           // console.log($(this).val())
-        })
+    $('#eRange').mousemove(function () {
+        $('#numeroPermisos').html($(this).val());
+        // console.log($(this).val())
+    })
+    //jquery validate
+    $('#formularioEdicion').validate({
+        rules: {
+            eCorreo: {
+                email: true
+            },
+            eNombre: {
+
+                minlength: 3,
+                maxlength: 100
+            },
+            eApellidos: {
+
+                minlength: 3,
+                maxlength: 100
+            },
+
+            eContrasenia: {
+
+                minlength: 5,
+
+            },
+            eContrasenia2: {
+
+                minlength: 5,
+                equalTo: "#eContrasenia"
+            }
+        }
+    })
+
 })
 
 
@@ -45,13 +75,13 @@ function cargarDatosVista(u) {
     $('#eCorreo').val(u.correo);
     $('#eNombre').val(u.nombre);
     $('#eApellidos').val(u.apellidos);
-   
+
 
     $('#imagen').attr('src', repositorioImagenes + "/" + u.imagen);
 
-    $('.rango').html("<label for='customRange2'>Rol <small> nivel de permisos <span id='numeroPermisos'></span></small><span class='fab fa-keycdn'></span></label>"+
-    "<input type='range' class='custom-range' min='0' max='100' value='"+u.rol+"' id='eRange'>");
-    $('#eRange').attr('value',u.rol);
+    $('.rango').html("<label for='customRange2'>Rol <small> nivel de permisos <span id='numeroPermisos'>0</span></small><span class='fab fa-keycdn'></span></label>" +
+        "<input type='range' class='custom-range' min='0' max='100' value='" + u.rol + "' id='eRange'>");
+    $('#numeroPermisos').html(u.rol);
 
 }
 

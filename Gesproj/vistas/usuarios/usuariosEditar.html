@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div class="card">
-                <form action="" method="POST">
+                <form action="" method="POST" id="formularioEdicion">
                     <div class="container">
                         <div class="row">
                             <div class="col">
@@ -59,21 +59,25 @@
                         </div>
                         <div class="row">
                             <div class="col rango">
-                                  
+
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-4 offset-4 text-center mb-2">
-                                <button class="btn btn-success">Atras</button>
+                                <button id='volverAtras' class="btn btn-success">Atras</button>
                                 <button class="btn btn-warning">Modificar</button>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
-        
+
         </div>
     </div>
 </div>
 
-<script src="/TFG/Gesproj/js/CRUD/usuarios/usuariosEditar.js"></script>
+<script>
+    url = undefined;
+    let url = '/TFG/Gesproj/js/CRUD/usuarios/usuariosEditar.js';
+    $.getScript(url);
+</script>
