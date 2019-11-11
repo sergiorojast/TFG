@@ -101,7 +101,7 @@ function enviarDatosRegistro(form) {
     let datos = new FormData();
     datos.append('nombre', $('#rCorreo').val());
     datos.append('imagen', $('#rImagen')[0].files[0]);
-    console.log(datos);
+    //console.log(datos);
 
     $.ajax({
             type: "POST",
@@ -119,7 +119,7 @@ function enviarDatosRegistro(form) {
 
         })
         .done(function (data) {
-            console.log(data)
+            //console.log(data)
             resultado = parseInt(data);
 
             if (resultado === 1) {

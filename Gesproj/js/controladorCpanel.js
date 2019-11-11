@@ -129,7 +129,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
 
       })
       .done(function (data) {
-        console.log(data)
+       // console.log(data)
         window.location = 'login.html';
       })
       .fail(function (data) {

@@ -211,7 +211,7 @@ function solicitarYPintarDatos() {
 
         function botonAnterior() {
             idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):first').attr('id'));
-            console.log(idUltimoElementovisible)
+            //console.log(idUltimoElementovisible)
             $('#cuerpoTabla tr').addClass('d-none');
 
 
@@ -220,12 +220,12 @@ function solicitarYPintarDatos() {
                 idUltimoElementovisible = parseInt(idUltimoElementovisible - idUltimoElementovisible %
                     numeroElementosPorPagina);
             }
-            console.log(idUltimoElementovisible);
+            //console.log(idUltimoElementovisible);
 
 
             for (let i = idUltimoElementovisible; i > idUltimoElementovisible -
                 numeroElementosPorPagina; i--) {
-                console.log("Usuarios mostrados-->" + i);
+                //console.log("Usuarios mostrados-->" + i);
                 $('#' + i).removeClass('d-none');
 
 
@@ -289,20 +289,22 @@ function solicitarYPintarDatos() {
     }
 }
 
-function llamarVer(){
-        
+function llamarVer() {
+
     $('#cuerpoTabla tr #verUsuario').each(function (i, e) {
         $(e).click(solicitarDatos);
-       // console.log(e)
+        // console.log(e)
     });
 
     function solicitarDatos() {
+
+
         let padre = $(this).parent().parent().parent().attr('id');
 
         correo = $("#" + padre + " td[id=correo]").html();
+        $('button[data-toggle="tooltip"]').tooltip('dispose');
 
-
-
+        $('#contenido').html(preload);
         $.post("vistas/usuarios/usuariosVer.html",
             function (data, textStatus, jqXHR) {
                 $('button[data-toggle="tooltip"]').tooltip('dispose')
