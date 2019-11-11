@@ -36,7 +36,7 @@ $(function () {
 
     $('#eRange').mousemove(function () {
         $('#numeroPermisos').html($(this).val());
-        // console.log($(this).val())
+        console.log($(this).val())
     })
     //jquery validate
     $('#formularioEdicion').validate({
@@ -77,7 +77,7 @@ function cargarDatosVista(u) {
     $('#eApellidos').val(u.apellidos);
 
 
-    $('#imagen').attr('src', repositorioImagenes + "/" + u.imagen);
+    $('#imagenActual').attr('src', repositorioImagenes + "/" + u.imagen);
 
     $('.rango').html("<label for='customRange2'>Rol <small> nivel de permisos <span id='numeroPermisos'>0</span></small><span class='fab fa-keycdn'></span></label>" +
         "<input type='range' class='custom-range' min='0' max='100' value='" + u.rol + "' id='eRange'>");

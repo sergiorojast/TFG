@@ -63,6 +63,29 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <div class="d-none">
+                                            <input type="file" class="custom-file-input" onchange="modificarBotonFile()"
+                                                id="rImagen" lang="es" name="rImagen" accept="image/*">
+
+                                            <label class="custom-file-label" for="rImagen">Suba una imagen para el
+                                                usuario</label>
+                                        </div>
+                                        <div id="file-up">
+
+                                            <label class="custom-file-label" for="rImagen">Suba una imagen para el
+                                                usuario</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col text-center">
+                                <img id='imagenActual' class="img-fluid rounded-circle  w-25 m-auto" alt="imagen del usuario actual"> 
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-4 offset-4 text-center mb-2">
                                 <button id='volverAtras' class="btn btn-success">Atras</button>
                                 <button class="btn btn-warning">Modificar</button>
@@ -78,6 +101,6 @@
 
 <script>
     url = undefined;
-     url = '/TFG/Gesproj/js/CRUD/usuarios/usuariosEditar.js';
+    url = '/TFG/Gesproj/js/CRUD/usuarios/usuariosEditar.js';
     $.getScript(url);
 </script>
