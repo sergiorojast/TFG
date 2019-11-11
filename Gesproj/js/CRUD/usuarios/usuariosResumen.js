@@ -73,7 +73,7 @@ function solicitarYPintarDatos() {
                 $(celda).html("" +
                     "<div class='btn-group btn-group-sm' role='group'>" +
                     "<button id='verUsuario' class='btn btn-primary'  data-toggle='tooltip' data-placement='top'title='Visualizar'><span class=' text-white fa fa-eye'></span></button>" +
-                    "<button  class='btn btn-warning '   data-toggle='tooltip' data-placement='top'title='Modificar'><span class='  text-white fa fa-pencil-alt'></span></button>" +
+                    "<button  id='editarUsuario' class='btn btn-warning '   data-toggle='tooltip' data-placement='top'title='Modificar'><span class='  text-white fa fa-pencil-alt'></span></button>" +
                     "<button  class='btn btn-danger' data-toggle='tooltip' data-placement='top'title='Eliminar'><span class='  text-white    fa fa-trash'  ></span></button>" +
 
                     "<div class='btn-group btn-group-sm' role='group'>" +
@@ -111,6 +111,7 @@ function solicitarYPintarDatos() {
             paginacion();
             //hacemos la llamada para ver el  los datos del usuario.
             llamarVer();
+            llamarEditar();
         } else {
             $('#botonesPaginacion').addClass('d-none')
         }
@@ -306,6 +307,34 @@ function llamarVer() {
 
         $('#contenido').html(preload);
         $.post("vistas/usuarios/usuariosVer.html",
+            function (data, textStatus, jqXHR) {
+                $('button[data-toggle="tooltip"]').tooltip('dispose')
+                $('#contenido').empty();
+                $('#contenido').html(data);
+
+
+            },
+            "html"
+        );
+    }
+}
+
+function llamarEditar() {
+    $('#cuerpoTabla tr #editarUsuario').each(function (i, e) {
+        $(e).click(solicitarDatosEdicion);
+        //console.log(e)
+    });
+
+    function solicitarDatosEdicion() {
+
+
+        let padre = $(this).parent().parent().parent().attr('id');
+
+        correo = $("#" + padre + " td[id=correo]").html();
+        $('button[data-toggle="tooltip"]').tooltip('dispose');
+
+        $('#contenido').html(preload);
+        $.post("vistas/usuarios/usuariosEditar.html",
             function (data, textStatus, jqXHR) {
                 $('button[data-toggle="tooltip"]').tooltip('dispose')
                 $('#contenido').empty();
