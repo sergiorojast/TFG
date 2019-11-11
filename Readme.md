@@ -3,7 +3,7 @@
 
 Este proyecto trata sobre un "Gestor de proyectos", el cual nos permitira gestionar diferentes tipos de actividades, a las cuales se les podra añadir tareas.
 
-Para el acceso a los datos de la BD, se hara por medio de un servicio web tipo rest.
+Para el acceso a los datos de la BD, se hara por medio de un servicio web.
 
  La aplicación tendra varios roles
 
