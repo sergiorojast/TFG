@@ -38,6 +38,15 @@ $(function () {
         $('#numeroPermisos').html($(this).val());
         console.log($(this).val())
     })
+    //añadimos funcionalidad al boton de subr imagen
+    $('#botonReal').click(function (e) {
+        $('#rImagen').click();
+    })
+    //cambio del texto dle label de la imagen
+    $('#rImagen').change(function (e) {
+       // console.log($('#rImagen')[0].files[0].name)
+        $('#labelImagen').text($('#rImagen')[0].files[0].name)
+    })
     //jquery validate
     $('#formularioEdicion').validate({
         rules: {

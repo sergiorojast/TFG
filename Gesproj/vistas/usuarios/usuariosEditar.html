@@ -65,24 +65,21 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <div class="custom-file">
-                                        <div class="d-none">
-                                            <input type="file" class="custom-file-input" onchange="modificarBotonFile()"
-                                                id="rImagen" lang="es" name="rImagen" accept="image/*">
 
-                                            <label class="custom-file-label" for="rImagen">Suba una imagen para el
-                                                usuario</label>
-                                        </div>
-                                        <div id="file-up">
 
-                                            <label class="custom-file-label" for="rImagen">Suba una imagen para el
-                                                usuario</label>
-                                        </div>
-                                    </div>
+                                    <input type="file" class="form-control-file" id="rImagen" lang="es" name="rImagen"
+                                        accept="image/*" style="display: none;">
+
+
+                                    <button id="botonReal" type="button" class="btn btn-secondary "">Subir imagen</button>
+                                   
+                                    <label  for="botonReal" id="labelImagen">Ninguna imagen seleccionada</label>
+
                                 </div>
                             </div>
-                            <div class="col text-center">
-                                <img id='imagenActual' class="img-fluid rounded-circle  w-25 m-auto" alt="imagen del usuario actual"> 
+                            <div class=" col text-center">
+                                <img id='imagenActual' class="img-fluid rounded-circle  w-25 m-auto"
+                                    alt="imagen del usuario actual">
                             </div>
                         </div>
                         <div class="row">
