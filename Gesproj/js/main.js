@@ -1,5 +1,6 @@
 var webService =  'http://localhost/TFG/GesprojServicio/Servicio.php';
 var LOGIN = 'http://localhost/TFG/Gesproj/login.html';
+var js = '/js/';
 
 var repositorioImagenes = 'http://localhost/TFG/GesprojServicio/imagenes';
 
