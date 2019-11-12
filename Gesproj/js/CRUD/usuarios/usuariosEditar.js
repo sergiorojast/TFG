@@ -2,20 +2,48 @@ $(function () {
 
 
 
-    $('#volverResumenUsuario').click(botonUsuarios);
-    $('#volverAtras').click(botonUsuarios);
-
-
     if (correo == undefined || correo == "") {
         bootbox.alert({
             message: "Fallo al extraer el correo de la tabla",
             backdrop: true
         })
-        botonUsuarios();
+        cerrar();
     }
 
 
+    //llamadas a los procemientos.
+    asignarAccionesBotonesAtras();
 
+    cargarTituloImagen();
+
+    rellenarConDatosUsuario();
+
+    validarFomulario();
+
+
+
+
+})
+
+
+/**
+ * funcion encargada de cargar el nombre de la imagen en el label del input file
+ */
+function cargarTituloImagen() {
+    $('#rImagen').on('change', function () {
+        //get the file name
+        let fileName = $(this).val().split('\\').pop();
+        //replace the "Choose a file" label
+        $('.custom-file-label').html(fileName);
+    });
+}
+
+
+/**
+ * Procedimiento que rellena los datos correo, nombre , apellidos y muestra la imagen actual del usuario, para poder visualizar los datos.
+ * estos datos los meto en los input.
+ */
+function rellenarConDatosUsuario() {
     $.ajax({
             type: "POST",
             url: webService,
@@ -34,12 +62,27 @@ $(function () {
         });
 
 
-    $('#rImagen').on('change', function () {
-        //get the file name
-        let fileName = $(this).val().split('\\').pop();
-        //replace the "Choose a file" label
-        $('.custom-file-label').html(fileName);
-    });
+    function cargarDatosVista(u) {
+        $('#eCorreo').val(u.correo);
+        $('#eNombre').val(u.nombre);
+        $('#eApellidos').val(u.apellidos);
+
+
+        $('#imagenActual').attr('src', repositorioImagenes + "/" + u.imagen);
+
+        $('.rango').html("<label for='customRange2'>Rol <small> nivel de permisos <span id='numeroPermisos'>0</span></small><span class='fab fa-keycdn'></span></label>" +
+            "<input type='range' class='custom-range' min='0' max='100' value='" + u.rol + "' id='eRange'>");
+        $('#numeroPermisos').html(u.rol);
+
+        $('#eRange').mousemove(function () {
+            $('#numeroPermisos').html($(this).val());
+
+        })
+
+    }
+}
+
+function validarFomulario() {
     //jquery validate
     $('#formularioEdicion').validate({
         rules: {
@@ -67,38 +110,27 @@ $(function () {
                 minlength: 5,
                 equalTo: "#eContrasenia"
             },
-            eImagen:{
-               
+            eImagen: {
+
                 extension: "png|jpeg|jpg|svg"
             }
         }
     })
+}
 
-})
+/**
+ * volvemos a la vista anterior.
+ */
 
+function asignarAccionesBotonesAtras() {
 
-function cargarDatosVista(u) {
-    $('#eCorreo').val(u.correo);
-    $('#eNombre').val(u.nombre);
-    $('#eApellidos').val(u.apellidos);
+    $('#volverResumenUsuario').click(cerrar);
+    $('#volverAtras').click(cerrar);
 
-
-    $('#imagenActual').attr('src', repositorioImagenes + "/" + u.imagen);
-
-    $('.rango').html("<label for='customRange2'>Rol <small> nivel de permisos <span id='numeroPermisos'>0</span></small><span class='fab fa-keycdn'></span></label>" +
-        "<input type='range' class='custom-range' min='0' max='100' value='" + u.rol + "' id='eRange'>");
-    $('#numeroPermisos').html(u.rol);
-
-    $('#eRange').mousemove(function () {
-        $('#numeroPermisos').html($(this).val());
-
-    })
 
 }
 
-
-
-function botonUsuarios() {
+function cerrar() {
     $('#contenido').empty();
     $('#contenido').html(preload);
 
