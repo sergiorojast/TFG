@@ -5,3 +5,7 @@ function filtrado($datos){
     $datos = htmlspecialchars($datos); // Traduce caracteres especiales en entidades HTML
     return $datos;
 }
+
+function filtraryValidarUsuario(int $rol, int $rolRequerido,string $correo, string $accion){
+
+}

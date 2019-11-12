@@ -82,26 +82,31 @@ function rellenarConDatosUsuario() {
     }
 }
 
+/**
+ * Funcion encargada de validar los datos y a su vez, en la funcion submithandler  llamaremos a 
+ * envar datos
+ */
 function validarFomulario() {
     //jquery validate
     $('#formularioEdicion').validate({
         rules: {
             eCorreo: {
+                
                 email: true
             },
             eNombre: {
-
+                
                 minlength: 3,
                 maxlength: 100
             },
             eApellidos: {
-
+                
                 minlength: 3,
                 maxlength: 100
             },
 
             eContrasenia: {
-
+                
                 minlength: 5,
 
             },
@@ -116,7 +121,22 @@ function validarFomulario() {
             }
         }
     })
+
+    function enviarDatos(){
+        $.ajax({
+            type: "POST",
+            url: webService,
+            data: "data",
+        })
+        .done(function(data){
+            console.log(data);
+        }).fail(function(e){
+            falloAjax();
+        });
+    }
 }
+
+
 
 /**
  * volvemos a la vista anterior.
