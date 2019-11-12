@@ -4,12 +4,16 @@
 
 include("./includes/ConectorBD.php");
 include("./includes/Usuario.php");
+
+
+session_start();
+
 include("./function.php");
 
 
 
 
-session_start();     
+
 
 /**
  * Datos relacionados con el login, inicio de sesion y login como tal.

@@ -6,6 +6,9 @@ devolverUsuarios();
 
 visualizarDatos();
 
+editarUsuario();
+
+
 
 /**
  * 
@@ -101,7 +104,7 @@ function visualizarDatos()
 
                         $controlador  = new ConectorBD();
                         $consulta = "Select *  from Usuarios where pk_correo ='" . $correo . "' ";
-                       
+
 
                         $rows  = $controlador->consultarBD($consulta);
                         $usuarios = [];
@@ -129,6 +132,27 @@ function visualizarDatos()
             }
         } else {
             echo -1; // sesion no creada
+        }
+    }
+}
+
+
+/**
+ * 
+ * @return -1; El usuario no tiene la sesion iniciada o no tiene permisos para realizar esta accion;
+ */
+function editarUsuario()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'editarUsuario') {
+
+        if (isset($_POST['correo'])) {
+            $correo = filtrado($_POST['correo']);
+
+            if (gestionarUsuarioExiste(90, $correo)) {
+                var_dump($_POST);
+            } else {
+                echo -1;
+            }
         }
     }
 }

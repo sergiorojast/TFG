@@ -119,6 +119,10 @@ function validarFomulario() {
 
                 extension: "png|jpeg|jpg|svg"
             }
+        },
+        submitHandler: function(form, event){
+            event.preventDefault();
+            enviarDatos();
         }
     })
 
@@ -126,7 +130,10 @@ function validarFomulario() {
         $.ajax({
             type: "POST",
             url: webService,
-            data: "data",
+            data: {
+                'accion' : 'editarUsuario',
+                'correo': correo
+            },
         })
         .done(function(data){
             console.log(data);
