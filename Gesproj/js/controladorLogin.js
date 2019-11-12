@@ -108,9 +108,13 @@ function enviarDatosLogin(correo, contrasenia) {
 
                 //si el switch esta en on, se almacenaran los datos en una cookie
                 if ($('#recuerdame').val() == 'true') {
-                    document.cookie = "recuerdame=[" + $('#lCorreo').val() + "," + $('#lContrasenia').val() + "]";
+                    let fecha = new Date();
+                    fecha.setDate(fecha.getDate()+2)
+                    console.log(fecha);
+                    document.cookie = "recuerdame=[" + $('#lCorreo').val() + "," + $('#lContrasenia').val() + "]; expires="+fecha;
                     // console.log(document.cookie);
                 }
+
 
                 window.location = 'cpanel.html'
 
@@ -149,6 +153,7 @@ function comprobarRecuerdame() {
 
 
     }
+  
     if (cookisFormateadas['recuerdame'] != undefined) {
         let recuerdame = cookisFormateadas['recuerdame'].split(',');
         //llamamos a la funcion de enviar datos
