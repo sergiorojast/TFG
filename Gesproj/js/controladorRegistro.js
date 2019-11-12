@@ -4,7 +4,24 @@ $(document).ready(function () {
 
     validacionFormulario();
     //modificarBotonFile();
- 
+    /* 
+        //añadimos funcionalidad al boton de subr imagen
+        $('#botonReal').click(function (e) {
+            $('#rImagen').click();
+        })
+        //cambio del texto dle label de la imagen
+        $('#rImagen').change(function (e) {
+             console.log($('#rImagen')[0].files[0].name)
+           // $('#labelImagen').html($('#rImagen')[0].files[0].name)
+        })
+     */
+
+    $('#rImagen').on('change', function () {
+        //get the file name
+        let fileName = $(this).val().split('\\').pop(); 
+        //replace the "Choose a file" label
+        $('.custom-file-label').html(fileName);
+    });
 });
 
 
@@ -154,9 +171,4 @@ function enviarDatosRegistro(form) {
 
 
         });
-}
-
-function modificarBotonFile(){
-    var fichero = document.getElementById('rImagen').files[0].name;
-    document.getElementById('file-up').innerHTML = fichero;
 }

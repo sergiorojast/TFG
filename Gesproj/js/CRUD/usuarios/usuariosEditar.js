@@ -34,19 +34,12 @@ $(function () {
         });
 
 
-    $('#eRange').mousemove(function () {
-        $('#numeroPermisos').html($(this).val());
-        console.log($(this).val())
-    })
-    //añadimos funcionalidad al boton de subr imagen
-    $('#botonReal').click(function (e) {
-        $('#rImagen').click();
-    })
-    //cambio del texto dle label de la imagen
-    $('#rImagen').change(function (e) {
-       // console.log($('#rImagen')[0].files[0].name)
-        $('#labelImagen').text($('#rImagen')[0].files[0].name)
-    })
+    $('#rImagen').on('change', function () {
+        //get the file name
+        let fileName = $(this).val().split('\\').pop();
+        //replace the "Choose a file" label
+        $('.custom-file-label').html(fileName);
+    });
     //jquery validate
     $('#formularioEdicion').validate({
         rules: {
@@ -73,6 +66,10 @@ $(function () {
 
                 minlength: 5,
                 equalTo: "#eContrasenia"
+            },
+            eImagen:{
+               
+                extension: "png|jpeg|jpg|svg"
             }
         }
     })
@@ -91,6 +88,11 @@ function cargarDatosVista(u) {
     $('.rango').html("<label for='customRange2'>Rol <small> nivel de permisos <span id='numeroPermisos'>0</span></small><span class='fab fa-keycdn'></span></label>" +
         "<input type='range' class='custom-range' min='0' max='100' value='" + u.rol + "' id='eRange'>");
     $('#numeroPermisos').html(u.rol);
+
+    $('#eRange').mousemove(function () {
+        $('#numeroPermisos').html($(this).val());
+
+    })
 
 }
 

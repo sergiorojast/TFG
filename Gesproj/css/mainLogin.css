@@ -29,3 +29,7 @@
     width: 25%;
 }
  */
+ /* Esto cambia el texto del boton de subir ficheros */
+ .custom-file-input ~ .custom-file-label::after {
+    content: "Subir";
+}
