@@ -64,6 +64,7 @@ function rellenarConDatosUsuario() {
 
     function cargarDatosVista(u) {
         $('#eCorreo').val(u.correo);
+        $('#eCorreoHidden').val(u.correo);
         $('#eNombre').val(u.nombre);
         $('#eApellidos').val(u.apellidos);
 
@@ -71,7 +72,7 @@ function rellenarConDatosUsuario() {
         $('#imagenActual').attr('src', repositorioImagenes + "/" + u.imagen);
 
         $('.rango').html("<label for='customRange2'>Rol <small> nivel de permisos <span id='numeroPermisos'>0</span></small><span class='fab fa-keycdn'></span></label>" +
-            "<input type='range' class='custom-range' min='0' max='100' value='" + u.rol + "' id='eRange'>");
+            "<input type='range' class='custom-range' name='rol' min='0' max='100' value='" + u.rol + "' id='eRange'>");
         $('#numeroPermisos').html(u.rol);
 
         $('#eRange').mousemove(function () {
@@ -121,12 +122,13 @@ function validarFomulario() {
             }
         },
         submitHandler: function(form, event){
-            event.preventDefault();
-            enviarDatos();
+            form.submit();
+            //event.preventDefault();
+            //enviarDatos();
         }
     })
 
-    function enviarDatos(){
+ /*    function enviarDatos(){
         $.ajax({
             type: "POST",
             url: webService,
@@ -140,7 +142,7 @@ function validarFomulario() {
         }).fail(function(e){
             falloAjax();
         });
-    }
+    } */
 }
 
 

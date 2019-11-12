@@ -73,7 +73,7 @@ function registro()
 
             var_dump($_FILES);
             if (count($_FILES) === 1 || $_FILES['rImagen']['name'] != '') {
-                if (explode('/', $_FILES['rImagen']['type'])[1] == "png"||explode('/', $_FILES['rImagen']['type'])[1] == "jpeg"||explode('/', $_FILES['rImagen']['type'])[1] == "jpg"||explode('/', $_FILES['rImagen']['type'])[1] == "svg") {
+                if (explode('/', $_FILES['rImagen']['type'])[1] == "png" || explode('/', $_FILES['rImagen']['type'])[1] == "jpeg" || explode('/', $_FILES['rImagen']['type'])[1] == "jpg" || explode('/', $_FILES['rImagen']['type'])[1] == "svg") {
 
 
                     if ($_FILES['rImagen']['size'] <= 1000000) {
@@ -85,7 +85,7 @@ function registro()
 
                         $controlador = new ConectorBD();
 
-                        $correo = filter_var($_POST['rCorreo'], FILTER_SANITIZE_EMAIL);
+                        $correo = filtraCorreo($_POST['rCorreo']);
                         $nombre = filtrado($_POST['rNombre']);
                         $apellidos =  filtrado($_POST['rApellidos']);
                         $contrasenia = password_hash($_POST['rContrasenia'], PASSWORD_BCRYPT);
@@ -129,7 +129,7 @@ function registro()
                     }
                 } else {
                     echo -6; // no es una imagen permitida
-                 }
+                }
             } else {
                 echo -4; // sin imagen.
             }
@@ -147,6 +147,7 @@ function registro()
 function consultarUsuario($correo): Usuario
 {
     unset($usuario);
+    $correo = filtraCorreo($correo);
     $controlador  = new ConectorBD();
     $consulta = "Select *  from Usuarios where pk_correo ='" . $correo . "'";
     $rows  = $controlador->consultarBD($consulta);

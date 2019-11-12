@@ -9,6 +9,7 @@
             </div>
             <div class="card">
                 <form action="" method="POST" id="formularioEdicion">
+                    <input type="hidden" name="accion" value="editarUsuario">
                     <div class="container">
                         <div class="row">
                             <div class="col">
@@ -16,6 +17,8 @@
                                     <label for="eCorreo" class="col-form-label">Correo</label>
 
                                     <input type="email" class="form-control" id="eCorreo" name="eCorreo">
+                                    <input type="hidden" name="correo" id="eCorreoHidden">
+
 
                                 </div>
                             </div>
@@ -96,4 +99,7 @@
     url = undefined;
     url = '/TFG/Gesproj/js/CRUD/usuarios/usuariosEditar.js';
     $.getScript(url);
+
+
+    $('#formularioEdicion').attr('action',webService);
 </script>

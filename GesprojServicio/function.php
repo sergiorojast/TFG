@@ -81,19 +81,20 @@ function comprobarUsuario(string $correo)
         $rows  = $controlador->consultarBD($consulta);
 
         // si el array asociativo es mayor que cero, el usuario existe;
-        if (count($rows->fetch()) > 0) {
+        if (!empty($rows->fetch())) {
             $resultado  = true;
+          
         }
 
         $controlador->cerrarBD();
 
-
-
-        unset($usuarios);
-        unset($usuario);
     } catch (Exception $e) {
         $reusultado  = false;
     }
 
     return $resultado;
+}
+
+function filtraCorreo(string $correo){
+   return filter_var($correo, FILTER_SANITIZE_EMAIL);
 }
