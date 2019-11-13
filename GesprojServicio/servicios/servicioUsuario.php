@@ -152,14 +152,24 @@ function editarUsuario()
 
             if (gestionarUsuarioExiste(90, $correo)) {
 
-                var_dump($_POST);
+              //  var_dump($_POST);
                 $correoEditar = filtraCorreo($_POST['eCorreo']);
                 $nombre  = filtrado($_POST['eNombre']);
                 $apellidos = filtrado($_POST['eApellidos']);
                 $contrasenia = password_hash($_POST['eContrasenia'], PASSWORD_BCRYPT);
                 $rol = $_POST['rol'];
 
-                $consulta = "UPDATE `Usuarios` SET `pk_correo`='$correoEditar',`nombre`='$nombre',`apellidos`='$apellidos',`imagen`='[value-4]',`contrasenia`='$contrasenia',`rol`='$rol' WHERE `pk_correo`='$correo'";
+                //var_dump($_POST);
+                $consulta = "UPDATE `Usuarios` SET";
+
+                if ($correoEditar !== $correo) {
+                    $consulta .= "`pk_correo`='$correoEditar',";
+                }
+                 $consulta .= "`nombre`='$nombre',`apellidos`='$apellidos',";
+                var_dump(empty($_POST['eContrasenia']));
+
+                echo "<br>";
+                // $consulta = "UPDATE `Usuarios` SET `pk_correo`='$correoEditar',`nombre`='$nombre',`apellidos`='$apellidos',`imagen`='[value-4]',`contrasenia`='$contrasenia',`rol`='$rol' WHERE `pk_correo`='$correo'";
                 echo $consulta;
             } else {
                 echo -1;
