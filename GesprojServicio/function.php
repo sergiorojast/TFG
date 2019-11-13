@@ -40,7 +40,7 @@ function gestionarSesionyRol(int $rolNecesario)
  * para la accion que quiere realizar
  * @return 1 ; Todo ok, El usuario tiene permisos y existe.
  * @return -1 ; // el usuario,  no tiene la sesion iniciaza o no tiene permisos para hacer la accion.
- * @return -3 ; // el usuario introducido existe en la base de datos.
+ * @return -2 ; // el usuario introducido existe en la base de datos.
  */
 function gestionarUsuarioExiste(int $rolRequerido, string $correo)
 {
@@ -58,6 +58,7 @@ function gestionarUsuarioExiste(int $rolRequerido, string $correo)
     }
 }
 
+//comprueba si el rol requerido es mayor o menor  que el del usuario.
 function controlarRol(int $rolRequerido)
 {
     $resultado  = false;
@@ -68,6 +69,7 @@ function controlarRol(int $rolRequerido)
     return $resultado;
 }
 
+//comprueba si el usuario existe;
 function comprobarUsuario(string $correo)
 {
     $resultado  = false;
@@ -94,7 +96,7 @@ function comprobarUsuario(string $correo)
 
     return $resultado;
 }
-
+// filtra el correo co sanitize
 function filtraCorreo(string $correo){
    return filter_var($correo, FILTER_SANITIZE_EMAIL);
 }

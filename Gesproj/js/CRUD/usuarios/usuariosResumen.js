@@ -74,7 +74,7 @@ function solicitarYPintarDatos() {
                     "<div class='btn-group btn-group-sm' role='group'>" +
                     "<button id='verUsuario' class='btn btn-primary'  data-toggle='tooltip' data-placement='top'title='Visualizar'><span class=' text-white fa fa-eye'></span></button>" +
                     "<button  id='editarUsuario' class='btn btn-warning '   data-toggle='tooltip' data-placement='top'title='Modificar'><span class='  text-white fa fa-pencil-alt'></span></button>" +
-                    "<button  class='btn btn-danger' data-toggle='tooltip' data-placement='top'title='Eliminar'><span class='  text-white    fa fa-trash'  ></span></button>" +
+                    "<button id='borrarUsuario' class='btn btn-danger' data-toggle='tooltip' data-placement='top'title='Eliminar'><span class='  text-white    fa fa-trash'  ></span></button>" +
 
                     "<div class='btn-group btn-group-sm' role='group'>" +
                     "<button id='btnGroupDrop1' type='button' class='btn btn-secondary dropdown-toggle' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>" +
@@ -112,6 +112,7 @@ function solicitarYPintarDatos() {
             //hacemos la llamada para ver el  los datos del usuario.
             llamarVer();
             llamarEditar();
+            llamarBorrar();
         } else {
             $('#botonesPaginacion').addClass('d-none')
         }
@@ -345,4 +346,72 @@ function llamarEditar() {
             "html"
         );
     }
+}
+
+function llamarBorrar() {
+    $('#cuerpoTabla tr #borrarUsuario').each(function (i, e) {
+        $(e).click(borrarUsuario);
+    });
+}
+
+function borrarUsuario() {
+
+    let padre = $(this).parent().parent().parent().attr('id');
+
+    let correoParaBorrar = $("#" + padre + " td[id=correo]").html();
+
+    let mensaje = bootbox.dialog({
+        title: 'Está apunto de borrar un usuario',
+        message: "<p>¿Seguro qué quiere borrarlo?</p>",
+        buttons: {
+            cancel: {
+                label: "Eliminar",
+                className: 'btn-danger',
+                callback: function () {
+                    $.ajax({
+                        type: "POST",
+                        url: webService,
+                        data: {
+                            'accion': 'borrarUsuario',
+                            'correoBorrar': correoParaBorrar
+                        }
+
+
+                    }).done(function (data) {
+                        console.log(data)
+                        if(data == 1){
+                            recargarListado();
+                        }
+
+                    }).fail(function (e) {
+                        falloAjax();
+
+
+                    })
+                }
+            },
+            ok: {
+                label: "cancelar",
+                className: 'btn-success',
+                callback: function () {
+                    mensaje.modal('hide');
+                }
+            }
+
+
+        },
+
+    });
+
+}
+
+function recargarListado() {
+    $('#contenido').empty();
+    $('#contenido').html(preload);
+
+
+    $.post('vistas/usuarios/usuarios.html', function (htmle) {
+        $('#contenido').html(htmle);
+    }, 'html');
+
 }
