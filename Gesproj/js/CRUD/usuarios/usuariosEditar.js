@@ -72,7 +72,7 @@ function rellenarConDatosUsuario() {
         $('#imagenActual').attr('src', repositorioImagenes + "/" + u.imagen);
 
         $('.rango').html("<label for='customRange2'>Rol <small> nivel de permisos <span id='numeroPermisos'>0</span></small><span class='fab fa-keycdn'></span></label>" +
-            "<input type='range' class='custom-range' name='rol' min='0' max='100' value='" + u.rol + "' id='eRange'>");
+            "<input type='range' class='custom-range' name='eRol' min='0' max='100' value='" + u.rol + "' id='eRange'>");
         $('#numeroPermisos').html(u.rol);
 
         $('#eRange').mousemove(function () {
@@ -92,22 +92,22 @@ function validarFomulario() {
     $('#formularioEdicion').validate({
         rules: {
             eCorreo: {
-                
+
                 email: true
             },
             eNombre: {
-                
+
                 minlength: 3,
                 maxlength: 100
             },
             eApellidos: {
-                
+
                 minlength: 3,
                 maxlength: 100
             },
 
             eContrasenia: {
-                
+
                 minlength: 5,
 
             },
@@ -121,28 +121,35 @@ function validarFomulario() {
                 extension: "png|jpeg|jpg|svg"
             }
         },
-        submitHandler: function(form, event){
-            form.submit();
-            //event.preventDefault();
-            //enviarDatos();
+        submitHandler: function (form, event) {
+
+            event.preventDefault();
+            enviarDatos(form);
         }
     })
 
- /*    function enviarDatos(){
+    function enviarDatos(form) {
+
+        imagen = $('#eImagen').prop("files")[0];
+
+        if (imagen == undefined) {
+            imagen = "";
+        } else {
+            imagen = btoa(imagen);
+        }
+
         $.ajax({
-            type: "POST",
-            url: webService,
-            data: {
-                'accion' : 'editarUsuario',
-                'correo': correo
-            },
-        })
-        .done(function(data){
-            console.log(data);
-        }).fail(function(e){
-            falloAjax();
-        });
-    } */
+                type: "POST",
+                url: webService,
+                data: $(form).serialize(),
+
+            })
+            .done(function (data) {
+                console.log(data);
+            }).fail(function (e) {
+                falloAjax();
+            });
+    }
 }
 
 
