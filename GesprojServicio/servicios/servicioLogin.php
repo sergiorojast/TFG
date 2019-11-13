@@ -39,7 +39,7 @@ function login()
 
                     echo json_encode($_SESSION);
 
-                    var_dump($_SESSION['usuario']);
+                   // var_dump($_SESSION['usuario']);
                 } else {
                     echo 2; // contraseña no coinciden
                 }

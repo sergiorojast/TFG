@@ -138,46 +138,64 @@ function visualizarDatos()
 
 
 /**
- * 
+ * @return 1 ; todo ok;
  * @return -1; El usuario no tiene la sesion iniciada o no tiene permisos para realizar esta accion;
+ * @return -2; fallo en la insercioón en la base de datos.
+ * @return -3; las contraseñas no coinciden.
+ * @return -4; No puedes modificar el ususario que estas usando.
  */
 function editarUsuario()
 {
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'editarUsuario') {
-       
+
         if (isset($_POST['correo'])) {
             $correo = filtrado($_POST['correo']);
-
-            if (gestionarUsuarioExiste(90, $correo)) {
-
-                $correoEditar = filtraCorreo($_POST['eCorreo']);
-                $nombre  = filtrado($_POST['eNombre']);
-                $apellidos = filtrado($_POST['eApellidos']);
-                $rol = $_POST['eRol'];
-
-                //var_dump($_POST);
-                $consulta = "UPDATE `Usuarios` SET";
-
-                if ($correoEditar !== $correo) {
-                    $consulta .= "`pk_correo`='$correoEditar',";
-                }
-
-                $consulta .= "`nombre`='$nombre',`apellidos`='$apellidos',";
-                ////////////////////////////////
-                //imagen/////
-
-
-                if (!empty($_POST['eContrasenia'])) {
-                    $contrasenia = password_hash($_POST['eContrasenia'], PASSWORD_BCRYPT);
-                    $consulta .= "`contrasenia`='$contrasenia',";
-                }
-                $consulta .= "rol`='$rol' WHERE `pk_correo`='$correo'";
-
-                // $consulta = "UPDATE `Usuarios` SET `pk_correo`='$correoEditar',`nombre`='$nombre',`apellidos`='$apellidos',`imagen`='[value-4]',`contrasenia`='$contrasenia',`rol`='$rol' WHERE `pk_correo`='$correo'";
-                echo $consulta;
+            if ($_SESSION['correo'] == $correo) {
+                echo -4;
             } else {
-                echo -1;
+                if (gestionarUsuarioExiste(90, $correo)) {
+                    $correoEditar = filtraCorreo($_POST['eCorreo']);
+                    $nombre  = filtrado($_POST['eNombre']);
+                    $apellidos = filtrado($_POST['eApellidos']);
+                    $rol = $_POST['eRol'];
+
+                    //var_dump($_POST);
+                    $consulta = "UPDATE `Usuarios` SET";
+
+                    if ($correoEditar !== $correo) {
+                        $consulta .= "`pk_correo`='$correoEditar',";
+                    }
+
+                    $consulta .= "`nombre`='$nombre',`apellidos`='$apellidos',";
+                    ////////////////////////////////
+                    //imagen/////
+
+
+                    if (!empty($_POST['eContrasenia']) && !empty($_POST['eContrasenia2'])) {
+                        if ($_POST['eContrasenia'] === $_POST['eContrasenia2']) {
+                            $contrasenia = password_hash($_POST['eContrasenia'], PASSWORD_BCRYPT);
+                            $consulta .= "`contrasenia`='$contrasenia',";
+                        } else {
+                            echo -3;
+                        }
+                    }
+                    $consulta .= " `rol`='$rol' WHERE `pk_correo`='$correo'";
+
+
+                    $controlador = new ConectorBD();
+
+
+                    if ($controlador->actualizarBD($consulta)) {
+                        echo 1;
+                    } else {
+                        echo -2;
+                    }
+                    $controlador->cerrarBD();
+                } else {
+                    echo -1;
+                }
+                //  echo $consulta;
             }
         }
     }

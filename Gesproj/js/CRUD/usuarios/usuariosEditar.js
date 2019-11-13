@@ -130,14 +130,14 @@ function validarFomulario() {
 
     function enviarDatos(form) {
 
-        imagen = $('#eImagen').prop("files")[0];
-
-        if (imagen == undefined) {
-            imagen = "";
-        } else {
-            imagen = btoa(imagen);
-        }
-
+        //imagen = $('#eImagen').prop("files")[0];
+        /* 
+                if (imagen == undefined) {
+                    imagen = "";
+                } else {
+                    imagen = btoa(imagen);
+                }
+         */
         $.ajax({
                 type: "POST",
                 url: webService,
@@ -145,7 +145,46 @@ function validarFomulario() {
 
             })
             .done(function (data) {
-                console.log(data);
+                let mensaje = "";
+
+                if (data == 1) {
+                    mensaje = bootbox.dialog({
+                        message: "Usuario modificado con éxito",
+                        buttons: {
+                            cancel: {
+                                label: "Ok",
+                                className: 'btn-success'
+                            }
+                        }
+                    });
+                } else if (data == -1) {
+                    mensaje = bootbox.alert({
+                        message: "No tienes los permisos suficientes",
+                        backdrop: true
+                    });
+                } else if (data == -2) {
+                    mensaje = bootbox.alert({
+                        message: "Fallo en la insección de la base de datos",
+                        backdrop: true
+                    });
+                } else if (data == -3) {
+                    mensaje = bootbox.alert({
+                        message: "Las contraseñas proporcionadas no son iguales, le recomendamos que hable con el administrador.",
+                        backdrop: true
+                    });
+
+                } else if (data == -4) {
+                    mensaje = bootbox.alert({
+                        message: "No puedes modificar TU usuario desde aquí.",
+                        backdrop: true
+                    });
+                }
+
+                mensaje.init(function () {
+                    setTimeout(function () {
+                        mensaje.modal('hide');
+                    }, 2000);
+                });
             }).fail(function (e) {
                 falloAjax();
             });
