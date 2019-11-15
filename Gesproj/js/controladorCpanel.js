@@ -41,7 +41,7 @@ function controladorBarraLateral() {
         },
         start: function () {
           $('#filaContenidoPrincipal').animate({
-            paddingLeft:'5%',
+            paddingLeft: '5%',
           }, 300)
         }
       }, 300)
@@ -75,7 +75,7 @@ function controladorBarraLateral() {
         },
         start: function () {
           $('#filaContenidoPrincipal').animate({
-            paddingLeft:'10%',
+            paddingLeft: '10%',
           }, 300)
         }
       }, 300)
@@ -104,6 +104,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
    * Borramos el contenido de la capa "contenido" y dibujamos los datos de la nueva vista
    */
   function botonUsuarios() {
+    comprobarSesion();
     $('#contenido').empty();
     $('#contenido').html(preload);
 
@@ -115,6 +116,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
   }
 
   function botonCerrarSesion() {
+    comprobarSesion();
     //borramos la cookie de recuerdame y la de usuario
     document.cookie = 'recuerdame = ;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
     document.cookie = 'usuario = ;expires=Thu, 01 Jan 1970 00:00:01 GMT;'
@@ -129,7 +131,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
 
       })
       .done(function (data) {
-       // console.log(data)
+        // console.log(data)
         window.location = 'login.html';
       })
       .fail(function (data) {

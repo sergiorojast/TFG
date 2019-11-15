@@ -200,7 +200,7 @@ function editarUsuario()
             }
         }
     }
-}
+} 
 
 /**
  * @return 1// usuario borrado.
@@ -212,28 +212,25 @@ function borrarUsuario()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'borrarUsuario') {
 
-        if(isset($_POST['correoBorrar'])){
-            
-            if(gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar']))== 1 ){
-                $consulta = "DELETE FROM `Usuarios` WHERE `pk_correo`='". filtraCorreo($_POST['correoBorrar'])."'";
+        if (isset($_POST['correoBorrar'])) {
+        
+            if (gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar'])) == 1) {
+                $consulta = "DELETE FROM `Usuarios` WHERE `pk_correo`='" . filtraCorreo($_POST['correoBorrar']) . "'";
 
                 $conector  = new ConectorBD();
 
-                if($conector->actualizarBD($consulta)){
+                if ($conector->actualizarBD($consulta)) {
                     echo 1;
-                }else{
+                } else {
                     echo -3;
                 }
-
-            }else if(gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar']))== -1){
+            } else if (gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar'])) == -1) {
                 echo -1;
-            }else if(gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar']))== -2){
+            } else if (gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar'])) == -2) {
                 echo -2;
             }
-
-        }else{
+        } else {
             echo -1;
         }
-
-     }
+    }
 }

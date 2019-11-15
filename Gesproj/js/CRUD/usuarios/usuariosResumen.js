@@ -17,11 +17,7 @@ function solicitarYPintarDatos() {
             pintarTabla(data)
 
         }).fail(function () {
-            bootbox.alert("Fallo en AJAX¡", function () {
-                setTimeout(function () {
-                    window.location = LOGIN;
-                }, 2000)
-            });
+           falloAjax();
         })
 
 
@@ -279,13 +275,13 @@ function solicitarYPintarDatos() {
             $('#paginasActuales').html(parseInt($('tbody tr:not(.d-none):first').attr('id')) + "···" + parseInt($(
                 'tbody tr:not(.d-none):last').attr('id')))
             if (cantidadElmentosTotales % numeroElementosPorPagina == 0) {
-                $('#paginasFinales').html(cantidadElmentosTotales)
+                $('#paginasFinales').html(cantidadElmentosTotales);
 
             } else {
-                $('#paginasFinales').html(cantidadElmentosTotales)
+                $('#paginasFinales').html(cantidadElmentosTotales);
 
             }
-            $('#paginasIniciales').html(numeroElementosPorPagina)
+            $('#paginasIniciales').html(1);
         }
 
     }
@@ -379,10 +375,35 @@ function borrarUsuario() {
 
                     }).done(function (data) {
                         console.log(data)
-                        if(data == 1){
-                            recargarListado();
+                        let mensaje;
+                        if (data == 1) {
+                            mensaje = bootbox.alert({
+                                message: "<span class='text-success'> Usuario eliminado con éxito</span>",
+
+                            })
+
+
+                        } else if (data == -1) {
+                            mensaje = bootbox.alert({
+                                message: "<span class='text-danger'>No tienes permisos para realizar esta acción<span>",
+
+                            })
+                        } else if (data == -2) {
+                            mensaje = bootbox.alert({
+                                message: "<span class='text-warning'>El usuario que intenta borrar no existe.<span>",
+
+                            })
+                        } else {
+                            mensaje = bootbox.alert({
+                                message: "<span class='text-warning'>Fallo en la consulta, inténtelo de nuevo más tarde.<span>",
+
+                            })
                         }
 
+
+                        setTimeout(mensaje.modal('hide'), 2000);
+
+                        recargarListado();
                     }).fail(function (e) {
                         falloAjax();
 
