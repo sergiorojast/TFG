@@ -5,6 +5,8 @@ window.addEventListener('load', function () {
   aniadeFuncionalidadBotonesBarraLateral();
   dibujarDatosUsarioBarraLateral();
 
+  cargarTablero();
+
 })
 
 /**
@@ -94,6 +96,7 @@ function controladorBarraLateral() {
 function aniadeFuncionalidadBotonesBarraLateral() {
   $('#crudUsuarios').click(botonUsuarios);
   $('#cerrarSesion').click(botonCerrarSesion);
+  $('#tablero').click(cargarTablero);
 
 
 
@@ -141,6 +144,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
         });
       });
   }
+
 }
 
 function comprobarSesion() {
@@ -186,4 +190,15 @@ function dibujarDatosUsarioBarraLateral() {
     .fail(function (data) {
 
     })
+}
+
+function cargarTablero() {
+  comprobarSesion();
+  $('#contenido').empty();
+  $('#contenido').html(preload);
+
+
+  $.post('vistas/tablero.html', function (htmle) {
+    $('#contenido').html(htmle);
+  }, 'html');
 }

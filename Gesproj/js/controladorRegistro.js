@@ -18,7 +18,7 @@ $(document).ready(function () {
 
     $('#rImagen').on('change', function () {
         //get the file name
-        let fileName = $(this).val().split('\\').pop(); 
+        let fileName = $(this).val().split('\\').pop();
         //replace the "Choose a file" label
         $('.custom-file-label').html(fileName);
     });
@@ -95,13 +95,13 @@ function validacionFormulario() {
         },
         submitHandler: function (form, event) {
 
-            //event.preventDefault();
+            event.preventDefault();
             $('#lEnviar').addClass('disabled');
             $('#lEnviar').html(preload);
-            $(form)[0].submit();
+            // $(form)[0].submit();
 
 
-            //enviarDatosRegistro(form);
+            enviarDatosRegistro(form);
 
 
 
@@ -115,34 +115,32 @@ function enviarDatosRegistro(form) {
     //let imagen =$('#rImagen').prop('files')[0];
     //console.dir(form);
 
-    let datos = new FormData();
-    datos.append('nombre', $('#rCorreo').val());
-    datos.append('imagen', $('#rImagen')[0].files[0]);
+
+    //datos.append('nombre', $('#rCorreo').val());
+    //datos.append('imagen', $('#rImagen')[0].files[0]);
     //console.log(datos);
 
     $.ajax({
             type: "POST",
             url: webService,
-            data: datos, //{
-            //'accion': 'registro',
-
-            /* 'correo': $('#rCorreo').val(),
-            'nombre': $('#rNombre').val(),
-            'apellidos': $('#rApellidos').val(),
-            'contrasenia' :$('#rContrasenia').val(),
-           'imagen': imagen */
-
-            //  }
+            data:{
+                'accion':'registro',
+                'rCorreo': $('#rCorreo').val(),
+                'rNombre': $('#rNombre').val(),
+                'rApellidos' :$('#rApellidos').val(),
+                'rContrasenia': $('#rContrasenia').val()
+            } ,
 
         })
         .done(function (data) {
-            //console.log(data)
+        
+            let mensaje;
             resultado = parseInt(data);
 
             if (resultado === 1) {
                 $('.alertas').empty()
 
-                bootbox.alert({
+              mensaje =  bootbox.alert({
                     message: "Usuario creado con exito, se le redireccionara al login.",
                     backdrop: true,
 
@@ -154,15 +152,21 @@ function enviarDatosRegistro(form) {
 
 
             } else if (resultado === -1) {
-                $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-                    "Correo invalido" +
-                    " </div>");
+                
+              mensaje =  bootbox.alert({
+                    message: "<span class='text-danger'> Correo no valido</span>",
+                    backdrop: true,
+                })
 
-            } else if (resultado === -2) {
-                $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-                    "El correo ya esta en uso" +
-                    " </div>");
+            } else if (resultado === -2 || resultado === -3) {
+                mensaje =  bootbox.alert({
+                    message: "<span class='text-info'> Este correo ya esta en uso </span>",
+                    backdrop: true,
+                })
             }
+            $('#lEnviar').removeClass('disabled');
+            $('#lEnviar').html('Enviar');
+            
         })
         .fail(function (data) {
             $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +

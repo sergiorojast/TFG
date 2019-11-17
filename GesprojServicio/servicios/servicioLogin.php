@@ -39,7 +39,7 @@ function login()
 
                     echo json_encode($_SESSION);
 
-                   // var_dump($_SESSION['usuario']);
+                    // var_dump($_SESSION['usuario']);
                 } else {
                     echo 2; // contraseña no coinciden
                 }
@@ -59,10 +59,8 @@ function login()
  * @return =  -1; //correo no valido
  * @return = -2 // error en la consulta, usuario en la bd.
  * @return = 1; // Usuario insertado con exito
- * @return = -3 // faltan datos
- * @return =  -4 // sin imagen
- * @return = -5 // tamaño indevido
- * @return = -6 // no es una imagen permitida
+ * @return = -3 // Usuario ya existe
+
  */
 function registro()
 {
@@ -71,60 +69,64 @@ function registro()
 
         if (isset($_POST['rCorreo']) && isset($_POST['rNombre']) && isset($_POST['rApellidos']) && isset($_POST['rContrasenia'])) {
 
-            var_dump($_FILES);
-            if (count($_FILES) === 1 || $_FILES['rImagen']['name'] != '') {
-                if (explode('/', $_FILES['rImagen']['type'])[1] == "png" || explode('/', $_FILES['rImagen']['type'])[1] == "jpeg" || explode('/', $_FILES['rImagen']['type'])[1] == "jpg" || explode('/', $_FILES['rImagen']['type'])[1] == "svg") {
+
+            //   if (count($_FILES) === 1 || $_FILES['rImagen']['name'] != '') {
+            //      if (explode('/', $_FILES['rImagen']['type'])[1] == "png" || explode('/', $_FILES['rImagen']['type'])[1] == "jpeg" || explode('/', $_FILES['rImagen']['type'])[1] == "jpg" || explode('/', $_FILES['rImagen']['type'])[1] == "svg") {
 
 
-                    if ($_FILES['rImagen']['size'] <= 1000000) {
+            //     if ($_FILES['rImagen']['size'] <= 1000000) {
 
-                        $nombreImagen = hash('md5', $_FILES['rImagen']['tmp_name']) . rand(0, 10000) . "." . explode('/', $_FILES['rImagen']['type'])[1];
-                        //echo $nombreImagen;
-
-
-
-                        $controlador = new ConectorBD();
-
-                        $correo = filtraCorreo($_POST['rCorreo']);
-                        $nombre = filtrado($_POST['rNombre']);
-                        $apellidos =  filtrado($_POST['rApellidos']);
-                        $contrasenia = password_hash($_POST['rContrasenia'], PASSWORD_BCRYPT);
-                        $rol  = 0;
-                        //var_dump($_FILES);
+            //      $nombreImagen = hash('md5', $_FILES['rImagen']['tmp_name']) . rand(0, 10000) . "." . explode('/', $_FILES['rImagen']['type'])[1];
+            //echo $nombreImagen;
 
 
 
-                        //procesamos los datos 
-                        if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+            $controlador = new ConectorBD();
 
-                            $consulta =  "INSERT INTO Usuarios(pk_correo,nombre,apellidos,imagen,contrasenia,rol)" .
-                                " VALUES('" . $correo . "','"
-                                . $nombre . "','"
-                                . $apellidos . "','"
-                                . $nombreImagen . "','"
-                                . $contrasenia . "',"
-                                . $rol . ")";
+            $correo = filtraCorreo($_POST['rCorreo']);
+            $nombre = filtrado($_POST['rNombre']);
+            $apellidos =  filtrado($_POST['rApellidos']);
+            $contrasenia = password_hash($_POST['rContrasenia'], PASSWORD_BCRYPT);
+            $rol  = 0;
+            //var_dump($_FILES);
 
-
-                            if ($controlador->actualizarBD($consulta)) {
-                                move_uploaded_file($_FILES['rImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
-
-                                echo 1;
-
-                                //  header('Location:' . $login);
-                            } else {
-                                echo -2;
-                            }
-                        } else {
-                            echo -1; //error en el correo
-
-                        }
+            if (!comprobarUsuario($correo)) {
 
 
 
+                //procesamos los datos 
+                if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
 
-                        $controlador->cerrarBD();
+                    $consulta =  "INSERT INTO Usuarios(pk_correo,nombre,apellidos,imagen,contrasenia,rol)" .
+                        " VALUES('" . $correo . "','"
+                        . $nombre . "','"
+                        . $apellidos . "', 'default.png','"
+                        . $contrasenia . "',"
+                        . $rol . ")";
+
+                   
+                    if ($controlador->actualizarBD($consulta)) {
+                        //       move_uploaded_file($_FILES['rImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
+
+                        echo 1;
+
+                        //  header('Location:' . $login);
                     } else {
+                        echo -2;
+                    }
+                } else {
+                    echo -1; //error en el correo
+
+                }
+            } else {
+                echo -3;
+            }
+
+
+
+
+            $controlador->cerrarBD();
+            /*    } else {
                         echo -5; // tamaño de la imagen demasiado grande
                     }
                 } else {
@@ -132,7 +134,7 @@ function registro()
                 }
             } else {
                 echo -4; // sin imagen.
-            }
+            } */
         } else {
             echo -3; // faltan datos.
         }

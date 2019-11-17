@@ -4,6 +4,8 @@ datosIniciales();
 
 devolverUsuarios();
 
+devolverCorreoFechaUsuarios();
+
 visualizarDatos();
 
 editarUsuario();
@@ -200,7 +202,7 @@ function editarUsuario()
             }
         }
     }
-} 
+}
 
 /**
  * @return 1// usuario borrado.
@@ -213,7 +215,7 @@ function borrarUsuario()
     if (isset($_POST['accion']) && $_POST['accion'] === 'borrarUsuario') {
 
         if (isset($_POST['correoBorrar'])) {
-        
+
             if (gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar'])) == 1) {
                 $consulta = "DELETE FROM `Usuarios` WHERE `pk_correo`='" . filtraCorreo($_POST['correoBorrar']) . "'";
 
@@ -231,6 +233,30 @@ function borrarUsuario()
             }
         } else {
             echo -1;
+        }
+    }
+}
+
+//funcion encargada de  enviar los datos para el primer diagrama de lineas del tablero
+function devolverCorreoFechaUsuarios()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'correoyfecha') {
+
+        if (gestionarSesionyRol(0)) {
+            $resultado  = [];
+            $consulta  = "select pk_correo , fCreacion from Usuarios";
+
+           // echo $consulta;
+            $controlador  = new ConectorBD();
+
+            $filas =  $controlador->consultarBD($consulta);
+            //  var_dump($filas);
+            while ($fila = $filas->fetch()) {
+                array_push($resultado, $fila);
+            }
+
+            echo json_encode($resultado);
+            $controlador->cerrarBD();
         }
     }
 }
