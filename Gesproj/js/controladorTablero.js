@@ -1,7 +1,7 @@
     //array que almacena cada fecha que  nos traemos de la base de datos y el numero de usuarios registrados esa fecha.
     // para despues dibujar el diagrama 
     var fechas = [];
-    var cantidades = [];
+    var fechasAux = [];
 
     $(function () {
 
@@ -22,15 +22,16 @@
                 datos = JSON.parse(data);
                 //primero rellenamos el array; y contamos las veces que aparencen
                 for (let i = 0; i < datos.length; i++) {
-                    if(fechas.includes(datos[i][1])){
-                     
-                       
+                    if(fechas[datos]!== undefined){
+                        
+                        fechas[datos[i][1]] +=1; 
                     }else{
-                        fechas.push(datos[i][1]);
-                     //   console.log('nope')
+                        fechas[datos[i][1]] =1
                     }
                 }
-                console.log(fechas)
+     
+             
+               
 
                 dibujarDiagramaUsuariosRegistrados();
 
@@ -41,12 +42,12 @@
 
     function dibujarDiagramaUsuariosRegistrados() {
         let canvas = $('#diagramaUsarios');
-       
+
 
         let diagrama = new Chart(canvas, {
             type: 'line',
             data: {
-                labels: fechas,
+                labels:fechas,
                 datasets: [{
                     label: 'Número de usuarios registrados',
                     data: [12, 19, 3, 5, 2, 3],
