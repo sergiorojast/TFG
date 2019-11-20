@@ -32,7 +32,7 @@
                 }
                 console.log(fechas)
 
-                dibujarDiagramaUsuariosRegistrados();;
+                dibujarDiagramaUsuariosRegistrados();
 
             }).fail(function (data) {
                 falloAjax();
