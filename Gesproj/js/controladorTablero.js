@@ -47,10 +47,10 @@
         let diagrama = new Chart(canvas, {
             type: 'line',
             data: {
-                labels:fechas,
+                labels:[12, 19, 3, 5, 2, 3],
                 datasets: [{
                     label: 'Número de usuarios registrados',
-                    data: [12, 19, 3, 5, 2, 3],
+                    data: [12, 19, 3, 5, 20, 3],
                     pointRadius: 0,
                     fill: false,
                     lineTension: 0,

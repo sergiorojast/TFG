@@ -3,6 +3,8 @@ var correo = '';
 
 solicitarYPintarDatos();
 
+$('#botonNuevoUsuario').on('click',crearUnNuevoUsuriof)
+
 
 // cargamos los datos de los usuarios
 function solicitarYPintarDatos() {
@@ -17,7 +19,7 @@ function solicitarYPintarDatos() {
             pintarTabla(data)
 
         }).fail(function () {
-           falloAjax();
+            falloAjax();
         })
 
 
@@ -426,6 +428,16 @@ function borrarUsuario() {
 
 }
 
+function crearUnNuevoUsuriof() {
+    $('#contenido').empty();
+    $('#contenido').html(preload);
+
+    $.post('vistas/usuarios/usuariosCrear.html', function (htmle) {
+        $('#contenido').html(htmle);
+    }, 'html');
+}
+
+
 function recargarListado() {
     $('#contenido').empty();
     $('#contenido').html(preload);
@@ -434,5 +446,4 @@ function recargarListado() {
     $.post('vistas/usuarios/usuarios.html', function (htmle) {
         $('#contenido').html(htmle);
     }, 'html');
-
 }

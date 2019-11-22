@@ -6,7 +6,9 @@
 
                 <div class="col mb-5 ">
                     <a class="btn" id="volverResumenUsuarios">Resumen Usuario</a>
-                    <div class="card carta" id="tabla">
+                    <div id="tabla">
+                        <button id='botonNuevoUsuario' class="btn btn-success float-right m-1"><span class="fa fa-user">
+                            </span> Crear usuario</button>
 
                         <div class="table-responsive">
 
@@ -25,7 +27,7 @@
 
                                 </tbody>
                             </table>
-                            <div class='btn-group btn-group-sm m-5 float-right' id="botonesPaginacion" role='group'>
+                            <div class='btn-group btn-group-sm m-1 float-right' id="botonesPaginacion" role='group'>
                                 <button type='button' class='btn btn-primary' id='botonAlPrincipio'><span
                                         class='fa fa-chevron-left'></span><span
                                         class='fa fa-chevron-left'></span></button>
@@ -50,6 +52,7 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
                 </div>
 
 
@@ -75,4 +78,3 @@
     url = "/TFG/Gesproj/js/CRUD/usuarios/usuariosResumen.js";
     $.getScript(url);
 </script>
-

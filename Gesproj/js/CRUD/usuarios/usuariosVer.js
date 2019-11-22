@@ -1,12 +1,16 @@
 $(function () {
 
     if (correo == undefined || correo == "") {
-        bootbox.alert({   message:"Fallo al extraer el correo de la tabla",  backdrop: true})
+        bootbox.alert({
+            message: "Fallo al extraer el correo de la tabla",
+            backdrop: true
+        })
         botonUsuarios();
     }
-   
 
 
+    //funcionalidad al boton atras;
+    $('#botonAtras').click(recargarListado);
     $.ajax({
             type: "POST",
             url: webService,
@@ -46,4 +50,14 @@ function botonUsuarios() {
         $('#contenido').html(htmle);
     }, 'html');
 
+}
+
+function recargarListado() {
+    $('#contenido').empty();
+    $('#contenido').html(preload);
+
+
+    $.post('vistas/usuarios/usuarios.html', function (htmle) {
+        $('#contenido').html(htmle);
+    }, 'html');
 }
