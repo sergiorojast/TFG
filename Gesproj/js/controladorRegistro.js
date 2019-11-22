@@ -133,7 +133,7 @@ function enviarDatosRegistro(form) {
 
         })
         .done(function (data) {
-        
+            console.log(data)
             let mensaje;
             resultado = parseInt(data);
 

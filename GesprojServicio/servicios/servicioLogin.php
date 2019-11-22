@@ -97,14 +97,15 @@ function registro()
                 //procesamos los datos 
                 if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
 
-                    $consulta =  "INSERT INTO Usuarios(pk_correo,nombre,apellidos,imagen,contrasenia,rol)" .
+                    $consulta =  "INSERT INTO Usuarios(pk_correo,nombre,apellidos,imagen,contrasenia,rol,estado)" .
                         " VALUES('" . $correo . "','"
                         . $nombre . "','"
                         . $apellidos . "', 'default.png','"
                         . $contrasenia . "',"
-                        . $rol . ")";
+                        . $rol . ","
+                        ."'NoActivo')";
 
-                   
+
                     if ($controlador->actualizarBD($consulta)) {
                         //       move_uploaded_file($_FILES['rImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
 

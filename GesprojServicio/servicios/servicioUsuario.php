@@ -6,11 +6,14 @@ devolverUsuarios();
 
 devolverCorreoFechaUsuarios();
 
+devolverRoles();
+
 visualizarDatos();
 
 editarUsuario();
 
 borrarUsuario();
+
 
 
 /**
@@ -246,7 +249,7 @@ function devolverCorreoFechaUsuarios()
             $resultado  = [];
             $consulta  = "select pk_correo , fCreacion from Usuarios";
 
-           // echo $consulta;
+            // echo $consulta;
             $controlador  = new ConectorBD();
 
             $filas =  $controlador->consultarBD($consulta);
@@ -257,6 +260,31 @@ function devolverCorreoFechaUsuarios()
 
             echo json_encode($resultado);
             $controlador->cerrarBD();
+        }
+    }
+}
+
+function devolverRoles()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'roles') {
+
+        if (gestionarSesionyRol(0)) {
+            $resultado  = [];
+            $consulta  = "select rol from Usuarios";
+
+            // echo $consulta;
+            $controlador  = new ConectorBD();
+
+            $filas =  $controlador->consultarBD($consulta);
+            //  var_dump($filas);
+            while ($fila = $filas->fetch()) {
+                array_push($resultado, $fila);
+            }
+
+            echo json_encode($resultado);
+            $controlador->cerrarBD();
+        } else {
+            echo -1; // sin permisos para realizar la accion
         }
     }
 }
