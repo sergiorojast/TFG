@@ -123,8 +123,8 @@ function solicitarDatosRoles() {
                     fill: false,
                     lineTension: 0,
                     borderWidth: 2,
-                    borderColor: "#f3f3f3",
-                    backgroundColor: ['red',"#5bc0de","orange"],
+                    borderColor: "#e0e0e0",
+                    backgroundColor: ['#E64538',"#2D6295","#BBDD36"],
                     fill: true
 
                 }]
