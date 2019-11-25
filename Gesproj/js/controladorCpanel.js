@@ -23,6 +23,7 @@ function controladorBarraLateral() {
     contadorGiroIcono = 0;
 
     if (estadoBarraLateral) {
+      $('#barraLateral .row p').addClass('text-center');
       $('#barraLateral').animate({
         width: '5%'
       }, {
@@ -56,6 +57,7 @@ function controladorBarraLateral() {
       estadoBarraLateral = !estadoBarraLateral;
 
     } else {
+      $('#barraLateral .row p').removeClass('text-center');
       contadorGiroIcono = 45;
       $('#barraLateral').animate({
         width: '10%'
@@ -157,6 +159,7 @@ function comprobarSesion() {
 
     })
     .done(function (data) {
+      
       //si la llamada ajax nos devuelve un string con dos corchetes quiere decir que no existe sesion alguna.
       if (data == "-1") {
         window.location = 'login.html';
@@ -164,7 +167,7 @@ function comprobarSesion() {
 
     })
     .fail(function (data) {
-
+      falloAjax();
     });
 }
 

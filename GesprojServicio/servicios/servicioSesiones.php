@@ -17,8 +17,11 @@ function ConsultarSession()
     if (isset($_POST['accion']) && $_POST['accion'] === 'sesion') {
         // CAMBIARLO
         // echo  json_encode($_SESSION);
+        // var_dump($_SESSION);
 
-        if (isset($_SESSION['correo']) && isset($_SESSION['rol'])) { } else {
+        if (isset($_SESSION['correo']) && isset($_SESSION['rol'])) {
+            echo 1;
+         } else {
             echo -1;
         }
     }

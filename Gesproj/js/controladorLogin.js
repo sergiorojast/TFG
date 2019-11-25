@@ -4,6 +4,8 @@ $(document).ready(function () {
 
     validacionFormulario();
 
+    comprobarSesion();
+
     $('#recuerdame').on('click', funcionalidadBotonRecuerdame);
 
       
@@ -162,4 +164,25 @@ function comprobarRecuerdame() {
 
 
 
+}
+function comprobarSesion(){
+    $.ajax({
+        type: "POST",
+        url: webService,
+        data: {
+          "accion": "sesion"
+        }
+  
+      })
+      .done(function (data) {
+        console.log(data);
+        //si la llamada ajax nos devuelve un string con dos corchetes quiere decir que no existe sesion alguna.
+        if (data == 1) {
+          window.location = 'cpanel.html';
+        }
+  
+      })
+      .fail(function (data) {
+        falloAjax();
+      });
 }

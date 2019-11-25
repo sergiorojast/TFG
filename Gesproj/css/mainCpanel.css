@@ -45,13 +45,13 @@
 }
 
 .separadorClaro {
-  filter: brightness(90%);
+  filter: brightness(98%);
 }
 
 .separadorOscuro {
-  filter: brightness(60%);
+  filter: brightness(40%);
 }
-
+/* Cambio del texto del boton para subir ficheros */
 .custom-file-input~.custom-file-label::after {
   content: "Subir";
 }
