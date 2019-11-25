@@ -247,7 +247,7 @@ function devolverCorreoFechaUsuarios()
 
         if (gestionarSesionyRol(0)) {
             $resultado  = [];
-            $consulta  = "select pk_correo , fCreacion from Usuarios";
+            $consulta  = "select pk_correo , fCreacion from Usuarios ORDER BY fCreacion ";
 
             // echo $consulta;
             $controlador  = new ConectorBD();
