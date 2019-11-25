@@ -139,40 +139,31 @@ function enviarDatosRegistro(form) {
 
             if (resultado === 1) {
                 $('.alertas').empty()
-
-              mensaje =  bootbox.alert({
-                    message: "Usuario creado con exito, se le redireccionara al login.",
-                    backdrop: true,
-
-                    callback: function () {
-                        window.location = "login.html";
-                    }
-                })
-
+            
+                let mensaje = mensajeSuccess("Usuario creado con éxito","¡Éxito!",3);
+                setTimeout(function () {
+                    window.location = "login.html";
+                },3000)
 
 
             } else if (resultado === -1) {
                 
-              mensaje =  bootbox.alert({
-                    message: "<span class='text-danger'> Correo no valido</span>",
-                    backdrop: true,
-                })
+        
+                mensajeDanger("Correo no valido", "ERROR")
 
             } else if (resultado === -2 || resultado === -3) {
-                mensaje =  bootbox.alert({
-                    message: "<span class='text-info'> Este correo ya esta en uso </span>",
-                    backdrop: true,
-                })
+            
+                mensajeInfo("El correo introducido ya esta en uso", "Información");
             }
             $('#lEnviar').removeClass('disabled');
             $('#lEnviar').html('Enviar');
             
         })
         .fail(function (data) {
-            $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-                "Error AJAX" +
-                " </div>");
-
+           falloAjax();
+           setTimeout(function(i){
+            window.location = "registro.html";
+           }, 5000);
 
         });
 }

@@ -6,11 +6,9 @@ $(document).ready(function () {
 
     $('#recuerdame').on('click', funcionalidadBotonRecuerdame);
 
+      
 
-
-
-
-
+ 
 });
 /**
  * Controlamos el value del boton switch del formulario
@@ -121,9 +119,9 @@ function enviarDatosLogin(correo, contrasenia) {
 
                 //let cookie = document.cookie.split(';')
             } else {
-                $('.alertas').html("  <div class='alert alert-danger' role='alert'>" +
-                    "Los datos introducidos son erróneos" +
-                    " </div>");
+                mensajeWarning("Datos erroneos","Advertencia")
+                $('#lContrasenia').val("");
+                $('#lContrasenia').focus();
             }
 
 

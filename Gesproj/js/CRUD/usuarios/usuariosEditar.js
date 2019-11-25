@@ -3,11 +3,9 @@ $(function () {
 
 
     if (correo == undefined || correo == "") {
-        bootbox.alert({
-            message: "Fallo al extraer el correo de la tabla",
-            backdrop: true
-        })
-        cerrar();
+       mensajeDanger('Fallo al extraer el correo de la tabla',"",3);
+       setTimeout(cerrar,3000);
+        
     }
 
 
@@ -148,36 +146,21 @@ function validarFomulario() {
                 let mensaje = "";
 
                 if (data == 1) {
-                    mensaje = bootbox.dialog({
-                        message: "Usuario modificado con éxito",
-                        buttons: {
-                            cancel: {
-                                label: "Ok",
-                                className: 'btn-success'
-                            }
-                        }
-                    });
+               
+                    mensajeSuccess("Usuario modificado con éxito");
                 } else if (data == -1) {
-                    mensaje = bootbox.alert({
-                        message: "No tienes los permisos suficientes",
-                        backdrop: true
-                    });
+                   
+                    mensajeWarning('No tienes permisos oara realizar esta acción');
                 } else if (data == -2) {
-                    mensaje = bootbox.alert({
-                        message: "Fallo en la insección de la base de datos",
-                        backdrop: true
-                    });
+                
+                    mensajeDanger('Fallo en la inserción en la base de datos')
                 } else if (data == -3) {
-                    mensaje = bootbox.alert({
-                        message: "Las contraseñas proporcionadas no son iguales, le recomendamos que hable con el administrador.",
-                        backdrop: true
-                    });
+
+                    mensajeWarning("Las contraseñas proporcionadas no son iguales.");
 
                 } else if (data == -4) {
-                    mensaje = bootbox.alert({
-                        message: "No puedes modificar TU usuario desde aquí.",
-                        backdrop: true
-                    });
+                  
+                    mensajeInfo("No puedes modificar tu usuario desde aquí");
                 }
 
                 mensaje.init(function () {

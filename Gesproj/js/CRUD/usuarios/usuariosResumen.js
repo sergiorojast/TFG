@@ -379,27 +379,19 @@ function borrarUsuario() {
                         console.log(data)
                         let mensaje;
                         if (data == 1) {
-                            mensaje = bootbox.alert({
-                                message: "<span class='text-success'> Usuario eliminado con éxito</span>",
-
-                            })
+                         
+                            mensajeSuccess("Usuario eliminado con éxito");
 
 
                         } else if (data == -1) {
-                            mensaje = bootbox.alert({
-                                message: "<span class='text-danger'>No tienes permisos para realizar esta acción<span>",
-
-                            })
+                        
+                            mensajeWarning("No tienes permisos para realizar esta acción");
                         } else if (data == -2) {
-                            mensaje = bootbox.alert({
-                                message: "<span class='text-warning'>El usuario que intenta borrar no existe.<span>",
-
-                            })
+                         
+                            mensajeDanger('El usuario que intenta borrar ya no existe');
                         } else {
-                            mensaje = bootbox.alert({
-                                message: "<span class='text-warning'>Fallo en la consulta, inténtelo de nuevo más tarde.<span>",
-
-                            })
+                          
+                            mensajeWarning('fallo, intentelo más tarde')
                         }
 
 
