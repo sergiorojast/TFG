@@ -99,6 +99,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
   $('#crudUsuarios').click(botonUsuarios);
   $('#cerrarSesion').click(botonCerrarSesion);
   $('#tablero').click(cargarTablero);
+  $('#crudProyectos').click(cargarProyectos);
 
 
 
@@ -146,7 +147,16 @@ function aniadeFuncionalidadBotonesBarraLateral() {
         });
       });
   }
-
+  function cargarProyectos(){
+    comprobarSesion();
+    $('#contenido').empty();
+    $('#contenido').html(preload);
+  
+  
+    $.post('vistas/Proyectos/proyectosResumen.html', function (htmle) {
+      $('#contenido').html(htmle);
+    }, 'html');
+  }
 }
 
 function comprobarSesion() {
