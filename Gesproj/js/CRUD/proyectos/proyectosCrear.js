@@ -50,9 +50,19 @@ function validarFormulario() {
             },
             'cDescripcionProyecto': {
                 required: true,
-                minlength: 3,
+                minlength: 10,
                 maxlength: 6000
 
+            },
+            'horas': {
+                number: true,
+                min: 0,
+                max: 99999
+            },
+            'minutos': {
+                number: true,
+                min: 0,
+                max: 59
             }
 
         },
@@ -124,12 +134,20 @@ function agrearFuncionalidadSelectorAdministradores() {
 
 
     $('#botonSeleccionarAdministradores').click(function () {
-            let correoSeleccionado = $('#selectorAdministradores').val();
-            if (correoSeleccionado !== 'Seleccionar Administradores...') {
+        let correoSeleccionado = $('#selectorAdministradores').val();
+        if (correoSeleccionado !== 'Seleccionar Administradores...') {
 
-                $('#listadoAdministradores').append("<li value='" + correoSeleccionado + "'>" + correoSeleccionado + "</li>");
-                $("#selectorAdministradores option[value='" + correoSeleccionado + "']").remove();
+            $('#listadoAdministradores').append("<li value='" + correoSeleccionado + "'>" + correoSeleccionado + "</li>");
+            $("#selectorAdministradores option[value='" + correoSeleccionado + "']").remove();
 
-                }
+            $("#listadoAdministradores li[value='" + correoSeleccionado + "']").click(function (e) {
+                let correo = $(this).attr('value');
+                $('#selectorAdministradores').append("<option value='" + correo + "'>" + correo + "</option>");
+
+                $("#listadoAdministradores li[value='" + correoSeleccionado + "']").remove()
             })
-    }
+
+        }
+    })
+
+}
