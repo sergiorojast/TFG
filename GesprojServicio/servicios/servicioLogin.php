@@ -126,7 +126,7 @@ function registro()
 
 
 
-            $controlador->cerrarBD();
+            // $controlador->cerrarBD();
             /*    } else {
                         echo -5; // tamaño de la imagen demasiado grande
                     }
@@ -160,7 +160,7 @@ function consultarUsuario($correo): Usuario
         // var_dump($row);
         $usuario->constructorArray($row);
     }
-    $controlador->cerrarBD();
+    // $controlador->cerrarBD();
 
     return $usuario;
 }

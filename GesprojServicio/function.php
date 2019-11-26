@@ -88,7 +88,7 @@ function comprobarUsuario(string $correo)
           
         }
 
-        $controlador->cerrarBD();
+        // $controlador->cerrarBD();
 
     } catch (Exception $e) {
         $reusultado  = false;

@@ -73,7 +73,7 @@ function devolverUsuarios()
                         $usuarios[]  = $usuario->devolverDatosArray();
                     }
                     //var_dump($usuarios);
-                    $controlador->cerrarBD();
+                    // $controlador->cerrarBD();
 
 
                     echo json_encode($usuarios);
@@ -123,7 +123,7 @@ function visualizarDatos()
                             $usuarios[]  = $usuario->devolverDatosArray();
                         }
                         //var_dump($usuarios);
-                        $controlador->cerrarBD();
+                        // $controlador->cerrarBD();
 
                         echo json_encode($usuarios);
 
@@ -199,7 +199,7 @@ function editarUsuario()
                     } else {
                         echo -2;
                     }
-                    $controlador->cerrarBD();
+                    // $controlador->cerrarBD();
                 } else {
                     echo -1;
                 }
@@ -261,7 +261,7 @@ function devolverCorreoFechaUsuarios()
             }
 
             echo json_encode($resultado);
-            $controlador->cerrarBD();
+            // $controlador->cerrarBD();
         }
     }
 }
@@ -284,7 +284,7 @@ function devolverRoles()
             }
 
             echo json_encode($resultado);
-            $controlador->cerrarBD();
+            // $controlador->cerrarBD();
         } else {
             echo -1; // sin permisos para realizar la accion
         }
