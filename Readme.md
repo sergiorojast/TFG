@@ -16,7 +16,8 @@ Para el acceso a los datos de la BD, se hara por medio de un servicio web.
 Para el hash de las contraseñas usamos PASSWORD_BCRYPT
 
 Estados de los proyectos.
- -Creado
- -En curso
- -En espera
- -finalizado
+
+    -Creado
+    -En curso
+    -En espera
+    -finalizado
