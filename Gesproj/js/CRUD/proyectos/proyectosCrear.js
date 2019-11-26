@@ -99,6 +99,7 @@ function validarFormulario() {
 
         submitHandler: function (form, event) {
             event.preventDefault();
+            enviarDatosAlServicio()
         }
     })
 }
@@ -149,5 +150,73 @@ function agrearFuncionalidadSelectorAdministradores() {
 
         }
     })
+
+}
+
+function enviarDatosAlServicio() {
+
+    //preparamos los datos y los validamos;
+    let nombre = "";
+    let descripción = "";
+    let horas = 0;
+    let minutos = 0;
+    let administradores = [];
+    //variable encargada de cortar la peticion ajax en caso de que los datos no cumplan unas restricciones.
+    let token = true;
+
+    //validamos que los datos no se hayan falseado.
+    if ($('#cNombreProyecto').val() === "") {
+        token = false;
+    } else {
+        nombre = $('#cNombreProyecto').val();
+    }
+    if ($('#cDescripcionProyecto').val() === "") {
+        token = false;
+    } else {
+        descripción = $('#cDescripcionProyecto').val();
+    }
+    if (parseInt($('#horas').val()) <= 0 && parseInt($('#minutos').val()) <= 0) {
+        token = false;
+        mensajeWarning("El proyecto debe tener un tiempo asignado", "Error en el tiempo", 6);
+    } else {
+        horas = parseInt($('#horas').val());
+        minutos = parseInt($('#minutos').val());
+    }
+
+    if ($('#listadoAdministradores li').length > 0) {
+
+        $('#listadoAdministradores li').each(function (i, e) {
+
+            administradores.push($(e).attr('value'));
+
+        })
+    } else {
+        token = false;
+        mensajeWarning('No selecciono ningun Administrador', "Seleccione un administrador", 6);
+    }
+
+    if (token) {
+
+        $.ajax({
+                type: "POST",
+                url: webService,
+                data: {
+                    'accion': 'crearProyecto',
+                    'nombre' : nombre,
+                    'descripcion' : descripción,
+                    'horas' : horas,
+                    'minutos': minutos,
+                    'administradores': administradores
+                },
+            })
+            .done(function (datos) {
+                console.log(datos)
+            })
+            .fail(function () {
+                falloAjax();
+            })
+    } else {
+        mensajeDanger("Revise los datos introducidos.", "Petición no enviada", 4);
+    }
 
 }

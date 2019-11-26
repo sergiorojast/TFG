@@ -18,6 +18,14 @@ class ConectorBD
 
 
     public function __construct()
+    { }
+
+    public function __destruct()
+    {
+        $this->conexion = null;
+    }
+
+    public function abrirConexion()
     {
         try {
             //definimos la direccion y parametros de la conexion
@@ -33,11 +41,6 @@ class ConectorBD
         }
     }
 
-    public function __destruct()
-    {
-        $this->conexion = null;
-    }
-
     public function cerrarBD(): void
     {
         $this->conexion  = null;
@@ -50,11 +53,16 @@ class ConectorBD
      * @return boolean | $consulta;
      */
     public function actualizarBD($consulta)
+
     {
+        abrirConexion();
         return $this->conexion->query($consulta);
+        cerrarBD();
     }
     public function consultarBD($consulta)
     {
+        abrirConexion();
         return $this->conexion->query($consulta);
-     }
+        cerrarBD();
+    }
 }
