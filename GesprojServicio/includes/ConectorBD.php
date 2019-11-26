@@ -14,6 +14,8 @@ class ConectorBD
 
     //variable que almacenara el objeto pdo.
     private $conexion;
+    
+
 
 
 
@@ -57,12 +59,12 @@ class ConectorBD
     {
         //  abrirConexion();
         return $this->conexion->query($consulta);
-        cerrarBD();
+       // cerrarBD();
     }
     public function consultarBD($consulta)
     {
         // abrirConexion();
         return $this->conexion->query($consulta);
-        cerrarBD();
+       // cerrarBD();
     }
 }

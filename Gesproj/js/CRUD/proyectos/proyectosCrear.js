@@ -210,7 +210,21 @@ function enviarDatosAlServicio() {
                 },
             })
             .done(function (datos) {
-                console.log(datos)
+                console.log(datos);
+                if(datos== 1){
+                    mensajeSuccess('El proyecto se creó correctamente','Éxito');
+
+                    recargarVista();
+
+                }else if(datos== -1){
+                    mensajeInfo('No tiene permisos para realizar esta acción');
+                }else if(datos== -2){
+                    mensajeInfo('El usuario no existe en la base de datos')
+                }else if(datos== -3){
+                    mensajeWarning('Faltan datos para crear el proyecto');
+                }else if(datos== -4){
+                    mensajeDanger('Error al almacenar los datos');
+                }
             })
             .fail(function () {
                 falloAjax();
@@ -219,4 +233,14 @@ function enviarDatosAlServicio() {
         mensajeDanger("Revise los datos introducidos.", "Petición no enviada", 4);
     }
 
+}
+
+function recargarVista(){
+    $('#contenido').empty();
+        $('#contenido').html(preload);
+    
+    
+         $.post('vistas/proyectos/proyectosCrear.html', function (htmle) {
+            $('#contenido').html(htmle);
+         }, 'html'); 
 }
