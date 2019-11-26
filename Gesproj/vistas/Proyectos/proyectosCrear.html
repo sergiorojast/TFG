@@ -14,25 +14,27 @@
         </div>
 
         <div class="row">
-            <div class="col col-md-6">
+            <div class="col-12 col-md-6">
                 <div class="card p-1">
-                    <form>
+                    <form id="formularioProyecto">
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Nombre del proyecto</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1">
+                                    <label for="cNombreProyecto">Nombre del proyecto</label>
+                                    <input type="text" class="form-control" name="cNombreProyecto" id="cNombreProyecto">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
-                                    <label for="exampleFormControlTextarea1">Descripción</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <label for="cDescripcionProyecto">Descripción</label>
+                                    <textarea class="form-control" id="cDescripcionProyecto" name="cDescripcionProyecto"
+                                        rows="5"></textarea>
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col">
                                 <div class="form-group">
@@ -45,7 +47,8 @@
                                                             class="text-primary fa fa-hourglass-start"></span>
                                                     </div>
                                                 </div>
-                                                <input type="number" min="0"  value="0" class="form-control col " id="horas">
+                                                <input type="number" min="0" value="0" class="form-control col "
+                                                    id="horas">
                                             </div>
                                         </div>
                                         <div class="col">
@@ -56,8 +59,8 @@
                                                             class="text-primary fa fa-hourglass-end"></span>
                                                     </div>
                                                 </div>
-                                                <input type="number" min="0" max="59"  value="0" class="form-control col "
-                                                    id="minutos">
+                                                <input type="number" min="0" max="59" value="0"
+                                                    class="form-control col " id="minutos">
                                             </div>
                                         </div>
                                     </div>
@@ -76,15 +79,42 @@
                     </form>
                 </div>
             </div>
+            <div class="col-12 col-md-6 card">
+                <div class="row p-1">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" id="botonSeleccionarAdministradores"
+                                    type="button">Añadir</button>
+                            </div>
+                            <select class="custom-select" id="selectorAdministradores">
+                                <option selected>Seleccionar Administradores...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col">
+                        <ul id="listadoAdministradores">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
 
-        </form>
         <div class="row">
-            <div class="col text-center">
-                <button id="botonAtras" class="btn btn-secondary m-1"><span class="fa fa-chevron-left"></span>
-                    atras</button>
+            <div class="col text-center ">
+                <div class="btn-group m-1">
+                    <button id="botonAtras" class="btn btn-secondary"><span class="fa fa-chevron-left"></span>
+                        atras</button>
+                    <button id="botonCrear" type="submit" class="btn btn-success">
+                        <span class="fa fa-upload"></span>
+                        Crear
+                    </button>
+                </div>
             </div>
         </div>
 
