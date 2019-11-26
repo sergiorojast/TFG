@@ -146,6 +146,7 @@ function registro()
 /**
  * Funcion auxiliar que nos devuelve un objeto Usuario por medio de la consulta
  * en la base de datos de un correo.
+ * @deprecated consultarUsuario();
  */
 function consultarUsuario($correo): Usuario
 {
