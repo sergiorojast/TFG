@@ -14,6 +14,8 @@ editarUsuario();
 
 borrarUsuario();
 
+devolverAdministradores();
+
 
 
 /**
@@ -285,6 +287,35 @@ function devolverRoles()
             $controlador->cerrarBD();
         } else {
             echo -1; // sin permisos para realizar la accion
+        }
+    }
+}
+
+/**
+ * Funcion encargada de devolver una lista con  los correos de los administradores.
+ * 
+ * @return json; correos de los ususarios adminsotradores.
+ * @return -1; No existe una sesion iniciaza.
+ * @return -2; El usuario que tiene la sesion iniciada no tiene los permisos necesario.
+ */
+function devolverAdministradores(){
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'listadoAdministradores') {
+        if(gestionarSesionyRol(90) == 1){
+            $controlador =  new ConectorBD();
+            $resultado = [];
+
+            $consulta = "select pk_correo  from Usuarios where rol >= 90";
+           
+            $filas = $controlador->consultarBD($consulta);
+            $filas->setFetchMode(PDO::FETCH_NUM);
+            
+            echo json_encode($filas->fetchAll());
+
+        }else if(gestionarSesionyRol(90) == -1){
+            echo -1;
+        }else if(gestionarSesionyRol(90) == -2){
+            echo -2;
         }
     }
 }
