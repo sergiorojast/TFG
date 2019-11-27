@@ -1,6 +1,7 @@
 <?php
 
 crearProyecto();
+listarProyectosDelPropietario();
 
 /**
  * Funcion encargada  de crear proyectos, necesita un nivel de permisos 90
@@ -59,7 +60,6 @@ function crearProyecto()
                             if ($conector->actualizarBD($consulta)) { } else {
                                 $token = false;
                             };
-                            
                         }
                         if ($token) {
                             echo 1;
@@ -73,6 +73,32 @@ function crearProyecto()
             } else {
                 echo -2;
             }
+        } else {
+            echo -1;
+        }
+    }
+}
+
+/**
+ * Funcion encargada de devolver los proyectos del usuario que tiene la sesion inciaza.
+ * solo se debe mostrar los proyectos a los usuarios administradores lvl 90 >;
+ * @return -1; //Error en la sesion y/o permisos.
+ */
+
+function listarProyectosDelPropietario()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'listarProyectosPropietario') {
+        if (gestionarSesionyRol(90) == 1) {
+            $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
+                "FROM `proyectos` , `usuarios:proyectos` WHERE" .
+                "`fk_idProyecto` <=> `pk_idProyecto` AND `fk_correo` <=> '" . $_SESSION["correo"] . "'";
+
+            $controlador =  new ConectorBD();
+
+            $filas = $controlador->consultarBD($consulta);
+            
+
+            echo json_encode( $filas->fetchAll(PDO::FETCH_ASSOC ));
         } else {
             echo -1;
         }
