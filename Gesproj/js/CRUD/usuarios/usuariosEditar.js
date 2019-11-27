@@ -163,11 +163,7 @@ function validarFomulario() {
                     mensajeInfo("No puedes modificar tu usuario desde aquí");
                 }
 
-                mensaje.init(function () {
-                    setTimeout(function () {
-                        mensaje.modal('hide');
-                    }, 2000);
-                });
+             
             }).fail(function (e) {
                 falloAjax();
             });

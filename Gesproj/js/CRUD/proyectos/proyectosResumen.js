@@ -12,6 +12,7 @@ $(function () {
     })
 
     solicitarProyectos();
+    asignarEventosCartasProyectos();
 })
 
 /**
@@ -51,7 +52,7 @@ function agregarDatosProyectosAlDoM(datos) {
         }
         //construimos el elmento que nos muestra los proyectos
         carta = "<div class='col-6 col-sm-4 col-lg-3 mb-2 ' >" +
-            "<div class = 'card' >" +
+            "<div class = 'card' id='cartasProyectos' >" +
             "<div class = 'row' >" +
             "<div class = 'col col-sm-6'>";
 
@@ -152,10 +153,10 @@ function agregarDatosProyectosAlDoM(datos) {
 
 }
 
-
-
-
-// "<span class=' m-1 badge badge-pill badge-primary'> Primary </span>" +
-// "</div>" +
-// "</div>" +
-// "esto es un mensaje" +
+/**
+ * Funcion encargada de asignar  el evento click a las cartas que contienen el proyecto.
+ */
+function asignarEventosCartasProyectos(){
+    //cartasProyectos
+    console.log($('#cartasProyectos'));
+}
