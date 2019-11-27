@@ -1,0 +1,31 @@
+<div class="card">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center">Resumen proyectos</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <a class="btn" id="volverResumenUsuarios">Resumen proyectos</a> <a class="btn"><span
+                    class="fas fa-arrow-right"></span> </a> <a id="volverListado" class="btn">Detalles proyecto</a>
+            <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col m-1">
+                <button class="btn btn-sm btn-success offset-10" id="crearProyectos">Crear proyecto</button>
+            </div>
+        </div>
+
+        <div class="container" id="capaProyectos">
+         
+              
+        </div>
+    </div>
+
+    <script>
+        url = undefined;
+        url = "/TFG/Gesproj/js/CRUD/proyectos/proyectosVerEditarBorrar.js";
+        $.getScript(url);
+    </script>
