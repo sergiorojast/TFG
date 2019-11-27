@@ -6,8 +6,8 @@ $(function () {
     } else {
         mensajeDanger("Error al obtener la id del proyecto, Intentelo en unos minutos", "ERROR");
     }
-
-
+    //añadimos eventos para poder volver atras.btn-warning
+    $('#volverResumenProyectos').click(volverAtras);
 })
 
 function solicitarDatosProyectoID() {
@@ -209,4 +209,14 @@ function enviarActualizacionProyecto() {
         .fail(function () {
             falloAjax();
         })
+}
+
+function volverAtras() {
+    $('#contenido').empty();
+    $('#contenido').html(preload);
+
+
+    $.post('vistas/proyectos/proyectosResumen.html', function (htmle) {
+        $('#contenido').html(htmle);
+    }, 'html');
 }
