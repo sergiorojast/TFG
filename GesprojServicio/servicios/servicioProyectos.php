@@ -132,6 +132,51 @@ function devolverProyectoporID()
     }
 }
 
-function actualizarProyecto(){
+/**
+ * Funcion encargada de actualizar el proyecto en la base de datos
+ * @return 1;// todo ok;
+ * @return -1; // El usuario tiene la sesion caducada o no tiene permisos para realizar esa acción.
+ * @return -2;//  No se encuentra el id del proyecto. 
+ * @return -3;// Error en la consulta. 
+ */
+function actualizarProyecto()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'actualizarProyecto') {
+        if (gestionarSesionyRol(90) == 1) {
+          //  var_dump($_POST);
 
+            if (isset($_POST['idProyecto'])) {
+
+
+                $horas = (int) filtrado($_POST['horas']);
+                $minutos  = (int) filtrado($_POST['minutos']);
+
+
+                if ($horas <= 9) {
+                    $horas = 0 . $horas;
+                }
+                if ($minutos <= 9) {
+                    $minutos  = "0" . filtrado($_POST['minutos']);
+                }
+                $estimacion = $horas . ":" . $minutos;
+
+                $idProyecto =  (int) $_POST['idProyecto'];
+
+                $consulta = "UPDATE `proyectos` SET `nombre`='" . filtrado($_POST['nonbreProyecto']) . "',`descripcion`='" . filtrado($_POST['descripcionProyecto']) . "',`estado`='" . filtrado($_POST['estado']) . "',`estimacion`='" . $estimacion
+                    . "' WHERE `pk_idProyecto` <=> '" .  $idProyecto . "'";
+
+                $controlador = new ConectorBD();
+
+                if ($controlador->actualizarBD($consulta)) {
+                    echo 1;
+                } else {
+                    echo -3;
+                }
+            } else {
+                echo -2;
+            }
+        } else {
+            echo -1;
+        }
+    }
 }

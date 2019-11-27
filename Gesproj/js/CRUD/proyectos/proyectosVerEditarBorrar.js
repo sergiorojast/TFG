@@ -196,7 +196,15 @@ function enviarActualizacionProyecto() {
             },
         })
         .done(function (datos) {
-
+            if (datos == 1) {
+                mensajeSuccess('Proyecto modificado');
+            } else if (datos == -1) {
+                mensajeDanger('No tienes permisos para realizar esta accion');
+            } else if (datos == -2) {
+                mensajeInfo('Error en la conexion con el servicio, Intentelo en unos minutos');
+            } else if (datos == -3) {
+                mensajeWarning("Error en la consulta, Intentelo en unos minutos");
+            }
         })
         .fail(function () {
             falloAjax();
