@@ -15,17 +15,23 @@ function filtrado($datos)
 /**
  * Función encargada de comprobar si el usuario tiene la sesion iniciada en el servidor.
  * Tambien comprueba si puede realizar la accion solicitada;
+ * Y si el usuario de la sesión existe en la base de datos.
  * 
  * @param $rolNecesario el rol que necesita la accion;
  * @return 1; // todo ok;
  * @return -1; // la sesion no esta iniciada;
  * @return -2 ; // el usuario no tiene los permisos para realizar la accion.
+ * @return -3; // El usuario de la sesion no existe en la base de datos.
  */
 function gestionarSesionyRol(int $rolNecesario)
 {
     if (isset($_SESSION['correo']) && isset($_SESSION['rol'])) {
         if (controlarRol($rolNecesario)) {
-            return 1;
+            if (comprobarUsuario($_SESSION['correo'])) {
+                return 1;
+            }else{
+                return -3;
+            }
         } else {
             return -2;
         }
@@ -85,7 +91,6 @@ function comprobarUsuario(string $correo)
         // si el array asociativo es mayor que cero, el usuario existe;
         if (!empty($rows->fetch())) {
             $resultado  = true;
-          
         }
 
         // $controlador->cerrarBD();
@@ -97,6 +102,7 @@ function comprobarUsuario(string $correo)
     return $resultado;
 }
 // filtra el correo co sanitize
-function filtraCorreo(string $correo){
-   return filter_var($correo, FILTER_SANITIZE_EMAIL);
+function filtraCorreo(string $correo)
+{
+    return filter_var($correo, FILTER_SANITIZE_EMAIL);
 }
