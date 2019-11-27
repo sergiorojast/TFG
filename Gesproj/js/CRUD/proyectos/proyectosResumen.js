@@ -1,3 +1,5 @@
+//variable que nos ayuda a pasarnos la id del proyecto entre las vistas
+var idProyecto = 0;
 $(function () {
 
     //Añadimos la funcion al boton de crear proyectos
@@ -12,7 +14,6 @@ $(function () {
     })
 
     solicitarProyectos();
-    asignarEventosCartasProyectos();
 })
 
 /**
@@ -54,7 +55,8 @@ function agregarDatosProyectosAlDoM(datos) {
         carta = "<div class='col-6 col-sm-4 col-lg-3 mb-2 ' >" +
             "<div class = 'card' id='cartasProyectos' >" +
             "<div class = 'row' >" +
-            "<div class = 'col col-sm-6'>";
+            "<div class = 'col col-sm-6'>" +
+            "<span id='idProyecto' class='d-none'>" + datos[i]['pk_idProyecto'] + "</span>";
 
 
         if (datos[i]['estado'] === "Creado") {
@@ -150,13 +152,35 @@ function agregarDatosProyectosAlDoM(datos) {
         $('#capaProyectos #columnasProyectos:last-child').append(carta);
 
     }
+    asignarEventosCartasProyectos();
+
 
 }
 
 /**
  * Funcion encargada de asignar  el evento click a las cartas que contienen el proyecto.
  */
-function asignarEventosCartasProyectos(){
-    //cartasProyectos
-    console.log($('#cartasProyectos'));
+function asignarEventosCartasProyectos() {
+    $('#cartasProyectos ').each(function (i, e) {
+        $(e).click(function () {
+            //reseteamos la idProyecto para que no haya fallos y nos envie a editar un proyecto que no queremos.
+            idProyecto = 0;
+
+            // Obtenemos la id del proyecto, lo cogemos de esta manera porque esta en un span oculto dentro de la "carta";
+            let columna = $(this).children('div')[0];
+            let fila = $(columna).children('div')[0];
+            let aux = $(fila).children('span')[0];
+
+            idProyecto = $(aux).html();
+            //hacemos la llamada a la vista.
+            $('#contenido').empty();
+            $('#contenido').html(preload);
+
+
+            $.post('vistas/proyectos/proyectosVerEditarBorrar.html', function (htmle) {
+                $('#contenido').html(htmle);
+            }, 'html');
+        })
+
+    })
 }

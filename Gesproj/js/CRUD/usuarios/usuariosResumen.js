@@ -395,7 +395,7 @@ function borrarUsuario() {
                         }
 
 
-                        setTimeout(mensaje.modal('hide'), 2000);
+                       // setTimeout(mensaje.modal('hide'), 2000);
 
                         recargarListado();
                     }).fail(function (e) {
