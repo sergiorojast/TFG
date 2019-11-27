@@ -45,10 +45,10 @@ function volverAtras() {
 function validarFormulario() {
     $('#formularioProyecto').validate({
         rules: {
-            'cNombreProyecto': {
+            'eNombreProyecto': {
                 required: true
             },
-            'cDescripcionProyecto': {
+            'eDescripcionProyecto': {
                 required: true,
                 minlength: 10,
                 maxlength: 6000
@@ -202,27 +202,27 @@ function enviarDatosAlServicio() {
                 url: webService,
                 data: {
                     'accion': 'crearProyecto',
-                    'nombre' : nombre,
-                    'descripcion' : descripción,
-                    'horas' : horas,
+                    'nombre': nombre,
+                    'descripcion': descripción,
+                    'horas': horas,
                     'minutos': minutos,
                     'administradores': administradores
                 },
             })
             .done(function (datos) {
                 console.log(datos);
-                if(datos== 1){
-                    mensajeSuccess('El proyecto se creó correctamente','Éxito');
+                if (datos == 1) {
+                    mensajeSuccess('El proyecto se creó correctamente', 'Éxito');
 
                     recargarVista();
 
-                }else if(datos== -1){
+                } else if (datos == -1) {
                     mensajeInfo('No tiene permisos para realizar esta acción');
-                }else if(datos== -2){
+                } else if (datos == -2) {
                     mensajeInfo('El usuario no existe en la base de datos')
-                }else if(datos== -3){
+                } else if (datos == -3) {
                     mensajeWarning('Faltan datos para crear el proyecto');
-                }else if(datos== -4){
+                } else if (datos == -4) {
                     mensajeDanger('Error al almacenar los datos');
                 }
             })
@@ -235,12 +235,12 @@ function enviarDatosAlServicio() {
 
 }
 
-function recargarVista(){
+function recargarVista() {
     $('#contenido').empty();
-        $('#contenido').html(preload);
-    
-    
-         $.post('vistas/proyectos/proyectosCrear.html', function (htmle) {
-            $('#contenido').html(htmle);
-         }, 'html'); 
+    $('#contenido').html(preload);
+
+
+    $.post('vistas/proyectos/proyectosCrear.html', function (htmle) {
+        $('#contenido').html(htmle);
+    }, 'html');
 }

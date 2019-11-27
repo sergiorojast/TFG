@@ -2,6 +2,8 @@
 
 crearProyecto();
 listarProyectosDelPropietario();
+devolverProyectoporID();
+actualizarProyecto();
 
 /**
  * Funcion encargada  de crear proyectos, necesita un nivel de permisos 90
@@ -96,11 +98,40 @@ function listarProyectosDelPropietario()
             $controlador =  new ConectorBD();
 
             $filas = $controlador->consultarBD($consulta);
-            
 
-            echo json_encode( $filas->fetchAll(PDO::FETCH_ASSOC ));
+
+            echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
         } else {
             echo -1;
         }
     }
+}
+
+/**
+ * Funcion encargada de devolver un proyecto reciviendo como parametros el id.
+ * @return -1; // El usuario tiene la sesion caducada o no tiene permisos para realizar esa acción.
+ * @return -2; // El servicio no esta reciviendo parametros correctos.
+ */
+function devolverProyectoporID()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'listarProyectoPorid') {
+        if (gestionarSesionyRol(90) == 1) {
+            if (isset($_POST['idProyecto'])) {
+                $consulta =  "SELECT * FROM proyectos WHERE pk_idProyecto <=> '" . filtrado($_POST['idProyecto']) . "'";
+                $controlador = new ConectorBD();
+
+                $filas  = $controlador->consultarBD($consulta);
+
+                echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
+            } else {
+                echo -2;
+            }
+        } else {
+            echo -1;
+        }
+    }
+}
+
+function actualizarProyecto(){
+
 }
