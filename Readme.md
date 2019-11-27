@@ -20,4 +20,4 @@ Estados de los proyectos.
     -Creado
     -En curso
     -En espera
-    -finalizado
+    -Finalizado
