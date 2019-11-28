@@ -17,25 +17,8 @@ $(function () {
 
 })
 
-function solicitarDatosProyectoID() {
-    $.ajax({
-            type: "POST",
-            url: webService,
-            data: {
-                'accion': 'listarProyectoPorid',
-                'idProyecto': idProyecto
-            },
 
-        })
-        .done(function (datos) {
-            let resultado = JSON.parse(datos);
-            agregarDatos(resultado);
-        })
-        .fail(function (datos) {
-            falloAjax();
-        })
-}
-
+//#region Funcionalidad
 function agregarDatos(datos) {
 
     let nombreProyecto = datos[0]['nombre'];
@@ -228,7 +211,28 @@ function volverAtras() {
         $('#contenido').html(htmle);
     }, 'html');
 }
+//#endregion
 
+//#region  SolicitudDatos
+
+function solicitarDatosProyectoID() {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'listarProyectoPorid',
+                'idProyecto': idProyecto
+            },
+
+        })
+        .done(function (datos) {
+            let resultado = JSON.parse(datos);
+            agregarDatos(resultado);
+        })
+        .fail(function (datos) {
+            falloAjax();
+        })
+}
 function solicitarDatosAdministradores() {
     $.ajax({
             type: "POST",
@@ -281,3 +285,7 @@ function agrearFuncionalidadSelectorAdministradores() {
 function solicitarAdministradoresProyecto() {
 
 }
+//#endregion
+//#region EnvioDeDatos
+
+//#endregion
