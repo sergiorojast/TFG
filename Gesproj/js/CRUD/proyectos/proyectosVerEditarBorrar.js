@@ -8,6 +8,13 @@ $(function () {
     }
     //añadimos eventos para poder volver atras.btn-warning
     $('#volverResumenProyectos').click(volverAtras);
+
+    solicitarDatosAdministradores();
+
+    agrearFuncionalidadSelectorAdministradores();
+
+    solicitarAdministradoresProyecto();
+
 })
 
 function solicitarDatosProyectoID() {
@@ -55,6 +62,7 @@ function agregarDatos(datos) {
     rellenarSelectConEstados(estado);
 
     agregarEventoBotonFinalizar();
+
 
 
 }
@@ -219,4 +227,57 @@ function volverAtras() {
     $.post('vistas/proyectos/proyectosResumen.html', function (htmle) {
         $('#contenido').html(htmle);
     }, 'html');
+}
+
+function solicitarDatosAdministradores() {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'listadoAdministradores'
+            },
+        })
+        .done(function (data) {
+
+            if (isNaN(data)) {
+                let datos = JSON.parse(data);
+
+                for (let i = 0; i < datos.length; i++) {
+                    $('#selectorAdministradores').append("<option value='" + datos[i] + "'> " + datos[i] + " </option>");
+                }
+            } else if (data === -1) {
+                mensajeDanger('Sesion no iniciada')
+            } else {
+                mensajeDanger('No tienes permisos para hacer esta acción');
+            }
+        })
+        .fail(function (data) {
+            falloAjax();
+        })
+}
+
+function agrearFuncionalidadSelectorAdministradores() {
+
+
+    $('#botonSeleccionarAdministradores').click(function () {
+        let correoSeleccionado = $('#selectorAdministradores').val();
+        if (correoSeleccionado !== 'Seleccionar Administradores...') {
+
+            $('#listadoAdministradores').append("<li value='" + correoSeleccionado + "'>" + correoSeleccionado + "</li>");
+            $("#selectorAdministradores option[value='" + correoSeleccionado + "']").remove();
+
+            $("#listadoAdministradores li[value='" + correoSeleccionado + "']").click(function (e) {
+                let correo = $(this).attr('value');
+                $('#selectorAdministradores').append("<option value='" + correo + "'>" + correo + "</option>");
+
+                $("#listadoAdministradores li[value='" + correoSeleccionado + "']").remove()
+            })
+
+        }
+    })
+
+}
+
+function solicitarAdministradoresProyecto() {
+
 }
