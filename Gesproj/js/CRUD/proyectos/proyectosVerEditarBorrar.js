@@ -13,7 +13,7 @@ $(function () {
 
     agrearFuncionalidadSelectorAdministradores();
 
-    solicitarAdministradoresProyecto();
+
 
 })
 
@@ -101,7 +101,6 @@ function rellenarSelectConEstados(estado) {
     cambiarColorSelect();
     validarFormularioUpdate();
 }
-
 /**
  * Funcion encargada de cambiar el color del select dependiendo de lo que tenga seleccionado.
  */
@@ -172,36 +171,6 @@ function validarFormularioUpdate() {
     })
 }
 
-function enviarActualizacionProyecto() {
-    $.ajax({
-            type: "POST",
-            url: webService,
-            data: {
-                'accion': 'actualizarProyecto',
-                'idProyecto': $('#cIDProyecto').val(),
-                'nonbreProyecto': $('#eNombreProyecto').val(),
-                'descripcionProyecto': $('#eDescripcionProyecto').val(),
-                'horas': $('#horas').val(),
-                'minutos': $('#minutos').val(),
-                'estado': $('#selectorDeEstados').val(),
-            },
-        })
-        .done(function (datos) {
-            if (datos == 1) {
-                mensajeSuccess('Proyecto modificado');
-            } else if (datos == -1) {
-                mensajeDanger('No tienes permisos para realizar esta accion');
-            } else if (datos == -2) {
-                mensajeInfo('Error en la conexion con el servicio, Intentelo en unos minutos');
-            } else if (datos == -3) {
-                mensajeWarning("Error en la consulta, Intentelo en unos minutos");
-            }
-        })
-        .fail(function () {
-            falloAjax();
-        })
-}
-
 function volverAtras() {
     $('#contenido').empty();
     $('#contenido').html(preload);
@@ -211,8 +180,28 @@ function volverAtras() {
         $('#contenido').html(htmle);
     }, 'html');
 }
-//#endregion
+/**
+ * Funcion encargada de dibujar los datos del administrador en la lista y eliminar del selector el correo del administrador que ya  este dentro del 
+ * proyecto.
+ * @param {Array} datos 
+ */
+function dibujarAdministradores(datos) {
+    for (let i = 0; i < datos.length; i++) {
 
+
+        $('#listadoAdministradores').append("<li value='" + datos[i]['fk_correo'] + "'>" + datos[i]['fk_correo'] + "</li>");
+
+        // console.log($('#listadoAdministradores li:last').attr('value'));
+
+        $('#selectorAdministradores option').each(function (i, e) {
+
+            if ($(e).val() === $('#listadoAdministradores li:last').attr('value')) {
+                $(e).remove();
+            }
+        })
+    }
+}
+//#endregion
 //#region  SolicitudDatos
 
 function solicitarDatosProyectoID() {
@@ -233,6 +222,7 @@ function solicitarDatosProyectoID() {
             falloAjax();
         })
 }
+
 function solicitarDatosAdministradores() {
     $.ajax({
             type: "POST",
@@ -254,6 +244,8 @@ function solicitarDatosAdministradores() {
             } else {
                 mensajeDanger('No tienes permisos para hacer esta acción');
             }
+
+            solicitarAdministradoresProyecto();
         })
         .fail(function (data) {
             falloAjax();
@@ -283,9 +275,47 @@ function agrearFuncionalidadSelectorAdministradores() {
 }
 
 function solicitarAdministradoresProyecto() {
-
+    $.ajax({
+        type: "POST",
+        url: webService,
+        data: {
+            'accion': 'devolverAdministradores',
+            'idProyecto': idProyecto
+        },
+    }).done(function (datos) {
+        dibujarAdministradores(JSON.parse(datos));
+    }).fail(falloAjax);
 }
 //#endregion
 //#region EnvioDeDatos
 
+function enviarActualizacionProyecto() {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'actualizarProyecto',
+                'idProyecto': $('#cIDProyecto').val(),
+                'nonbreProyecto': $('#eNombreProyecto').val(),
+                'descripcionProyecto': $('#eDescripcionProyecto').val(),
+                'horas': $('#horas').val(),
+                'minutos': $('#minutos').val(),
+                'estado': $('#selectorDeEstados').val(),
+            },
+        })
+        .done(function (datos) {
+            if (datos == 1) {
+                mensajeSuccess('Proyecto modificado');
+            } else if (datos == -1) {
+                mensajeDanger('No tienes permisos para realizar esta accion');
+            } else if (datos == -2) {
+                mensajeInfo('Error en la conexion con el servicio, Intentelo en unos minutos');
+            } else if (datos == -3) {
+                mensajeWarning("Error en la consulta, Intentelo en unos minutos");
+            }
+        })
+        .fail(function () {
+            falloAjax();
+        })
+}
 //#endregion

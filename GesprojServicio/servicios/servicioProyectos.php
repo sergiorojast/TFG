@@ -4,6 +4,7 @@ crearProyecto();
 listarProyectosDelPropietario();
 devolverProyectoporID();
 actualizarProyecto();
+devolverAdministradoresProyecto();
 
 /**
  * Funcion encargada  de crear proyectos, necesita un nivel de permisos 90
@@ -143,7 +144,7 @@ function actualizarProyecto()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'actualizarProyecto') {
         if (gestionarSesionyRol(90) == 1) {
-          //  var_dump($_POST);
+            //  var_dump($_POST);
 
             if (isset($_POST['idProyecto'])) {
 
@@ -172,6 +173,35 @@ function actualizarProyecto()
                 } else {
                     echo -3;
                 }
+            } else {
+                echo -2;
+            }
+        } else {
+            echo -1;
+        }
+    }
+}
+
+/**
+ * Funcion encargada de devolver los correos de los administradores de un proyecto en concreto.
+ * @param idProyecto;
+ * @param accion;
+ * 
+ * @return -1; // Usuario que no tiene permisos para realizar esta acción
+ * @return -2; // el id no esta definido.
+ */
+
+function devolverAdministradoresProyecto()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'devolverAdministradores') {
+        if (gestionarSesionyRol(90) == 1) {
+            if (isset($_POST['idProyecto'])) {
+                $consulta =  "SELECT fk_correo FROM `usuarios:proyectos` WHERE `fk_idProyecto` <=> '" . filtrado($_POST['idProyecto']) . "'";
+                $controlador = new ConectorBD();
+
+                $filas  = $controlador->consultarBD($consulta);
+
+                echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
             } else {
                 echo -2;
             }
