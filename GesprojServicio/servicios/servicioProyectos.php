@@ -40,14 +40,14 @@ function crearProyecto()
                     $administradores = $_POST['administradores'];
 
                     //insertamos el proyecto en la base de datos
-                    $consulta =  "INSERT INTO `proyectos`(`nombre`, `descripcion`, `estado`, `estimacion`) VALUES ('" . $nombre . "','" . $descripcion . "','Creado','" . $estimacion . "')";
+                    $consulta =  "INSERT INTO `Proyectos`(`nombre`, `descripcion`, `estado`, `estimacion`) VALUES ('" . $nombre . "','" . $descripcion . "','Creado','" . $estimacion . "')";
 
                     $conector = new ConectorBD();
                     if ($conector->actualizarBD($consulta)) {
 
                         //obtenemos la id del proyecto
                         $consulta = null;
-                        $consulta =  "Select pk_idProyecto FROM proyectos WHERE nombre <=>'" . $nombre . "' and descripcion <=> '" . $descripcion . "' and estimacion <=>'" . $estimacion . "' ";
+                        $consulta =  "Select pk_idProyecto FROM Proyectos WHERE nombre <=>'" . $nombre . "' and descripcion <=> '" . $descripcion . "' and estimacion <=>'" . $estimacion . "' ";
 
                         $filas = $conector->consultarBD($consulta);
 
@@ -58,7 +58,7 @@ function crearProyecto()
                         // añadimos los datos relacionados  entre los usuarios administradores y los proyectos.
                         for ($i = 0; $i < count($administradores); $i++) {
                             $consulta = null;
-                            $consulta = "INSERT INTO `usuarios:proyectos`(`fk_correo`, `fk_idProyecto`) VALUES('" . $administradores[$i] . "','" . $idProyecto . "')";
+                            $consulta = "INSERT INTO `Usuarios:Proyectos`(`fk_correo`, `fk_idProyecto`) VALUES('" . $administradores[$i] . "','" . $idProyecto . "')";
 
                             if ($conector->actualizarBD($consulta)) { } else {
                                 $token = false;
@@ -93,15 +93,15 @@ function listarProyectosDelPropietario()
     if (isset($_POST['accion']) && $_POST['accion'] === 'listarProyectosPropietario') {
         if (gestionarSesionyRol(90) == 1) {
             $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
-                "FROM `proyectos` , `usuarios:proyectos` WHERE" .
+                "FROM `Proyectos` , `Usuarios:Proyectos` WHERE" .
                 "`fk_idProyecto` <=> `pk_idProyecto` AND `fk_correo` <=> '" . $_SESSION["correo"] . "'";
 
             $controlador =  new ConectorBD();
 
             $filas = $controlador->consultarBD($consulta);
 
-
-            echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
+            //echo $consulta;
+         echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
         } else {
             echo -1;
         }
@@ -124,6 +124,8 @@ function devolverProyectoporID()
                 $filas  = $controlador->consultarBD($consulta);
 
                 echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
+               // var_dump($_POST);
+
             } else {
                 echo -2;
             }
@@ -131,6 +133,8 @@ function devolverProyectoporID()
             echo -1;
         }
     }
+    
+
 }
 
 /**

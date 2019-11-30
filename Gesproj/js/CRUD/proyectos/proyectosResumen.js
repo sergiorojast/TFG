@@ -8,7 +8,7 @@ $(function () {
         $('#contenido').html(preload);
 
 
-        $.post('vistas/proyectos/proyectosCrear.html', function (htmle) {
+        $.post('vistas/Proyectos/proyectosCrear.html', function (htmle) {
             $('#contenido').html(htmle);
         }, 'html');
     })
@@ -20,6 +20,7 @@ $(function () {
  * Funcion encargada de solicitar por medio de ajax los proyectos de usuario.
  */
 function solicitarProyectos() {
+    //console.log(webService);
     $.ajax({
             type: "POST",
             url: webService,
@@ -29,9 +30,11 @@ function solicitarProyectos() {
 
         })
         .done(function (datos) {
-            agregarDatosProyectosAlDoM(JSON.parse(datos));
+            //console.log(datos)
+           agregarDatosProyectosAlDoM(JSON.parse(datos));
         })
         .fail(function (datos) {
+
             falloAjax();
         });
 }
@@ -177,7 +180,7 @@ function asignarEventosCartasProyectos() {
             $('#contenido').html(preload);
 
 
-            $.post('vistas/proyectos/proyectosVerEditarBorrar.html', function (htmle) {
+            $.post('vistas/Proyectos/proyectosVerEditarBorrar.html', function (htmle) {
                 $('#contenido').html(htmle);
             }, 'html');
         })

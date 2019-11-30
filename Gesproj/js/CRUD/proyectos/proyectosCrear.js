@@ -240,7 +240,7 @@ function recargarVista() {
     $('#contenido').html(preload);
 
 
-    $.post('vistas/proyectos/proyectosCrear.html', function (htmle) {
+    $.post('vistas/Proyectos/proyectosCrear.html', function (htmle) {
         $('#contenido').html(htmle);
     }, 'html');
 }

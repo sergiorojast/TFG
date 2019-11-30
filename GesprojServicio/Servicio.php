@@ -46,3 +46,11 @@ require_once('servicios/servicioUsuario.php');
  * @method 
  */
 require_once('servicios/servicioProyectos.php');
+
+
+
+
+//limpio la variable POST
+unset($_POST);
+$_POST = null;
+$_POST = [];

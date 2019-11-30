@@ -3,7 +3,7 @@ var LOGIN = 'http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/Ges
 var cpanel = 'http://localhost/TFG/Gesproj/cpanel.html';
 var js = '/js/';
 
-var repositorioImagenes = 'http://localhost/TFG/GesprojServicio/imagenes';
+var repositorioImagenes = 'http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/GesprojServicio/imagenes';
 
 var preload = "<div class='text-center'><div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div> </div>";
 
