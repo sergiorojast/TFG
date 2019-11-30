@@ -17,8 +17,27 @@ $(function () {
 
 })
 
+//#region funcionalidad
 
-//#region Funcionalidad
+function solicitarDatosProyectoID() {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'listarProyectoPorid',
+                'idProyecto': idProyecto
+            },
+
+        })
+        .done(function (datos) {
+            let resultado = JSON.parse(datos);
+            agregarDatos(resultado);
+        })
+        .fail(function (datos) {
+            falloAjax();
+        })
+}
+
 function agregarDatos(datos) {
 
     let nombreProyecto = datos[0]['nombre'];
@@ -179,27 +198,6 @@ function volverAtras() {
     $.post('vistas/proyectos/proyectosResumen.html', function (htmle) {
         $('#contenido').html(htmle);
     }, 'html');
-}
-/**
- * Funcion encargada de dibujar los datos del administrador en la lista y eliminar del selector el correo del administrador que ya  este dentro del 
- * proyecto.
- * @param {Array} datos 
- */
-function dibujarAdministradores(datos) {
-    for (let i = 0; i < datos.length; i++) {
-
-
-        $('#listadoAdministradores').append("<li value='" + datos[i]['fk_correo'] + "'>" + datos[i]['fk_correo'] + "</li>");
-
-        // console.log($('#listadoAdministradores li:last').attr('value'));
-
-        $('#selectorAdministradores option').each(function (i, e) {
-
-            if ($(e).val() === $('#listadoAdministradores li:last').attr('value')) {
-                $(e).remove();
-            }
-        })
-    }
 }
 //#endregion
 //#region  SolicitudDatos
