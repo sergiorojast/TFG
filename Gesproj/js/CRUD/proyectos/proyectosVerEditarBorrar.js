@@ -11,7 +11,8 @@ $(function () {
 
     solicitarDatosAdministradores();
 
-    agrearFuncionalidadSelectorAdministradores();
+
+
 
 
 
@@ -30,11 +31,13 @@ function solicitarDatosProyectoID() {
 
         })
         .done(function (datos) {
+
             let resultado = JSON.parse(datos);
             agregarDatos(resultado);
         })
         .fail(function (datos) {
             falloAjax();
+
         })
 }
 
@@ -47,7 +50,7 @@ function agregarDatos(datos) {
     let estimacion = datos[0]['estimacion'];
     let estado = datos[0]['estado'];
 
-    //cargamos los datos 
+    //cargamos los datos
     $('#eNombreProyecto').val(nombreProyecto);
     $('#eDescripcionProyecto').val(descripcion);
 
@@ -199,6 +202,60 @@ function volverAtras() {
         $('#contenido').html(htmle);
     }, 'html');
 }
+
+function agrearFuncionalidadSelectorAdministradores() {
+
+
+    $('#botonSeleccionarAdministradores').click(function () {
+        let correoSeleccionado = $('#selectorAdministradores').val();
+        if (correoSeleccionado !== 'Seleccionar Administradores...') {
+
+            $('#listadoAdministradores').append("<li value='" + correoSeleccionado + "'>" + correoSeleccionado + "</li>");
+            $("#selectorAdministradores option[value='" + correoSeleccionado + "']").remove();
+
+            $("#listadoAdministradores li[value='" + correoSeleccionado + "']").click(function (e) {
+                let correo = $(this).attr('value');
+                $('#selectorAdministradores').append("<option value='" + correo + "'>" + correo + "</option>");
+
+                $("#listadoAdministradores li[value='" + correoSeleccionado + "']").remove()
+            })
+
+        }
+    })
+
+}
+
+/**
+ * Funcion encargada de añadir los administradores del proyecto a una lista 
+ * para que el usuario pueda decicir si añadir más  administradores o eliminarlos.
+ * Elimina del Select #selectorAdministradores el nombre que ya este dentro.
+ * @param {JSON} datos ;
+ */
+function dibujarAdministradores(datos) {
+    $('#listadoAdministradores').empty();
+
+    for (let i = 0; i < datos.length; i++) {
+        $('#listadoAdministradores').append("<li value='" + datos[i]['fk_correo'] + "'>" + datos[i]['fk_correo'] + "</li>")
+
+        //Eliminamos la opcion de añadir a este usuario en select
+        $("#selectorAdministradores option").each(function (it, e) {
+            if ($(e).val() === datos[i]['fk_correo']) {
+                // en el caso de que el administrador este en la lista, se elimina.
+                $(e).remove();
+            }
+        })
+        //añadimos el  evento para eliminar el elemento de la lista 
+        $('#listadoAdministradores li:last').click(function (e) {
+            let correo = $(this).attr('value');
+            $('#selectorAdministradores').append("<option value='" + correo + "'>" + correo + "</option>");
+
+            $("#listadoAdministradores li[value='" + correo + "']").remove()
+        })
+
+    }
+
+    agrearFuncionalidadSelectorAdministradores();
+}
 //#endregion
 //#region  SolicitudDatos
 
@@ -250,29 +307,11 @@ function solicitarDatosAdministradores() {
         })
 }
 
-function agrearFuncionalidadSelectorAdministradores() {
-
-
-    $('#botonSeleccionarAdministradores').click(function () {
-        let correoSeleccionado = $('#selectorAdministradores').val();
-        if (correoSeleccionado !== 'Seleccionar Administradores...') {
-
-            $('#listadoAdministradores').append("<li value='" + correoSeleccionado + "'>" + correoSeleccionado + "</li>");
-            $("#selectorAdministradores option[value='" + correoSeleccionado + "']").remove();
-
-            $("#listadoAdministradores li[value='" + correoSeleccionado + "']").click(function (e) {
-                let correo = $(this).attr('value');
-                $('#selectorAdministradores').append("<option value='" + correo + "'>" + correo + "</option>");
-
-                $("#listadoAdministradores li[value='" + correoSeleccionado + "']").remove()
-            })
-
-        }
-    })
-
-}
 
 function solicitarAdministradoresProyecto() {
+    //Añadimos el preload
+    $('#listadoAdministradores').append(preloadAzul);
+
     $.ajax({
         type: "POST",
         url: webService,

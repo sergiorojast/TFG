@@ -5,7 +5,16 @@ var js = '/js/';
 
 var repositorioImagenes = 'http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/GesprojServicio/imagenes';
 
+//preload normales.
 var preload = "<div class='text-center'><div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div> </div>";
+var preloadAzul = "<div class='text-center'><div class='spinner-border text-primary' role='status'><span class='sr-only'>Loading...</span></div> </div>";
+var preloadRojo = "<div class='text-center'><div class='spinner-border text-danger' role='status'><span class='sr-only'>Loading...</span></div> </div>";
+var preloadVerde = "<div class='text-center'><div class='spinner-border text-success' role='status'><span class='sr-only'>Loading...</span></div> </div>";
+
+//preload Pulso colores
+var preloadPulsoVerde = "<div class='container '> <div class='row '><div class='col text-center'><div class='spinner-grow text-success' role='status'><span class='sr-only'>Loading...</span></div></div></div></div>";
+var preloadPulsoRojo = "<div class='container '> <div class='row '><div class='col text-center'><div class='spinner-grow text-danger' role='status'><span class='sr-only'>Loading...</span></div></div></div></div>";
+var preloadPulsoAzul = "<div class='container '> <div class='row '><div class='col text-center'><div class='spinner-grow text-primary' role='status'><span class='sr-only'>Loading...</span></div></div></div></div>";
 
 
 
