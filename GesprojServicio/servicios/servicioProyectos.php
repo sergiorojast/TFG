@@ -101,7 +101,7 @@ function listarProyectosDelPropietario()
             $filas = $controlador->consultarBD($consulta);
 
             //echo $consulta;
-         echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
+            echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
         } else {
             echo -1;
         }
@@ -118,13 +118,13 @@ function devolverProyectoporID()
     if (isset($_POST['accion']) && $_POST['accion'] === 'listarProyectoPorid') {
         if (gestionarSesionyRol(90) == 1) {
             if (isset($_POST['idProyecto'])) {
-                $consulta =  "SELECT * FROM proyectos WHERE pk_idProyecto <=> '" . filtrado($_POST['idProyecto']) . "'";
+                $consulta =  "SELECT * FROM Proyectos WHERE pk_idProyecto <=> '" . filtrado($_POST['idProyecto']) . "'";
                 $controlador = new ConectorBD();
 
                 $filas  = $controlador->consultarBD($consulta);
 
                 echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
-               // var_dump($_POST);
+                // var_dump($_POST);
 
             } else {
                 echo -2;
@@ -133,8 +133,6 @@ function devolverProyectoporID()
             echo -1;
         }
     }
-    
-
 }
 
 /**
@@ -167,10 +165,13 @@ function actualizarProyecto()
 
                 $idProyecto =  (int) $_POST['idProyecto'];
 
-                $consulta = "UPDATE `proyectos` SET `nombre`='" . filtrado($_POST['nonbreProyecto']) . "',`descripcion`='" . filtrado($_POST['descripcionProyecto']) . "',`estado`='" . filtrado($_POST['estado']) . "',`estimacion`='" . $estimacion
+                $consulta = "UPDATE `Proyectos` SET `nombre`='" . filtrado($_POST['nonbreProyecto']) . "',`descripcion`='" . filtrado($_POST['descripcionProyecto']) . "',`estado`='" . filtrado($_POST['estado']) . "',`estimacion`='" . $estimacion
                     . "' WHERE `pk_idProyecto` <=> '" .  $idProyecto . "'";
 
+                //echo $consulta;
+
                 $controlador = new ConectorBD();
+
 
                 if ($controlador->actualizarBD($consulta)) {
                     echo 1;
@@ -200,7 +201,7 @@ function devolverAdministradoresProyecto()
     if (isset($_POST['accion']) && $_POST['accion'] === 'devolverAdministradores') {
         if (gestionarSesionyRol(90) == 1) {
             if (isset($_POST['idProyecto'])) {
-                $consulta =  "SELECT fk_correo FROM `usuarios:proyectos` WHERE `fk_idProyecto` <=> '" . filtrado($_POST['idProyecto']) . "'";
+                $consulta =  "SELECT fk_correo FROM `Usuarios:Proyectos` WHERE `fk_idProyecto` <=> '" . filtrado($_POST['idProyecto']) . "'";
                 $controlador = new ConectorBD();
 
                 $filas  = $controlador->consultarBD($consulta);
