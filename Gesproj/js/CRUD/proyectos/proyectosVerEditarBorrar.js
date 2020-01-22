@@ -1,6 +1,6 @@
 $(function () {
     //si id de producto es 0 quiere decir que hubo un fallo.
-    if (idProyecto !== 0) {
+    if (idProyecto !== -1) {
         $('#cIDProyecto').val(idProyecto);
         solicitarDatosProyectoID();
     } else {
@@ -90,6 +90,7 @@ function agregarEventoBotonFinalizar() {
 
 function rellenarSelectConEstados(estado) {
     let selector = $('#selectorDeEstados');
+    let boton = $('#botonModificar');
     if (estado === 'Creado') {
         selector.addClass('btn-info');
         selector.append("<option selected value='Creado'>Creado</option>");
@@ -111,14 +112,19 @@ function rellenarSelectConEstados(estado) {
 
         selector.append("<option value='En espera'>En espera</option>");
     }
+
     if (estado === 'Finalizado') {
-        selector.addClass('btn-secondary');
-        selector.append("<option selected value='Finalizado'>Finalizado</option>");
-
-    } else {
-        selector.append("<option value='Finalizado'>Finalizado</option>");
-
+        boton.addClass('d-none');
+        selector.addClass('d-none');
     }
+    // if (estado === 'Finalizado') {
+    //     selector.addClass('btn-secondary');
+    //     selector.append("<option selected value='Finalizado'>Finalizado</option>");
+
+    // } else {
+    //     selector.append("<option value='Finalizado'>Finalizado</option>");
+
+    // }
 
     cambiarColorSelect();
     validarFormularioUpdate();

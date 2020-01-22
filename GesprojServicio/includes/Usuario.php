@@ -2,12 +2,12 @@
 
 class Usuario
 {
-    private $correo;
-    private $nombre;
-    private $apellidos;
-    private $contrasenia;
-    private $rol;
-    private $imagen;
+    private $correo ="";
+    private $nombre ="";
+    private $apellidos="";
+    private $contrasenia="";
+    private $rol= 0;
+    private $imagen ="";
 
     /**
      * Constructores
@@ -39,27 +39,27 @@ class Usuario
     /**
      * zona de setters
      */
-    private function setCorreo($correo): void
+    public function setCorreo($correo): void
     {
         $this->correo = $correo;
     }
-    private function setNombre($nombre): void
+    public function setNombre($nombre): void
     {
         $this->nombre  = $nombre;
     }
-    private function setApellidos($apellidos): void
+    public function setApellidos($apellidos)
     {
         $this->apellidos  = $apellidos;
     }
-    private function setContrasenia($contrasenia): void
+    public function setContrasenia($contrasenia): void
     {
         $this->contrasenia = $contrasenia;
     }
-    private function setRol($rol): void
+    public function setRol($rol): void
     {
         $this->rol = $rol;
     }
-    private function setImagen($imagen)
+    public function setImagen($imagen)
     {
         $this->imagen = $imagen;
     }

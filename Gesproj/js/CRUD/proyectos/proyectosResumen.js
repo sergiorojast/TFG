@@ -1,5 +1,5 @@
 //variable que nos ayuda a pasarnos la id del proyecto entre las vistas
-var idProyecto = 0;
+var idProyecto = -1;
 $(function () {
 
     //Añadimos la funcion al boton de crear proyectos

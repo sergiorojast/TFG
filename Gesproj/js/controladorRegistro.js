@@ -112,58 +112,48 @@ function validacionFormulario() {
 }
 
 function enviarDatosRegistro(form) {
-    //let imagen =$('#rImagen').prop('files')[0];
-    //console.dir(form);
-
-
-    //datos.append('nombre', $('#rCorreo').val());
-    //datos.append('imagen', $('#rImagen')[0].files[0]);
-    //console.log(datos);
+ 
 
     $.ajax({
             type: "POST",
             url: webService,
-            data:{
-                'accion':'registro',
-                'rCorreo': $('#rCorreo').val(),
-                'rNombre': $('#rNombre').val(),
-                'rApellidos' :$('#rApellidos').val(),
-                'rContrasenia': $('#rContrasenia').val()
-            } ,
+            data: new FormData(form),
+            contentType: false,
+            cache: false,
+            processData: false,
 
         })
-        .done(function (data) {
-            console.log(data)
-            let mensaje;
-            resultado = parseInt(data);
+        .done(function (datos) {
+            console.log(datos)
+            console.log(typeof(datos));
+           let dato = parseInt(datos);
+           console.log(typeof(dato));
 
-            if (resultado === 1) {
-                $('.alertas').empty()
-            
-                let mensaje = mensajeSuccess("Usuario creado con éxito","¡Éxito!",3);
-                setTimeout(function () {
-                    window.location = "login.html";
-                },3000)
-
-
-            } else if (resultado === -1) {
-                
-        
-                mensajeDanger("Correo no valido", "ERROR")
-
-            } else if (resultado === -2 || resultado === -3) {
-            
-                mensajeInfo("El correo introducido ya esta en uso", "Información");
+            if (dato == 1) {
+                mensajeSuccess("El  usuario se ha creado correctamente, se procedera a la redirección para el acceso", "Exito");
+                //redireccionamos al login
+                setTimeout (redireccionarLogin, 5000);
             }
-            $('#lEnviar').removeClass('disabled');
-            $('#lEnviar').html('Enviar');
-            
-        })
-        .fail(function (data) {
-           falloAjax();
-           setTimeout(function(i){
-            window.location = "registro.html";
-           }, 5000);
+            if (dato == -1) {
+                mensajeDanger("El correo introducido no es valido", "Error en la dirección de correo");
+            }
+            if (dato == -2) {
+                mensajeDanger("Error en el acceso a la base de datos", "Contacte con el programador.");
 
-        });
+            }
+            if (dato == -3) {
+                mensajeWarning("La direccion de correo ya esta en uso", "Error en la dirección de correo");
+            }
+            $('#lEnviar').html("Enviar");
+
+            setTimeout($(form)[0].reset(),5000);
+        })
+        .fail(function (datos) {
+            falloAjax();
+            $('#lEnviar').html("Enviar");
+        })
+   
+}
+function redireccionarLogin(){
+    window.location="./login.html";
 }

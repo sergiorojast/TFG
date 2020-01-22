@@ -1,7 +1,7 @@
 <?php
 
 
-//direccion del login
+
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -64,20 +64,38 @@ function login()
  */
 function registro()
 {
-    $login = 'http://localhost/TFG/Gesproj/login.html';
+    $usuario = null;
+    //variable encargada de controlar si la imagen se sube al servidor.
+    $subidaImagen = false;
     if (isset($_POST['accion']) && $_POST['accion'] === 'registro') {
 
+
         if (isset($_POST['rCorreo']) && isset($_POST['rNombre']) && isset($_POST['rApellidos']) && isset($_POST['rContrasenia'])) {
+            $usuario = new Usuario();
 
 
-            //   if (count($_FILES) === 1 || $_FILES['rImagen']['name'] != '') {
-            //      if (explode('/', $_FILES['rImagen']['type'])[1] == "png" || explode('/', $_FILES['rImagen']['type'])[1] == "jpeg" || explode('/', $_FILES['rImagen']['type'])[1] == "jpg" || explode('/', $_FILES['rImagen']['type'])[1] == "svg") {
+            //Si la imagen no corresponde o no cumple los filtrados, se le asignara una imagen por defecto.
+            if (count($_FILES) === 1 || $_FILES['rImagen']['name'] != '') {
+                if (explode('/', $_FILES['rImagen']['type'])[1] == "png" || explode('/', $_FILES['rImagen']['type'])[1] == "jpeg" || explode('/', $_FILES['rImagen']['type'])[1] == "jpg" || explode('/', $_FILES['rImagen']['type'])[1] == "svg") {
 
 
-            //     if ($_FILES['rImagen']['size'] <= 1000000) {
+                    if ($_FILES['rImagen']['size'] <= 1000000) {
 
-            //      $nombreImagen = hash('md5', $_FILES['rImagen']['tmp_name']) . rand(0, 10000) . "." . explode('/', $_FILES['rImagen']['type'])[1];
-            //echo $nombreImagen;
+                        $nombreImagen = hash('md5', $_FILES['rImagen']['tmp_name']) . rand(0, 10000) . "." . explode('/', $_FILES['rImagen']['type'])[1];
+                        //echo $nombreImagen;
+                        $usuario->setImagen($nombreImagen);
+                        $subidaImagen = true;
+                    } else {
+                        $usuario->setImagen('default.png');
+                    }
+                } else {
+                    $usuario->setImagen('default.png');
+                }
+            } else {
+                $usuario->setImagen('default.png');
+            }
+
+
 
 
 
@@ -89,6 +107,11 @@ function registro()
             $contrasenia = password_hash($_POST['rContrasenia'], PASSWORD_BCRYPT);
             $rol  = 0;
             //var_dump($_FILES);
+            $usuario->setCorreo($correo);
+            $usuario->setNombre($nombre);
+            $usuario->setApellidos($apellidos);
+            $usuario->setContrasenia($contrasenia);
+            $usuario->setRol($rol);
 
             if (!comprobarUsuario($correo)) {
 
@@ -97,47 +120,29 @@ function registro()
                 //procesamos los datos 
                 if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
 
-                    $consulta =  "INSERT INTO Usuarios(pk_correo,nombre,apellidos,imagen,contrasenia,rol,estado)" .
-                        " VALUES('" . $correo . "','"
-                        . $nombre . "','"
-                        . $apellidos . "', 'default.png','"
-                        . $contrasenia . "',"
-                        . $rol . ","
-                        ."'NoActivo')";
+                    $consulta =  "INSERT INTO Usuarios(pk_correo,nombre,apellidos,imagen,contrasenia,rol)" .
+                        " VALUES('" . $usuario->getCorreo() . "','"
+                        . $usuario->getNombre() . "','"
+                        . $usuario->getApellidos() . "', '" . $usuario->getImagen() . "','"
+                        . $usuario->getContrasenia() . "',"
+                        . $usuario->getRol() . ")";
 
 
                     if ($controlador->actualizarBD($consulta)) {
-                        //       move_uploaded_file($_FILES['rImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
-
+                        if ($subidaImagen) {
+                            move_uploaded_file($_FILES['rImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
+                        }
                         echo 1;
-
-                        //  header('Location:' . $login);
                     } else {
-                        echo -2;
+                        echo -2; //error en la consulta
                     }
                 } else {
                     echo -1; //error en el correo
 
                 }
             } else {
-                echo -3;
+                echo -3; //usuario ya existe
             }
-
-
-
-
-            // $controlador->cerrarBD();
-            /*    } else {
-                        echo -5; // tamaño de la imagen demasiado grande
-                    }
-                } else {
-                    echo -6; // no es una imagen permitida
-                }
-            } else {
-                echo -4; // sin imagen.
-            } */
-        } else {
-            echo -3; // faltan datos.
         }
     }
 }
