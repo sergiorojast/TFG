@@ -151,11 +151,18 @@ function visualizarDatos()
  * @return -2; fallo en la insercioón en la base de datos.
  * @return -3; las contraseñas no coinciden.
  * @return -4; No puedes modificar el ususario que estas usando.
+ * @return -5; La imagen es demasiado grande.
  */
 function editarUsuario()
 {
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'editarUsuario') {
+        // variable encargada de controlar si la imagen sera sustituida en el servidor.
+        $subidaImagen = false;
+
+        $controlador = new ConectorBD();
+
+        $nombreImagenAntigua = "";
 
         if (isset($_POST['correo'])) {
             $correo = filtrado($_POST['correo']);
@@ -166,9 +173,16 @@ function editarUsuario()
                     $correoEditar = filtraCorreo($_POST['eCorreo']);
                     $nombre  = filtrado($_POST['eNombre']);
                     $apellidos = filtrado($_POST['eApellidos']);
-                    $rol = $_POST['eRol'];
+                    $rol = filtrado($_POST['eRol']);
+                    if ($rol === "usuario") {
+                        $rol = 0;
+                    } else if ($rol === "moderador") {
+                        $rol = 50;
+                    } else if ($rol === "administrador") {
+                        $rol = 90;
+                    }
 
-                    //var_dump($_POST);
+                    //             //var_dump($_POST);
                     $consulta = "UPDATE `Usuarios` SET";
 
                     if ($correoEditar !== $correo) {
@@ -176,8 +190,31 @@ function editarUsuario()
                     }
 
                     $consulta .= "`nombre`='$nombre',`apellidos`='$apellidos',";
-                    ////////////////////////////////
-                    //imagen/////
+                    //             ////////////////////////////////
+                    //             //imagen/////
+
+                    if (count($_FILES) === 1 || $_FILES['eImagen']['name'] != '') {
+                        if (explode('/', $_FILES['eImagen']['type'])[1] == "png" || explode('/', $_FILES['eImagen']['type'])[1] == "jpeg" || explode('/', $_FILES['eImagen']['type'])[1] == "jpg" || explode('/', $_FILES['eImagen']['type'])[1] == "svg") {
+
+
+                            if ($_FILES['eImagen']['size'] <= 1000000) {
+
+                                $nombreImagen = hash('md5', $_FILES['eImagen']['tmp_name']) . rand(0, 10000) . "." . explode('/', $_FILES['eImagen']['type'])[1];
+                                //echo $nombreImagen;
+                                $consulta .= "`imagen`='$nombreImagen',";
+                                $subidaImagen = true;
+                                //consultamos para almacenar el nombre de la imagen del usuario anterior.accordion
+                                $consultaImagen = "SELECT imagen FROM Usuarios WHERE pk_correo='$correo'";
+
+                                $row = $controlador->consultarBD($consultaImagen);
+                                while ($fila = $row->fetch()) {
+                                    $nombreImagenAntigua = $fila['imagen'];
+                                }
+                            } else {
+                                echo -5; //la imagen es demasiado grande.
+                            }
+                        }
+                    }
 
 
                     if (!empty($_POST['eContrasenia']) && !empty($_POST['eContrasenia2'])) {
@@ -191,14 +228,29 @@ function editarUsuario()
                     $consulta .= " `rol`='$rol' WHERE `pk_correo`='$correo'";
 
 
-                    $controlador = new ConectorBD();
+
 
 
                     if ($controlador->actualizarBD($consulta)) {
-                        echo 1;
+                        //si la imagen no es actualizada, devolveremos ok.
+                        if ($subidaImagen) {
+                            //borramos la imagen anterior y movemos la nueva.
+                            unlink("imagenes/$nombreImagenAntigua");
+
+                            //movemos la imagen nueva.
+
+                            move_uploaded_file($_FILES['eImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
+                            echo 1;
+                        } else {
+                            echo 1;
+                        }
                     } else {
                         echo -2;
                     }
+
+
+
+
                     // $controlador->cerrarBD();
                 } else {
                     echo -1;
@@ -298,23 +350,23 @@ function devolverRoles()
  * @return -1; No existe una sesion iniciaza.
  * @return -2; El usuario que tiene la sesion iniciada no tiene los permisos necesario.
  */
-function devolverAdministradores(){
+function devolverAdministradores()
+{
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'listadoAdministradores') {
-        if(gestionarSesionyRol(90) == 1){
+        if (gestionarSesionyRol(90) == 1) {
             $controlador =  new ConectorBD();
             $resultado = [];
 
             $consulta = "select pk_correo  from Usuarios where rol >= 90";
-           
+
             $filas = $controlador->consultarBD($consulta);
             $filas->setFetchMode(PDO::FETCH_NUM);
-            
-            echo json_encode($filas->fetchAll());
 
-        }else if(gestionarSesionyRol(90) == -1){
+            echo json_encode($filas->fetchAll());
+        } else if (gestionarSesionyRol(90) == -1) {
             echo -1;
-        }else if(gestionarSesionyRol(90) == -2){
+        } else if (gestionarSesionyRol(90) == -2) {
             echo -2;
         }
     }

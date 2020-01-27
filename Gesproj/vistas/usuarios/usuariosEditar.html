@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col col-lg-6">
                                 <div class="form-group">
                                     <label for="eNombre" class="col-form-label">Nombre</label>
 
@@ -35,7 +35,7 @@
 
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col col-lg-6">
                                 <div class="form-group">
                                     <label for="eApellidos" class="col-form-label">Apellidos</label>
 
@@ -45,54 +45,66 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
+                            <div class="col col-lg-6">
                                 <div class="form-group">
                                     <label for="eContrasenia" class="col-form-label">Nueva contraseña</label>
 
-                                    <input type="text" class="form-control" id="eContrasenia" name="eContrasenia">
+                                    <input type="password" class="form-control" id="eContrasenia" name="eContrasenia">
 
                                 </div>
                             </div>
-                            <div class="col">
+                            <div class="col col-lg-6">
                                 <div class="form-group">
                                     <label for="eContrasenia2" class="col-form-label">Repita la nueva contraseña</label>
 
-                                    <input type="text" class="form-control" id="eContrasenia2" name="eContrasenia2">
+                                    <input type="password" class="form-control" id="eContrasenia2" name="eContrasenia2">
 
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col rango">
-
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-
-                                <!-- SUbir imaganes -->
-                                <!--  <div class="custom-file">
-
-                                    <div id="file-up" class="disabled">
-                                        <input type="file" class="custom-file-input " id="eImagen" lang="es" name="eImagen" accept="image/*">
-
-
-                                        <label class="custom-file-label" for="eImagen">Suba una imagen para el
-                                            usuario</label>
+                        <div class="row mb-2">
+                            <div class="col col-lg-6">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="selectRol" class="col-form-label">Rol</label>
+                                            <select name="eRol" id="selectRol" class="form-control ">
+                                                <option value="usuario">Usuario</option>
+                                                <option value="moderador">Moderador</option>
+                                                <option value="administrador">Administrador</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div> -->
+                                </div>
+                                <hr class="separadorOscuro">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="custom-file">
+
+                                            <div id="file-up" class="disabled">
+                                                <input type="file" class="custom-file-input col-form-label" id="eImagen"
+                                                    lang="es" name="eImagen" accept="image/*">
+
+
+                                                <label class="custom-file-label" for="eImagen">Imagen</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class=" col text-center">
-                                <img id='imagenActual' class="img-fluid rounded-circle  w-25 m-auto"
+                            <div class="col col-lg-6">
+                                <img id='imagenActual' class="img-fluid rounded-circle imagenUsuarioEditar"
                                     alt="imagen del usuario actual">
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col col-md-4 btn-group offset-md-4 text-center mb-2">
                                 <button id='volverAtras' class="btn btn-secondary">Atrás</button>
                                 <button class="btn btn-warning" type="submit" name="modificarButton">Modificar</button>
                             </div>
                         </div>
+
                     </div>
                 </form>
             </div>

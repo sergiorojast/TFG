@@ -55,7 +55,7 @@ function solicitarYPintarDatos() {
                     rolEnTexto = "<span class='text-danger'>Administrador</span>";
                 } else if (e.rol >= 50 && e.rol < 90) {
                     usuarioAvanzado++;
-                    rolEnTexto = "<span class='text-warning'>Avanzado</span>";
+                    rolEnTexto = "<span class='text-warning'>Moderador</span>";
 
                 } else {
                     usuarioNormal++;
