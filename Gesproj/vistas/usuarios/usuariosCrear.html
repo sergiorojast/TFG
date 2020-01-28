@@ -11,90 +11,116 @@
             <hr>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <form>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-11">
-                            <div class="form-group row">
-                                <label for="cCorreo" class="col-form-label col-2">Email </label>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-8  card mb-2">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="text-center">Creación de usuario</h5>
+                        <form id="formularioCreacion">
+                            <input type="hidden" name="accion" value="registro">
+                            <div class="row">
                                 <div class="col">
-                                    <input type="email" class="form-control" id="cCorreo" name="cCorreo">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group row">
-                                <label for="cNombre" class="col-sm-3 col-form-label">Nombre</label>
-                                <div class="col-sm">
-                                    <input type="text" class="form-control" id="cNombre" name="cNombre">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group row">
-                                <label for="cApellidos" class="col-sm-3 col-form-label">Apellidos</label>
-                                <div class="col-sm">
-                                    <input type="text" class="form-control" id="cApellidos" name="cApellidos">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="form-group row">
-                                <label for="cContrasenia" class="col-sm-3 col-form-label">Contraseña</label>
-                                <div class="col-sm">
-                                    <input type="text" class="form-control" id="cContrasenia" name="cContrasenia">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group row">
-                                <label for="cContrasenia2" class="col-sm-3 col-form-label"> </label>
-                                <div class="col-sm">
-                                    <input type="text" class="form-control" id="cContrasenia2" name="cContrasenia2">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-11">
-                            <div class="offset-2 form-group">
-                                <div class="custom-file">
-
-                                    <div id="file-up">
-                                        <input type="file" class="custom-file-input" id="rImagen" lang="es"
-                                            name="rImagen" accept="image/*">
-
-
-                                        <label class="custom-file-label disabled" for="rImagen">Suba una imagen para el
-                                            usuario</label>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Correo</label>
+                                        <input type="email" class="form-control" name="rCorreo" id="rCorreo">
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="text-center m-3">
-                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                    <button type="button" id="botonCancelar" class="btn btn-danger"> <span
-                                            class="fa fa-times"></span> Cancelar </button>
-                                    <button type="reset" class="btn btn-info"> <span class="fa fa-trash"></span> reset
-                                    </button>
-                                    <button type="button" id="botonEnviar" class="btn btn-success"> <span
-                                            class="fa fa-upload"></span> Crear </button>
+                            <div class="row">
+                                <div class="col col-lg-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Nombre</label>
+                                        <input type="text" class="form-control" name="rNombre" id="rNombre">
+                                    </div>
+                                </div>
+                                <div class="col col-lg-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Apellidos</label>
+                                        <input type="text" class="form-control" name="rApellidos" id="rApellidos">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="col col-lg-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Contraseña</label>
+                                        <input type="password" class="form-control" name="rContrasenia" id="rContrasenia">
+                                    </div>
+                                </div>
+                                <div class="col col-lg-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Repita la contraseña</label>
+                                        <input type="password" class="form-control" name="rContrasenia2"
+                                            id="rContrasenia2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <div class="custom-file">
+
+                                            <div id="file-up">
+                                                <input type="file" class="custom-file-input" id="rImagen" lang="es"
+                                                    name="rImagen" accept="image/*">
+
+
+                                                <label class="custom-file-label" for="rImagen">Suba una imagen para el
+                                                    usuario</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-center mb-2">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="reset" class="btn btn-info"> <i class="fas fa-trash"></i>
+                                            Borrar</button>
+                                        <button type="button" id="lEnviar" class="btn btn-success"><i class="fas fa-upload"></i>
+                                            Crear</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
                     </div>
                 </div>
-            </form>
+
+            </div>
+            <div class="col-12 col-lg-3 offset-lg-1 ">
+                <div class="card m-1 p-2">
+                    <h5 class="text-center">Enviar Invitación</h5>
+                    <form id="formularioInvitacion">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Correo</label>
+                            <input type="email" class="form-control" name="iCorreo" id="iCorreo">
+                            <small id="emailHelp" class="form-text text-muted">Se le enviará al usuario una invitación
+                                por
+                                correo, el rellenara sus datos.</small>
+                        </div>
+                        <div class="text-center mb-1">
+                            <button type="button" id="botonInvitacion" class="btn btn-primary m-auto"> <i
+                                    class="fas fa-envelope"></i> Enviar</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center mb-3">
+                <button id='volverAtras' class="btn btn-secondary"> <i class="fa fa-chevron-left"></i> Atrás</button>
+            </div>
         </div>
     </div>
 </div>
+
+
+<script>
+    url = undefined;
+    url = 'js/CRUD/usuarios/usuariosCrear.js';
+    $.getScript(url);
+</script>
