@@ -2,13 +2,21 @@
 
 
 
-include("./includes/ConectorBD.php");
-include("./includes/Usuario.php");
+include_once("./includes/ConectorBD.php");
+include_once("./includes/Usuario.php");
+
+require_once "includes/phpMailer/src/Exception.php";
+require_once "includes/phpMailer/src/PHPMailer.php";
+require_once "includes/phpMailer/src/SMTP.php";
+
 
 
 session_start();
 
-include("./function.php");
+include_once("./function.php");
+
+
+include_once("./notificaciones.php");
 
 
 

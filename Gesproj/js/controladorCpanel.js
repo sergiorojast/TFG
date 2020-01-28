@@ -147,12 +147,13 @@ function aniadeFuncionalidadBotonesBarraLateral() {
         });
       });
   }
-  function cargarProyectos(){
+
+  function cargarProyectos() {
     comprobarSesion();
     $('#contenido').empty();
     $('#contenido').html(preload);
-  
-  
+
+
     $.post('vistas/Proyectos/proyectosResumen.html', function (htmle) {
       $('#contenido').html(htmle);
     }, 'html');
@@ -169,7 +170,7 @@ function comprobarSesion() {
 
     })
     .done(function (data) {
-      
+
       //si la llamada ajax nos devuelve un string con dos corchetes quiere decir que no existe sesion alguna.
       if (data == "-1") {
         window.location = 'login.html';
@@ -177,6 +178,7 @@ function comprobarSesion() {
 
     })
     .fail(function (data) {
+
       falloAjax();
     });
 }
@@ -201,7 +203,8 @@ function dibujarDatosUsarioBarraLateral() {
       $('.apellidosUsuario').html(datos['apellidos']);
     })
     .fail(function (data) {
-
+      console.log(data)
+      falloAjax()
     })
 }
 

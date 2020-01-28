@@ -16,6 +16,7 @@ borrarUsuario();
 
 devolverAdministradores();
 
+enviarInvitacion();
 
 
 /**
@@ -368,6 +369,21 @@ function devolverAdministradores()
             echo -1;
         } else if (gestionarSesionyRol(90) == -2) {
             echo -2;
+        }
+    }
+}
+
+/**
+ * Funcion encargada de enviar las invitaciones a los usuarios.
+ */
+function enviarInvitacion()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'enviarNotificacion') {
+        if (gestionarSesionyRol(90) == 1) {
+            $correo = filtraCorreo($_POST['iCorreo']);
+            //echo "dentro";
+            enviarInvitacionUsuario($correo);
+            // echo $correo;
         }
     }
 }

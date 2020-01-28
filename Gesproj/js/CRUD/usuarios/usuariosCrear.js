@@ -148,7 +148,6 @@ function enviarDatosCreacion(form) {
         })
         .fail(function (datos) {
             falloAjax();
-            $('#lEnviar').html("Enviar");
         })
 
 }
@@ -214,8 +213,34 @@ function validarFormularioInvitacion() {
             $('#botonInvitacion').addClass('disabled');
             $('#botonInvitacion').html(preload);
 
+            enviarDatosInvitacion();
 
         }
     })
 
+}
+
+function enviarDatosInvitacion() {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'enviarNotificacion',
+                'iCorreo': $('#iCorreo').val()
+            }
+
+        })
+        .done(function (datos) {
+            if (datos == 1) {
+                mensajeSuccess("Invitación enviada con éxito.")
+                $('#botonInvitacion').removeClass('disabled');
+                $('#botonInvitacion').html(" <i class='fas fa-envelope'></i> Enviar");
+            }else{
+                mensajeDanger("La invitación no se envió.","Error en la notificación");
+            }
+        })
+        .fail(function (datos) {
+            falloAjax();
+
+        })
 }
