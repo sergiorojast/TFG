@@ -8,9 +8,51 @@ use PHPMailer\PHPMailer\Exception;
 function enviarInvitacionUsuario($direccion)
 {
 
+    $urlRegistro = "http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/Gesproj/registro.html?";
+    $urlRegistro .= base64_encode("correo=$direccion");
   
     $subject = "Invitación a Gesproj";
-    $message = 'Mensaje de prueba';
+    $message = "     <style>
+    .boton {
+        
+    }
+            s</style>
+       <img style='margin:auto;display: block;'
+    src='http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/GesprojServicio/imagenes/logoColor.png'>
+
+                <h4>Invitación al registro en la plataforma de gesproj.</h4>
+                <p>Uno de los administradores a introducido esta dirección de correo electronico, si usted a sido informado,
+                por favor cumplimente el siguiente formulario de registro
+                </p>
+                
+                <a style='    display: inline-block;
+                margin-bottom: 0;
+                font-weight: 400;
+                text-align: center;
+                white-space: nowrap;
+                vertical-align: middle;
+                -ms-touch-action: manipulation;
+                touch-action: manipulation;
+                cursor: pointer;
+                background-image: none;
+                border: 1px solid transparent;
+                padding: 6px 12px;
+                font-size: 14px;
+                line-height: 1.42857143;
+                border-radius: 4px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                color: #fff;
+                background-color: #337ab7;
+                border-color: #2e6da4;
+                text-decoration:none;
+                ' href='$urlRegistro'>Registrarse</a>
+                
+
+                <p><a style='text-decoration:none' href='www.rojastorres.es'> Atentamente el equipo de Gesproj</a></p>";
+
 
 
     // Creando una nueva instancia de PHPMailer

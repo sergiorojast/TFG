@@ -375,15 +375,49 @@ function devolverAdministradores()
 
 /**
  * Funcion encargada de enviar las invitaciones a los usuarios.
+ * @return 1;//el correo a sido enviado.
+ * @return -1;//correo no enviado. 
+ * @return -2;//fallo en la consulta 
+ * @return -3;//fallo en el borrado de las invitaciones cumplidas.
  */
 function enviarInvitacion()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'enviarNotificacion') {
         if (gestionarSesionyRol(90) == 1) {
             $correo = filtraCorreo($_POST['iCorreo']);
-            //echo "dentro";
-            enviarInvitacionUsuario($correo);
-            // echo $correo;
+
+
+
+            $conector = new ConectorBD();
+
+            //Obtenemos la fecha actual, y le sumamos 30 minutos.
+            $fechaActual = new DateTime();
+            $fechaActual->modify('+30 minute');
+
+            $consulta = "INSERT INTO `Registros`(`pk_correoInvitacion`, `fechaCaducidadInvitacion`) VALUES ('$correo', '" . $fechaActual->format('Y-m-d H:i:s') . "')";
+
+
+
+            if ($conector->actualizarBD($consulta)) {
+                //envio de correo, devuelve 1 ó -1 si el correo fué enviado o no.
+                enviarInvitacionUsuario($correo);
+            } else {
+                echo -2;
+            }
+
+            //borramos las invitaciones caducadas.
+            $consulta =  "SELECT pk_correoInvitacion FROM Registros where SYSDATE() >= fechaCaducidadInvitacion";
+            //echo $consulta;
+
+            $filas = $conector->consultarBD($consulta);
+
+            while ($fila = $filas->fetch()) {
+                $consulta  = "DELETE FROM Registros WHERE pk_correoInvitacion = '" . $fila[0] . "'";
+
+                if (!$conector->actualizarBD($consulta)) {
+                    echo -3;
+                }
+            }
         }
     }
 }

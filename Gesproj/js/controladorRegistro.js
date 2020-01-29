@@ -1,20 +1,9 @@
 $(document).ready(function () {
 
-
+    comprobarInvitacionValida();
 
     validacionFormulario();
-    //modificarBotonFile();
-    /* 
-        //añadimos funcionalidad al boton de subr imagen
-        $('#botonReal').click(function (e) {
-            $('#rImagen').click();
-        })
-        //cambio del texto dle label de la imagen
-        $('#rImagen').change(function (e) {
-             console.log($('#rImagen')[0].files[0].name)
-           // $('#labelImagen').html($('#rImagen')[0].files[0].name)
-        })
-     */
+
 
     $('#rImagen').on('change', function () {
         //get the file name
@@ -112,7 +101,7 @@ function validacionFormulario() {
 }
 
 function enviarDatosRegistro(form) {
- 
+
 
     $.ajax({
             type: "POST",
@@ -125,14 +114,14 @@ function enviarDatosRegistro(form) {
         })
         .done(function (datos) {
             console.log(datos)
-            console.log(typeof(datos));
-           let dato = parseInt(datos);
-           console.log(typeof(dato));
+            console.log(typeof (datos));
+            let dato = parseInt(datos);
+            console.log(typeof (dato));
 
             if (dato == 1) {
                 mensajeSuccess("El  usuario se ha creado correctamente, se procedera a la redirección para el acceso", "Exito");
                 //redireccionamos al login
-                setTimeout (redireccionarLogin, 5000);
+                setTimeout(redireccionarLogin, 5000);
             }
             if (dato == -1) {
                 mensajeDanger("El correo introducido no es valido", "Error en la dirección de correo");
@@ -146,14 +135,58 @@ function enviarDatosRegistro(form) {
             }
             $('#lEnviar').html("Enviar");
 
-            setTimeout($(form)[0].reset(),5000);
+            setTimeout($(form)[0].reset(), 5000);
         })
         .fail(function (datos) {
             falloAjax();
             $('#lEnviar').html("Enviar");
         })
-   
+
 }
-function redireccionarLogin(){
-    window.location="./login.html";
+
+function redireccionarLogin() {
+    window.location = "./login.html";
+}
+
+function comprobarInvitacionValida() {
+
+    //obtenemos la url.
+    let url = window.location.search;
+    // obtenemos el base64 decodificado a utf8 donde tenemos el correo.
+    let correoURL = atob(url.substr(1));
+    //limpiamos la variable para solo dejar el correoURL.
+    correoURL = correoURL.split("=")[1];
+
+    //console.log(correoURL)
+    //hacemos una llamada ajax para comprobar si tenemos una invitación activa.contenedor
+
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'registroInvitacion',
+                'correo': correoURL
+            }
+        })
+        .done(function (data) {
+            // console.log(data);
+            if (data == 1) {
+
+            } else {
+                $('.contenedorRegistro').empty();
+                bootbox.alert({
+                    title: 'No tiene una invitación valida',
+                    message: "Será redireccionado al login",
+                    size: 'small',
+                    backdrop: true,
+                    callback: function (resultado) {
+                        window.location = "http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/Gesproj";
+                    }
+
+                });
+            }
+        })
+        .fail(function (data) {
+            falloAjax();
+        })
 }

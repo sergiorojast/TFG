@@ -231,16 +231,23 @@ function enviarDatosInvitacion() {
 
         })
         .done(function (datos) {
+            console.log(datos)
             if (datos == 1) {
                 mensajeSuccess("Invitación enviada con éxito.")
-                $('#botonInvitacion').removeClass('disabled');
-                $('#botonInvitacion').html(" <i class='fas fa-envelope'></i> Enviar");
-            }else{
-                mensajeDanger("La invitación no se envió.","Error en la notificación");
+            } else if (datos == -1) {
+                mensajeDanger("La invitación no se envió.", "Error en la notificación");
+            } else if (datos == -2) {
+                mensajeWarning("Posiblemente la invitación ya haya sido enviada", "Error en el almacenamiento de la invitación");
+            } else if (datos == -3) {
+                mensajeInfo("Error, Contacte con el programador", "Error");
             }
+            $('#botonInvitacion').removeClass('disabled');
+            $('#botonInvitacion').html(" <i class='fas fa-envelope'></i> Enviar");
         })
         .fail(function (datos) {
             falloAjax();
+            $('#botonInvitacion').removeClass('disabled');
+            $('#botonInvitacion').html(" <i class='fas fa-envelope'></i> Enviar");
 
         })
 }

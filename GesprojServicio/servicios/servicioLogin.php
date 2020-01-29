@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     login();
     registro();
+    gestionRegistroInvitacion();
 }
 
 /**
@@ -168,4 +169,42 @@ function consultarUsuario($correo): Usuario
     // $controlador->cerrarBD();
 
     return $usuario;
+}
+
+/**
+ * Funcion encargada de gestionar las invitaciones del registro
+ * @return 1; todo ok;
+ * @return -1; el usuario no tiene un invitación o esta caducada.
+ * @return -2; invitacion caducada;
+ */
+function gestionRegistroInvitacion()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'registroInvitacion') {
+
+        if (isset($_POST['correo'])) {
+            //hacemos un filtrado del correo.
+            $correo = filtraCorreo($_POST['correo']);
+
+
+            $consulta = "SELECT * FROM Registros WHERE pk_correoInvitacion = '$correo'";
+            $controlador =  new ConectorBD();
+
+            $filas = $controlador->consultarBD($consulta);
+            if (count($filas) == 1) {
+
+                while ($fila = $filas->fetch()) {
+                    $fechaActual = new DateTime();
+                    $fechaEnvioNotificacion = new DateTime($fila['fechaEnvioNotificacion']);
+                    $fechaCaducidadInvitacion = new DateTime($fila['fechaCaducidadInvitacion']);
+                    if ($fechaActual >= $fechaCaducidadInvitacion) {
+                        echo "-2";// invitacion caducada
+                    } else {
+                        echo "1";//todo ok
+                    }
+                }
+            } else {
+                echo -1; // el usuario no tiene invitacion o a caducado.
+            }
+        }
+    }
 }

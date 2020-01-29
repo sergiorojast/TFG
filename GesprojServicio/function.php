@@ -29,7 +29,7 @@ function gestionarSesionyRol(int $rolNecesario)
         if (controlarRol($rolNecesario)) {
             if (comprobarUsuario($_SESSION['correo'])) {
                 return 1;
-            }else{
+            } else {
                 return -3;
             }
         } else {
