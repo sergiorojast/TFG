@@ -171,7 +171,7 @@ function comprobarInvitacionValida() {
         .done(function (data) {
             // console.log(data);
             if (data == 1) {
-
+                $('#rCorreo').val(correoURL);
             } else {
                 $('.contenedorRegistro').empty();
                 bootbox.alert({

@@ -21,8 +21,8 @@ function enviarInvitacionUsuario($direccion)
     src='http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/GesprojServicio/imagenes/logoColor.png'>
 
                 <h4>Invitación al registro en la plataforma de gesproj.</h4>
-                <p>Uno de los administradores a introducido esta dirección de correo electronico, si usted a sido informado,
-                por favor cumplimente el siguiente formulario de registro
+                <p>Uno de los administradores ha introducido esta dirección de correo electronico, si usted ha sido informado,
+                por favor cumplimente el siguiente formulario de registro.
                 </p>
                 
                 <a style='    display: inline-block;

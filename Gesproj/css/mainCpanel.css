@@ -1,5 +1,3 @@
-
-
 .contenedor {
   height: 100vh;
 
@@ -51,6 +49,7 @@
 .separadorOscuro {
   filter: brightness(40%);
 }
+
 /* Cambio del texto del boton para subir ficheros */
 .custom-file-input~.custom-file-label::after {
   content: "Subir";
@@ -63,7 +62,7 @@
   height: auto;
 }
 
-.imagenUsuarioEditar{
+.imagenUsuarioEditar {
   max-width: 50%;
   height: auto;
 }

@@ -1,4 +1,3 @@
-
 .formulario {
     /* hace referencia al div que contiene el formulario */
     margin-top: 15vh;
@@ -29,7 +28,17 @@
     width: 25%;
 }
  */
- /* Esto cambia el texto del boton de subir ficheros */
- .custom-file-input ~ .custom-file-label::after {
+/* Esto cambia el texto del boton de subir ficheros */
+.custom-file-input~.custom-file-label::after {
     content: "Subir";
+}
+
+.logo_cabecera {
+    width: 5vw;
+    max-width: 200px;
+    padding: 0px;
+    margin: 0px;
+}
+.navbar {
+    height: 10vh;
 }

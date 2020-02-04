@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 /**
- * Funcion encargada de devolver la session de php
+ * Funcion encargada de devolver 1 si la sesion esta iniciada o -1  si no es el caso.
  */
 function ConsultarSession()
 {

@@ -18,6 +18,9 @@ devolverAdministradores();
 
 enviarInvitacion();
 
+datosUsuarioLogueado();
+
+editarUsuarioActual();
 
 /**
  * 
@@ -60,7 +63,7 @@ function devolverUsuarios()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'usuarios') {
         if (isset($_SESSION['correo']) && isset($_SESSION['rol'])) {
-            if ($_SESSION['rol'] > 90) {
+            if ($_SESSION['rol'] >= 90) {
                 try {
 
                     $controlador  = new ConectorBD();
@@ -105,7 +108,7 @@ function visualizarDatos()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'visualizarUsuario') {
         if (isset($_SESSION['correo']) && isset($_SESSION['rol'])) {
-            if ($_SESSION['rol'] > 90) {
+            if ($_SESSION['rol'] >= 90) {
                 if (isset($_POST['correo'])) {
 
                     $correo =  filtrado($_POST['correo']);
@@ -274,7 +277,7 @@ function borrarUsuario()
 
         if (isset($_POST['correoBorrar'])) {
 
-            if (gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar'])) == 1) {
+            if (gestionarUsuarioExiste(90, filtraCorreo($_POST['correoBorrar'])) == 1) {
                 $consulta = "DELETE FROM `Usuarios` WHERE `pk_correo`='" . filtraCorreo($_POST['correoBorrar']) . "'";
 
                 $conector  = new ConectorBD();
@@ -284,9 +287,9 @@ function borrarUsuario()
                 } else {
                     echo -3;
                 }
-            } else if (gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar'])) == -1) {
+            } else if (gestionarUsuarioExiste(90, filtraCorreo($_POST['correoBorrar'])) == -1) {
                 echo -1;
-            } else if (gestionarUsuarioExiste(99, filtraCorreo($_POST['correoBorrar'])) == -2) {
+            } else if (gestionarUsuarioExiste(90, filtraCorreo($_POST['correoBorrar'])) == -2) {
                 echo -2;
             }
         } else {
@@ -384,11 +387,26 @@ function enviarInvitacion()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'enviarNotificacion') {
         if (gestionarSesionyRol(90) == 1) {
+            $conector = new ConectorBD();
+
+            //borramos las invitaciones caducadas.
+            $consulta =  "SELECT pk_correoInvitacion FROM Registros where SYSDATE() >= fechaCaducidadInvitacion";
+            //echo $consulta;
+
+            $filas = $conector->consultarBD($consulta);
+
+            while ($fila = $filas->fetch()) {
+                $consulta  = "DELETE FROM Registros WHERE pk_correoInvitacion = '" . $fila[0] . "'";
+
+                if (!$conector->actualizarBD($consulta)) {
+                    echo -3;
+                }
+            }
             $correo = filtraCorreo($_POST['iCorreo']);
 
 
 
-            $conector = new ConectorBD();
+
 
             //Obtenemos la fecha actual, y le sumamos 30 minutos.
             $fechaActual = new DateTime();
@@ -404,19 +422,158 @@ function enviarInvitacion()
             } else {
                 echo -2;
             }
+        }
+    }
+}
 
-            //borramos las invitaciones caducadas.
-            $consulta =  "SELECT pk_correoInvitacion FROM Registros where SYSDATE() >= fechaCaducidadInvitacion";
-            //echo $consulta;
 
-            $filas = $conector->consultarBD($consulta);
+/**
+ * Funcion encargada de devolver todos los datos del usuario para su posterior edición.
+ * 
+ * 
+ * @return -1;//sesion no iniciada.
+ */
+function datosUsuarioLogueado()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'datosUsuarioInicialesUsuarioLogueado') {
+        if (isset($_SESSION['correo'])) {
 
-            while ($fila = $filas->fetch()) {
-                $consulta  = "DELETE FROM Registros WHERE pk_correoInvitacion = '" . $fila[0] . "'";
+            $consulta =  "SELECT * FROM Usuarios WHERE pk_correo  ='" . $_SESSION['correo'] . "'";
+            $usuario = new Usuario();
 
-                if (!$conector->actualizarBD($consulta)) {
-                    echo -3;
+            $controlador =  new ConectorBD();
+            $filas = $controlador->consultarBD($consulta);
+            while ($fila =  $filas->fetch()) {
+                $usuario->constructorArray($fila);
+                echo json_encode($usuario->devolverDatosArray());
+            }
+        } else {
+            echo -1; //sesion no iniciada.
+        }
+    }
+}
+
+/**
+ * Funcion encargada de modificarl el usuario actual.
+ * @return 1 ; todo ok;
+ * @return -1; El usuario no tiene la sesion iniciada o no tiene permisos para realizar esta accion;
+ * @return -2; fallo en la insercioón en la base de datos.
+ * @return -3; las contraseñas no coinciden.
+ * @return -4; Esta intentando modificar un usuario diferente al de la sesion actual.
+ * @return -5; La imagen es demasiado grande.
+ */
+function editarUsuarioActual()
+{
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'editarUsuarioActual') {
+
+        // variable encargada de controlar si la imagen sera sustituida en el servidor.
+
+        $subidaImagen = false;
+
+        $controlador = new ConectorBD();
+
+        $nombreImagenAntigua = "";
+
+        if (isset($_POST['correo'])) {
+            $correo = filtrado($_POST['correo']);
+            if ($_SESSION['correo'] != filtraCorreo($_POST['eCorreo'])) {
+
+                echo -4;
+            } else {
+                if (gestionarUsuarioExiste(00, $correo)) {
+                    $correoEditar = filtraCorreo($_POST['eCorreo']);
+                    $nombre  = filtrado($_POST['eNombre']);
+                    $apellidos = filtrado($_POST['eApellidos']);
+                    $rol = filtrado($_POST['eRol']);
+                    if ($rol === "usuario") {
+                        $rol = 0;
+                    } else if ($rol === "moderador") {
+                        $rol = 50;
+                    } else if ($rol === "administrador") {
+                        $rol = 90;
+                    }
+
+                    //             //var_dump($_POST);
+                    $consulta = "UPDATE `Usuarios` SET";
+
+                    if ($correoEditar !== $correo) {
+                        $consulta .= "`pk_correo`='$correoEditar',";
+                    }
+
+                    $consulta .= "`nombre`='$nombre',`apellidos`='$apellidos',";
+                    //             ////////////////////////////////
+                    //             //imagen/////
+
+                    if (count($_FILES) === 1 || $_FILES['eImagen']['name'] != '') {
+                        if (explode('/', $_FILES['eImagen']['type'])[1] == "png" || explode('/', $_FILES['eImagen']['type'])[1] == "jpeg" || explode('/', $_FILES['eImagen']['type'])[1] == "jpg" || explode('/', $_FILES['eImagen']['type'])[1] == "svg") {
+
+
+                            if ($_FILES['eImagen']['size'] <= 1000000) {
+
+                                $nombreImagen = hash('md5', $_FILES['eImagen']['tmp_name']) . rand(0, 10000) . "." . explode('/', $_FILES['eImagen']['type'])[1];
+                                //echo $nombreImagen;
+                                $consulta .= "`imagen`='$nombreImagen',";
+                                $subidaImagen = true;
+                                //consultamos para almacenar el nombre de la imagen del usuario anterior.accordion
+                                $consultaImagen = "SELECT imagen FROM Usuarios WHERE pk_correo='$correo'";
+
+                                $row = $controlador->consultarBD($consultaImagen);
+                                while ($fila = $row->fetch()) {
+                                    $nombreImagenAntigua = $fila['imagen'];
+                                }
+                            } else {
+                                echo -5; //la imagen es demasiado grande.
+                            }
+                        }
+                    }
+
+
+                    if (!empty($_POST['eContrasenia']) && !empty($_POST['eContrasenia2'])) {
+                        if ($_POST['eContrasenia'] === $_POST['eContrasenia2']) {
+                            $contrasenia = password_hash($_POST['eContrasenia'], PASSWORD_BCRYPT);
+                            $consulta .= "`contrasenia`='$contrasenia',";
+                        } else {
+                            echo -3;
+                        }
+                    }
+                    $consulta .= " `rol`='$rol' WHERE `pk_correo`='$correoEditar'";
+
+
+                   
+
+
+                    if ($controlador->actualizarBD($consulta)) {
+                        //si la imagen no es actualizada, devolveremos ok.
+                        if ($subidaImagen) {
+                            //borramos la imagen anterior y movemos la nueva.
+                            unlink("imagenes/$nombreImagenAntigua");
+
+                            //movemos la imagen nueva.
+
+                            move_uploaded_file($_FILES['eImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
+
+
+                            //actualizamos los datos de la sesion 
+
+
+                            echo 1;
+                        } else {
+
+                            echo 1;
+                        }
+                    } else {
+                        echo -2;
+                    }
+
+
+
+
+                    // $controlador->cerrarBD();
+                } else {
+                    echo -1;
                 }
+                //  echo $consulta;
             }
         }
     }

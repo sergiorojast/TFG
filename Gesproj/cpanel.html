@@ -8,7 +8,9 @@
     <title>GesProj - cpanel</title>
 
     <!-- <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cosmo/bootstrap.min.css" rel="stylesheet" integrity="sha384-qdQEsAI45WFCO5QwXBelBe1rR9Nwiss4rGEqiszC+9olH1ScrLrMQr1KmDR964uZ" crossorigin="anonymous">
+    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/cosmo/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-qdQEsAI45WFCO5QwXBelBe1rR9Nwiss4rGEqiszC+9olH1ScrLrMQr1KmDR964uZ" crossorigin="anonymous">
+
     <link href="lib/fontAwesome/css/all.css" rel="stylesheet">
     <link href="lib/chart/css/Chart.min.css" rel="stylesheet">
     <link href="lib/toastr-master/toastr.min.css" rel="stylesheet">
@@ -26,6 +28,7 @@
 <body>
 
 
+
     <div id="barraLateral" class="bg-dark text-light float-left">
         <div class="container ">
             <div class="row">
@@ -34,11 +37,12 @@
                 </a>
             </div>
             <div class="row ">
-                <img src="" class="img-fluid img-thumbnail m-auto w-50 usuarioImg" alt="imagen usuarios">
+                <img src="" class="img-fluid img-thumbnail m-auto w-50 usuarioImg" id='imagenUsuario'
+                    alt="imagen usuarios">
 
             </div>
             <div class="row ">
-                <p class="m-auto">
+                <p class="m-auto" id="usuarioActual">
                     <small id="textoBarraLateral" class="nombreUsuario"></small>
                     <small id="textoBarraLateral" class="apellidosUsuario"></small>
                 </p>
@@ -98,31 +102,32 @@
             <hr class="bg-light m-2 separadorOscuro">
             <div class="row ">
                 <div class="col ">
-                <p class="p-0 m-0">
-                    <a class="p-0 m-0 text-light btn botonesBarraLateral">
-                        <span class="fa fa-sticky-note" data-toggle="tooltip" data-placement="right"
-                            title="Anotaciones"></span>
-                        <small id="textoBarraLateral"> Anotaciones</small>
-                    </a>
-                </p>
-            </div>
+                    <p class="p-0 m-0">
+                        <a class="p-0 m-0 text-light btn botonesBarraLateral">
+                            <span class="fa fa-sticky-note" data-toggle="tooltip" data-placement="right"
+                                title="Anotaciones"></span>
+                            <small id="textoBarraLateral"> Anotaciones</small>
+                        </a>
+                    </p>
+                </div>
             </div>
             <hr class="bg-light m-2 separadorClaro">
             <div class="row">
                 <div class="col">
-                <p class="p-0 m-0">
-                    <a class="p-0 m-0 text-light btn botonesBarraLateral" id="cerrarSesion">
-                        <span class="fa fa-sign-out-alt" data-toggle="tooltip" data-placement="right"
-                            title="Cerrar sesión"></span>
-                        <small id="textoBarraLateral"> Cerrar sesión</small>
-                    </a>
-                </p>
-            </div>
+                    <p class="p-0 m-0">
+                        <a class="p-0 m-0 text-light btn botonesBarraLateral" id="cerrarSesion">
+                            <span class="fa fa-sign-out-alt" data-toggle="tooltip" data-placement="right"
+                                title="Cerrar sesión"></span>
+                            <small id="textoBarraLateral"> Cerrar sesión</small>
+                        </a>
+                    </p>
+                </div>
             </div>
             <hr class="bg-light m-2">
         </div>
 
     </div>
+
     <div class="container-fluid contenedor">
 
         <div class="row m-auto" id='filaContenidoPrincipal'>
@@ -131,16 +136,6 @@
             <div class="col-12  p-0">
                 <div class="container-fluid  m-1" id='contenido'>
 
-                    <script>
-                        /*  $(document).ready( function() {
-                                $('#falseinput').click(function(){
-                                  $("#fileinput").click();
-                                });
-                              });
-                              $('#fileinput').change(function() {
-                                $('#selected_filename').text($('#fileinput]')[0].files[0].name);
-                              }); */
-                    </script>
 
                 </div>
 

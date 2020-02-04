@@ -1,5 +1,6 @@
 window.addEventListener('load', function () {
 
+
   comprobarSesion();
   controladorBarraLateral();
   aniadeFuncionalidadBotonesBarraLateral();
@@ -96,6 +97,9 @@ function controladorBarraLateral() {
  * Función creada para añadir los eventos de click.
  */
 function aniadeFuncionalidadBotonesBarraLateral() {
+
+  $('#usuarioActual').click(botonEditarUsuario)
+  $('#imagenUsuario').click(botonEditarUsuario)
   $('#crudUsuarios').click(botonUsuarios);
   $('#cerrarSesion').click(botonCerrarSesion);
   $('#tablero').click(cargarTablero);
@@ -105,7 +109,19 @@ function aniadeFuncionalidadBotonesBarraLateral() {
 
 
   ////AREA DE FUNCIONES PARA LOS BOTONES
+  /**
+   * Función encargada de  editar el usuario actual que tiene la sesion iniciada.
+   */
+  function botonEditarUsuario() {
+    comprobarSesion();
+    $('#contenido').empty();
+    $('#contenido').html(preload);
 
+
+    $.post('vistas/usuarios/usuarioEditarActual.html', function (htmle) {
+      $('#contenido').html(htmle);
+    }, 'html');
+  }
   /**
    * Borramos el contenido de la capa "contenido" y dibujamos los datos de la nueva vista
    */
