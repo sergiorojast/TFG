@@ -70,6 +70,14 @@ function rellenarConDatosUsuario() {
 
         $('#imagenActual').attr('src', repositorioImagenes + "/" + u.imagen);
 
+        if (parseInt(u.rol) >= 90) {
+            $('#administrador').attr('selected', 'true');
+        } else if (parseInt(u.rol) >= 50 && parseInt(u.rol) < 90) {
+            $('#moderador').attr('selected', 'true');
+        } else {
+            $('#usuario').attr('selected', 'true');
+        }
+
 
     }
 }
@@ -131,7 +139,7 @@ function validarFomulario() {
 
             })
             .done(function (data) {
-               
+
 
                 if (data == 1) {
 
@@ -149,22 +157,22 @@ function validarFomulario() {
                 } else if (data == -4) {
 
                     mensajeInfo("No puedes modificar tu usuario desde aquí");
-                }else if(data == -5){
-                    mensajeDanger('Imagen demasiado pesada. El tamaño máximo son 10mb','Error en la imagen');
+                } else if (data == -5) {
+                    mensajeDanger('Imagen demasiado pesada. El tamaño máximo son 10mb', 'Error en la imagen');
                 }
                 //recargamos la vista a los 5 segundos para actualizar los datos y la imagen.
-                setTimeout(function(){
+                setTimeout(function () {
                     $('#contenido').empty();
                     $('#contenido').html(preload);
-                
-                
+
+
                     $.post(' vistas/usuarios/usuariosEditar.html', function (htmle) {
                         $('#contenido').html(htmle);
                     }, 'html');
-                
 
-                   
-                },5000)
+
+
+                }, 5000)
 
             }).fail(function (e) {
                 falloAjax();

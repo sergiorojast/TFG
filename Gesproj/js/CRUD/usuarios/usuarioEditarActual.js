@@ -9,6 +9,7 @@ $(function () {
 
     cargarTituloImagen();
 
+    funcionalidadSelectorTemas();
 
 
 })
@@ -149,19 +150,116 @@ function validarFomularioEdicion() {
                 if (resultado == 1) {
                     mensajeSuccess("Los datos representados en la interfaz se mostraran en el próximo acceso.", "Usuario Actualizado con exito");
                 } else if (resultado == -1) {
-                    mensajeDanger('Se ha producido un error en la sesion','Error en la sesión.');
+                    mensajeDanger('Se ha producido un error en la sesion', 'Error en la sesión.');
                 } else if (resultado == -2) {
-                    mensajeDanger('Se ha producido un error en la conexion a la base de datos','Error de conexión.')
+                    mensajeDanger('Se ha producido un error en la conexion a la base de datos', 'Error de conexión.')
                 } else if (resultado == -3) {
-                    mensajeDanger('Las contraseñas no coninciden','Error en los datos.')
+                    mensajeDanger('Las contraseñas no coninciden', 'Error en los datos.')
                 } else if (resultado == -4) {
-                    mensajeDanger('Se esta intentando modificar un usuario diferente al de la sesion actual.','Error')
-                }else if (resultado == -5) {
-                    mensajeDanger('El tamaño de la imagen es demasiado grande.','Error de imagen.')
+                    mensajeDanger('Se esta intentando modificar un usuario diferente al de la sesion actual.', 'Error')
+                } else if (resultado == -5) {
+                    mensajeDanger('El tamaño de la imagen es demasiado grande.', 'Error de imagen.')
                 }
             })
             .fail(function (data) {
                 falloAjax();
             })
     }
+}
+/**
+ * Funcion encargada de darle funcionalidad al selector de temas.
+ */
+function funcionalidadSelectorTemas() {
+
+    cambiarImagen();
+    cambiarTema();
+    cambiarSelector();
+
+
+    function cambiarImagen() {
+        $('#selectorTema').change(function (evento) {
+            let tema = $('#selectorTema').val();
+            switch (tema) {
+                case "Cosmo":
+                    $('#imagenTema').attr('src', 'temas/cosmo.png');
+                    break;
+                case "Darkly":
+                    $('#imagenTema').attr('src', 'temas/darkly.png');
+                    break;
+                case "Flatly":
+                    $('#imagenTema').attr('src', 'temas/flatly.png');
+                    break;
+                case "Litera":
+                    $('#imagenTema').attr('src', 'temas/litera.png');
+                    break;
+                case "Lumen":
+                    $('#imagenTema').attr('src', 'temas/lumen.png');
+                    break;
+                case "Lux":
+                    $('#imagenTema').attr('src', 'temas/lux.png');
+                    break;
+                case "Materia":
+                    $('#imagenTema').attr('src', 'temas/materia.png');
+                    break;
+                case "Minty":
+                    $('#imagenTema').attr('src', 'temas/minty.png');
+                    break;
+            }
+        })
+    }
+    /**
+     * Funcion encargada de cambiar el tema y crear una cookie con el mismo.
+     */
+    function cambiarTema() {
+        $('#botonCambiarTema').click(function (evento) {
+            let temaSeleccionado = $('#selectorTema').val();
+            console.log(document.cookie = "tema =" + temaSeleccionado);
+
+            mensajeSuccess('Espere 5 segundos para ver los cambios', 'Tema cambiado correctamente');
+
+            setTimeout(function () {
+                location.reload();
+            }, 5000);
+        })
+    }
+
+    function cambiarSelector() {
+        let temaActual = obtenerCookie('tema');
+        switch (temaActual) {
+            case "Cosmo":
+                $('#selectorTema option[value="Cosmo"]').attr("selected", 'true');
+                $('#imagenTema').attr('src', 'temas/cosmo.png');
+                break;
+            case "Darkly":
+                $('#selectorTema option[value="Darkly"]').attr("selected", 'true');
+                $('#imagenTema').attr('src', 'temas/darkly.png');
+                break;
+            case "Flatly":
+                $('#selectorTema option[value="Flatly"]').attr("selected", 'true');
+                $('#imagenTema').attr('src', 'temas/flatly.png');
+                break;
+            case "Litera":
+                $('#selectorTema option[value="Litera"]').attr("selected", 'true');
+                $('#imagenTema').attr('src', 'temas/litera.png');
+                break;
+            case "Lumen":
+                $('#selectorTema option[value="Lumen"]').attr("selected", 'true');
+                $('#imagenTema').attr('src', 'temas/lumen.png');
+                break;
+            case "Lux":
+                $('#selectorTema option[value="Lux"]').attr("selected", 'true');
+                $('#imagenTema').attr('src', 'temas/lux.png');
+                break;
+            case "Materia":
+                $('#selectorTema option[value="Materia"]').attr("selected", 'true');
+                $('#imagenTema').attr('src', 'temas/materia.png');
+                break;
+            case "Minty":
+                $('#selectorTema option[value="Minty"]').attr("selected", 'true');
+                $('#imagenTema').attr('src', 'temas/minty.png');
+                break;
+        }
+    }
+
+
 }

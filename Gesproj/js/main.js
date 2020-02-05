@@ -81,3 +81,10 @@ function mensajeDanger(mensaje, titulo = "", tiempo = 5) {
         timeOut: tiempo
     });
 };
+
+
+function obtenerCookie(nombreCookie) {
+    let valor = "; " + document.cookie;
+    let cookie = valor.split("; " + nombreCookie + "=");
+    if (cookie.length == 2) return cookie.pop().split(";").shift();
+}
