@@ -156,6 +156,7 @@ function visualizarDatos()
  * @return -3; las contraseñas no coinciden.
  * @return -4; No puedes modificar el ususario que estas usando.
  * @return -5; La imagen es demasiado grande.
+ * @return -6; Error en el envio de la notificación.
  */
 function editarUsuario()
 {
@@ -244,9 +245,19 @@ function editarUsuario()
                             //movemos la imagen nueva.
 
                             move_uploaded_file($_FILES['eImagen']['tmp_name'], 'imagenes/' . $nombreImagen);
-                            echo 1;
+
+                            if (enviarNotificacionModificacion($correoEditar) == 1) {
+                                echo 1;
+                            } else {
+                                echo -6;
+                            }
                         } else {
-                            echo 1;
+
+                            if (enviarNotificacionModificacion($correoEditar) == 1) {
+                                echo 1;
+                            } else {
+                                echo -6;
+                            }
                         }
                     } else {
                         echo -2;
@@ -461,6 +472,7 @@ function datosUsuarioLogueado()
  * @return -3; las contraseñas no coinciden.
  * @return -4; Esta intentando modificar un usuario diferente al de la sesion actual.
  * @return -5; La imagen es demasiado grande.
+ * @return -6; Error en el envio de la notificación.
  */
 function editarUsuarioActual()
 {
@@ -540,7 +552,7 @@ function editarUsuarioActual()
                     $consulta .= " `rol`='$rol' WHERE `pk_correo`='$correoEditar'";
 
 
-                   
+
 
 
                     if ($controlador->actualizarBD($consulta)) {
@@ -557,10 +569,19 @@ function editarUsuarioActual()
                             //actualizamos los datos de la sesion 
 
 
-                            echo 1;
-                        } else {
 
-                            echo 1;
+
+                            if (enviarNotificacionModificacion($correoEditar) == 1) {
+                                echo 1;
+                            } else {
+                                echo -6;
+                            }
+                        } else {
+                            if (enviarNotificacionModificacion($correoEditar) == 1) {
+                                echo 1;
+                            } else {
+                                echo -6;
+                            }
                         }
                     } else {
                         echo -2;

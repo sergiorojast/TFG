@@ -1,7 +1,7 @@
 $(function () {
 
 
-    //   notificarUsuarioConPreload();
+
     obtenerDatosInicialesUsuario();
 
     $('#contenido').fadeToggle(2000);
@@ -50,12 +50,6 @@ function obtenerDatosInicialesUsuario() {
         })
 }
 
-function notificarUsuarioConPreload() {
-    $('#zonaPreload').html(preload)
-    $('#formularioEdicionActual').hide();
-    $('#formularioEdicionActual').removeClass("d-none")
-
-}
 
 function dibujarDatosUsuario(datos) {
     $("#eCorreo").val(datos['correo'])
@@ -79,16 +73,16 @@ function validarFomularioEdicion() {
     $('#formularioEdicionActual').validate({
         rules: {
             eCorreo: {
-
+                required: true,
                 email: true
             },
             eNombre: {
-
+                required: true,
                 minlength: 3,
                 maxlength: 100
             },
             eApellidos: {
-
+                required: true,
                 minlength: 3,
                 maxlength: 100
             },
@@ -128,7 +122,7 @@ function validarFomularioEdicion() {
             $(element).addClass("is-valid").removeClass("is-invalid");
         },
         submitHandler: function (form, event) {
-
+            $('#botonModificarEdicionUsuarioActual').html(preload);
             event.preventDefault();
             enviarDatos(form);
         }
@@ -159,9 +153,14 @@ function validarFomularioEdicion() {
                     mensajeDanger('Se esta intentando modificar un usuario diferente al de la sesion actual.', 'Error')
                 } else if (resultado == -5) {
                     mensajeDanger('El tamaño de la imagen es demasiado grande.', 'Error de imagen.')
+                } else if (resultado == -6) {
+                    mensajeInfo('Datos modificados con exito, pero no notificados');
                 }
+
+                $('#botonModificarEdicionUsuarioActual').html("<i lass='fa fa-save'></i> Modificar");
             })
             .fail(function (data) {
+                $('#botonModificarEdicionUsuarioActual').html("<i lass='fa fa-save'></i> Modificar");
                 falloAjax();
             })
     }

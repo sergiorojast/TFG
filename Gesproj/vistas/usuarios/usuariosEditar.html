@@ -19,7 +19,7 @@
                                 <div class="form-group">
                                     <label for="eCorreo" class="col-form-label">Correo</label>
 
-                                    <input type="email" class="form-control" id="eCorreo" name="eCorreo">
+                                    <input type="email" readonly class="form-control" id="eCorreo" name="eCorreo">
                                     <input type="hidden" name="correo" id="eCorreoHidden">
 
 
@@ -92,7 +92,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col col-lg-6">
+                            <div class="col col-lg-6 text-center">
                                 <img id='imagenActual' class="img-fluid rounded-circle imagenUsuarioEditar"
                                     alt="imagen del usuario actual">
                             </div>
@@ -101,7 +101,7 @@
                         <div class="row">
                             <div class="col col-md-4 btn-group offset-md-4 text-center mb-2">
                                 <button id='volverAtras' class="btn btn-secondary"> <i class="fa fa-chevron-left"></i> Atrás</button>
-                                <button class="btn btn-warning" type="submit" name="modificarButton"> <i class="fa fa-save"></i> Modificar</button>
+                                <button class="btn btn-warning" id="botonModificarUsuario" type="submit" name="modificarButton"> <i class="fa fa-save"></i> Modificar</button>
                             </div>
                         </div>
 

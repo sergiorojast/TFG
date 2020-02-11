@@ -6,7 +6,7 @@ var js = '/js/';
 var repositorioImagenes = 'http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/GesprojServicio/imagenes';
 
 //preload normales.
-var preload = "<div class='m-5 text-center'><div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div> </div>";
+var preload = "<div class='text-center'><div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div> </div>";
 var preloadAzul = "<div class='text-center'><div class='spinner-border text-primary' role='status'><span class='sr-only'>Loading...</span></div> </div>";
 var preloadRojo = "<div class='text-center'><div class='spinner-border text-danger' role='status'><span class='sr-only'>Loading...</span></div> </div>";
 var preloadVerde = "<div class='text-center'><div class='spinner-border text-success' role='status'><span class='sr-only'>Loading...</span></div> </div>";

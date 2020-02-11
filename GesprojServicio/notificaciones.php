@@ -10,13 +10,9 @@ function enviarInvitacionUsuario($direccion)
 
     $urlRegistro = "http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/Gesproj/registro.html?";
     $urlRegistro .= base64_encode("correo=$direccion");
-  
-    $subject = "Invitación a Gesproj";
-    $message = "     <style>
-    .boton {
-        
-    }
-            s</style>
+
+    $asunto = "Invitación a Gesproj";
+    $mensaje = "
        <img style='margin:auto;display: block;'
     src='http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/GesprojServicio/imagenes/logoColor.png'>
 
@@ -53,7 +49,36 @@ function enviarInvitacionUsuario($direccion)
 
                 <p><a style='text-decoration:none' href='www.rojastorres.es'> Atentamente el equipo de Gesproj</a></p>";
 
+    if (enviarCorreo($direccion, $asunto, $mensaje) == 1) {
+        echo 1; //mensaje enviado correctamente.
+    } else {
+        echo -1; //error en el envio del mensaje.
+    }
+}
 
+function enviarNotificacionModificacion($direccion)
+{
+    $asunto = "Se han modificado los datos del usuario - Gesproj";
+    $mensaje = "
+       <img style='margin:auto;display: block;'
+    src='http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/GesprojServicio/imagenes/logoColor.png'>
+
+                <h4>Los datos de su usuario han sido modificados desde la plataforma de Gesproj.</h4>
+                <p>Los datos modificados se han cambiado con éxito, la próxima vez que visite la plataforma se verán reflejados en la misma.</p>
+                
+           
+                
+
+                <p><a style='text-decoration:none' href='www.rojastorres.es'> Atentamente el equipo de Gesproj</a></p>";
+
+
+    return enviarCorreo($direccion, $asunto, $mensaje);
+   
+}
+
+
+function enviarCorreo($direccion, $asunto, $mensaje)
+{
 
     // Creando una nueva instancia de PHPMailer
     $mail = new PHPMailer();
@@ -98,10 +123,10 @@ function enviarInvitacionUsuario($direccion)
     $mail->addAddress($direccion);
 
     // El asunto del mail
-    $mail->Subject = $subject;
+    $mail->Subject = $asunto;
 
     // Estableciendo el mensaje a enviar
-    $mail->MsgHTML($message);
+    $mail->MsgHTML($mensaje);
 
 
     // Adjuntando una imagen
@@ -109,8 +134,8 @@ function enviarInvitacionUsuario($direccion)
 
     // Enviando el mensaje y controlando los errores
     if (!$mail->send()) {
-        echo -1;
+        return -1;
     } else {
-        echo 1;
+        return 1;
     }
 }

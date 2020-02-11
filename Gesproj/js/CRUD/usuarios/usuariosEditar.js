@@ -91,16 +91,16 @@ function validarFomulario() {
     $('#formularioEdicion').validate({
         rules: {
             eCorreo: {
-
+                required: true,
                 email: true
             },
             eNombre: {
-
+                required: true,
                 minlength: 3,
                 maxlength: 100
             },
             eApellidos: {
-
+                required: true,
                 minlength: 3,
                 maxlength: 100
             },
@@ -120,8 +120,27 @@ function validarFomulario() {
                 extension: "png|jpeg|jpg|svg"
             }
         },
-        submitHandler: function (form, event) {
+        errorElement: "small",
+        errorPlacement: function (error, element) {
+            // Add the `invalid-feedback` class to the error element
+            error.addClass("invalid-feedback");
 
+
+            if (element.prop("type") === "checkbox") {
+                error.insertAfter(element.next("label"));
+            } else {
+                error.insertAfter(element);
+
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-valid").removeClass("is-invalid");
+        },
+        submitHandler: function (form, event) {
+            $('#botonModificarUsuario').html(preload);
             event.preventDefault();
             enviarDatos(form);
         }
@@ -159,20 +178,11 @@ function validarFomulario() {
                     mensajeInfo("No puedes modificar tu usuario desde aquí");
                 } else if (data == -5) {
                     mensajeDanger('Imagen demasiado pesada. El tamaño máximo son 10mb', 'Error en la imagen');
+                } else if (data == -6) {
+                    mensajeInfo('Datos modificados con exito, pero no notificados');
                 }
-                //recargamos la vista a los 5 segundos para actualizar los datos y la imagen.
-                setTimeout(function () {
-                    $('#contenido').empty();
-                    $('#contenido').html(preload);
 
-
-                    $.post(' vistas/usuarios/usuariosEditar.html', function (htmle) {
-                        $('#contenido').html(htmle);
-                    }, 'html');
-
-
-
-                }, 5000)
+                $('#botonModificarUsuario').html("<i class='fa fa-save'></i> Modificar");
 
             }).fail(function (e) {
                 falloAjax();
