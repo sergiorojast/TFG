@@ -14,6 +14,10 @@ $(function () {
     })
 
     solicitarProyectos();
+
+    //Una vez tenemos los datos en el doom mostramos la vista.
+    $('#contenido').fadeToggle(2500);
+
 })
 
 /**
@@ -31,7 +35,8 @@ function solicitarProyectos() {
         })
         .done(function (datos) {
             //console.log(datos)
-           agregarDatosProyectosAlDoM(JSON.parse(datos));
+            agregarDatosProyectosAlDoM(JSON.parse(datos));
+
         })
         .fail(function (datos) {
 
@@ -155,6 +160,7 @@ function agregarDatosProyectosAlDoM(datos) {
         $('#capaProyectos #columnasProyectos:last-child').append(carta);
 
     }
+
     asignarEventosCartasProyectos();
 
 

@@ -4,6 +4,7 @@ $(function () {
     solicitarDatosUsuariosRegistrados();
 
     solicitarDatosRoles();
+    $('#contenido').fadeToggle(2000);
 
 })
 
@@ -78,7 +79,7 @@ function solicitarDatosUsuariosRegistrados() {
  * los mostraremos en un diagrama circular
  */
 function solicitarDatosRoles() {
-    let administradores=  0;
+    let administradores = 0;
     let Avanzados = 0;
     let usuarios = 0;
     $.ajax({
@@ -93,11 +94,11 @@ function solicitarDatosRoles() {
 
             for (let i = 0; i < datos.length; i++) {
                 // console.log(datos[i][0]);
-                if(datos[i][0]>= 90){
+                if (datos[i][0] >= 90) {
                     administradores++;
-                }else if(datos[i][0]>=50 && datos[i][0] < 90){
-                    Avanzados ++;
-                }else{
+                } else if (datos[i][0] >= 50 && datos[i][0] < 90) {
+                    Avanzados++;
+                } else {
                     usuarios++;
                 }
 
@@ -111,20 +112,20 @@ function solicitarDatosRoles() {
 
     function dibujarDatos() {
         let canvas = $('#diagramaRoles');
-        
+
         let diagrama = new Chart(canvas, {
             type: 'doughnut',
             data: {
-                labels: ["Administradores","Avanzados","usuarios"],
+                labels: ["Administradores", "Avanzados", "usuarios"],
                 datasets: [{
                     label: 'Número de usuarios registrados',
-                    data: [administradores,Avanzados,usuarios],
+                    data: [administradores, Avanzados, usuarios],
                     pointRadius: 0,
                     fill: false,
                     lineTension: 0,
                     borderWidth: 2,
                     borderColor: "#428bca",
-                    backgroundColor: ['#E64538',"#2D6295","#BBDD36"],
+                    backgroundColor: ['#E64538', "#2D6295", "#BBDD36"],
                     fill: true
 
                 }]

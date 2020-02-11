@@ -2,8 +2,8 @@
 var correo = '';
 
 solicitarYPintarDatos();
-
-$('#botonNuevoUsuario').on('click',crearUnNuevoUsuriof)
+$('#contenido').fadeToggle(2000);
+$('#botonNuevoUsuario').on('click', crearUnNuevoUsuriof)
 
 
 // cargamos los datos de los usuarios
@@ -379,23 +379,23 @@ function borrarUsuario() {
                         //console.log(data)
                         let mensaje;
                         if (data == 1) {
-                         
+
                             mensajeSuccess("Usuario eliminado con éxito");
 
 
                         } else if (data == -1) {
-                        
+
                             mensajeWarning("No tienes permisos para realizar esta acción");
                         } else if (data == -2) {
-                         
+
                             mensajeDanger('El usuario que intenta borrar ya no existe');
                         } else {
-                          
+
                             mensajeWarning('fallo, intentelo más tarde')
                         }
 
 
-                       // setTimeout(mensaje.modal('hide'), 2000);
+                        // setTimeout(mensaje.modal('hide'), 2000);
 
                         recargarListado();
                     }).fail(function (e) {

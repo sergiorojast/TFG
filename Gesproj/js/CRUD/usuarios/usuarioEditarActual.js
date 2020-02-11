@@ -1,10 +1,10 @@
 $(function () {
 
 
-    notificarUsuarioConPreload();
+    //   notificarUsuarioConPreload();
     obtenerDatosInicialesUsuario();
 
-
+    $('#contenido').fadeToggle(2000);
     validarFomularioEdicion();
 
     cargarTituloImagen();
@@ -41,8 +41,8 @@ function obtenerDatosInicialesUsuario() {
             dibujarDatosUsuario(usuario);
 
 
-            $('#zonaPreload').empty();
-            $('#formularioEdicionActual').fadeToggle("slow");
+            // $('#zonaPreload').empty();
+            //$('#formularioEdicionActual').fadeToggle("slow");
 
         })
         .fail(function (datos) {

@@ -195,12 +195,17 @@ function asignarAccionesBotonesAtras() {
 }
 
 function cerrar() {
+
+    $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
 
 
-    $.post('vistas/usuarios/usuarios.html', function (htmle) {
-        $('#contenido').html(htmle);
-    }, 'html');
+    setTimeout(function () {
+        $.post('vistas/usuarios/usuarios.html', function (htmle) {
+            $('#contenido').html(htmle);
+        }, 'html');
+    }, 250)
+
 
 }

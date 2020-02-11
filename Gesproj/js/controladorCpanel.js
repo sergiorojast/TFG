@@ -114,27 +114,33 @@ function aniadeFuncionalidadBotonesBarraLateral() {
    */
   function botonEditarUsuario() {
     comprobarSesion();
+
+    $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
 
-
-    $.post('vistas/usuarios/usuarioEditarActual.html', function (htmle) {
-      $('#contenido').html(htmle);
-    }, 'html');
+    setTimeout(function () {
+      $.post('vistas/usuarios/usuarioEditarActual.html', function (htmle) {
+        $('#contenido').html(htmle);
+      }, 'html');
+    }, 1000)
   }
   /**
    * Borramos el contenido de la capa "contenido" y dibujamos los datos de la nueva vista
    */
   function botonUsuarios() {
     comprobarSesion();
+
+    $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
 
 
-    $.post('vistas/usuarios/usuarios.html', function (htmle) {
-      $('#contenido').html(htmle);
-    }, 'html');
-
+    setTimeout(function () {
+      $.post('vistas/usuarios/usuarios.html', function (htmle) {
+        $('#contenido').html(htmle);
+      }, 'html');
+    }, 1000)
   }
 
   function botonCerrarSesion() {
@@ -157,22 +163,26 @@ function aniadeFuncionalidadBotonesBarraLateral() {
         window.location = 'login.html';
       })
       .fail(function (data) {
-        bootbox.alert({
-          message: "Fallo en AJAX!",
-          backdrop: true
-        });
+        falloAjax();
       });
   }
 
   function cargarProyectos() {
+
     comprobarSesion();
+
+    $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
 
 
-    $.post('vistas/Proyectos/proyectosResumen.html', function (htmle) {
-      $('#contenido').html(htmle);
-    }, 'html');
+
+    setTimeout(function () {
+      $.post('vistas/Proyectos/proyectosResumen.html', function (htmle) {
+        $('#contenido').html(htmle);
+      }, 'html');
+    }, 1000);
+
   }
 }
 
@@ -226,11 +236,16 @@ function dibujarDatosUsarioBarraLateral() {
 
 function cargarTablero() {
   comprobarSesion();
+  $('#contenido').fadeToggle('slow');
   $('#contenido').empty();
   $('#contenido').html(preload);
 
 
-  $.post('vistas/tablero.html', function (htmle) {
-    $('#contenido').html(htmle);
-  }, 'html');
+
+  setTimeout(function () {
+
+    $.post('vistas/tablero.html', function (htmle) {
+      $('#contenido').html(htmle);
+    }, 'html');
+  }, 1000);
 }

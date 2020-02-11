@@ -168,13 +168,18 @@ function recargarVista() {
  * Funcion encargada de eliminar el contenido del container principal y mostrar la vista de los ususarios.
  */
 function cerrar() {
+
+    $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
 
 
-    $.post('vistas/usuarios/usuarios.html', function (htmle) {
-        $('#contenido').html(htmle);
-    }, 'html');
+    setTimeout(function () {
+        $.post('vistas/usuarios/usuarios.html', function (htmle) {
+            $('#contenido').html(htmle);
+        }, 'html');
+    }, 500)
+
 
 }
 

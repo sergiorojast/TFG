@@ -42,22 +42,32 @@ function cargarDatosVista(u) {
 }
 
 function botonUsuarios() {
+    $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
 
 
-    $.post('vistas/usuarios/usuarios.html', function (htmle) {
-        $('#contenido').html(htmle);
-    }, 'html');
+    setTimeout(function () {
+        $.post('vistas/usuarios/usuarios.html', function (htmle) {
+            $('#contenido').html(htmle);
+        }, 'html');
+    }, 500)
+
 
 }
 
 function recargarListado() {
+
+    $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
 
 
-    $.post('vistas/usuarios/usuarios.html', function (htmle) {
-        $('#contenido').html(htmle);
-    }, 'html');
+    setTimeout(function () {
+        $.post('vistas/usuarios/usuarios.html', function (htmle) {
+            $('#contenido').html(htmle);
+        }, 'html');
+    }, 500)
+
+
 }
