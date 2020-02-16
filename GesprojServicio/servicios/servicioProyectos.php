@@ -1,13 +1,13 @@
 <?php
 
 crearProyecto();
-listarProyectosDelPropietario();
+listarProyectos();
 devolverProyectoporID();
 actualizarProyecto();
 devolverAdministradoresProyecto();
 
 /**
- * Funcion encargada  de crear proyectos, necesita un nivel de permisos 90
+ * Funcion encargada  de crear proyectos, necesita un nivel de permisos 50 o superior
  * 
  * @return 1; todo ok;
  * @return -1; El usuario que intenta crear el usuario no tiene permisos.
@@ -18,7 +18,7 @@ devolverAdministradoresProyecto();
 function crearProyecto()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'crearProyecto') {
-        if (gestionarSesionyRol(90) === 1) {
+        if (gestionarSesionyRol(50) == 1) {
             if (comprobarUsuario($_SESSION['correo'])) {
                 if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['horas']) && isset($_POST['minutos']) && isset($_POST['administradores'])) {
                     $token = true;
@@ -60,7 +60,8 @@ function crearProyecto()
                             $consulta = null;
                             $consulta = "INSERT INTO `Usuarios:Proyectos`(`fk_correo`, `fk_idProyecto`) VALUES('" . $administradores[$i] . "','" . $idProyecto . "')";
 
-                            if ($conector->actualizarBD($consulta)) { } else {
+                            if ($conector->actualizarBD($consulta)) {
+                            } else {
                                 $token = false;
                             };
                         }
@@ -83,15 +84,25 @@ function crearProyecto()
 }
 
 /**
- * Funcion encargada de devolver los proyectos del usuario que tiene la sesion inciaza.
- * solo se debe mostrar los proyectos a los usuarios administradores lvl 90 >;
+ *Funcion encargada de devolver los proyectos, si la solicitud se envia desde una cuenta de administrador, se podran 
+ *visualizar todos los proyectos en el sistema, pero si se envia desde la cuenta de un moderador, solo los del propietario
  * @return -1; //Error en la sesion y/o permisos.
  */
 
-function listarProyectosDelPropietario()
+function listarProyectos()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'listarProyectosPropietario') {
-        if (gestionarSesionyRol(90) == 1) {
+        if (gestionarSesionyRol(90) == 1) { //solicitud administrador
+            $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
+                "FROM `Proyectos` ";
+
+            $controlador =  new ConectorBD();
+
+            $filas = $controlador->consultarBD($consulta);
+
+            //echo $consulta;
+            echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
+        } else if (gestionarSesionyRol(50) == 1) { //solicitud moderador
             $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
                 "FROM `Proyectos` , `Usuarios:Proyectos` WHERE" .
                 "`fk_idProyecto` <=> `pk_idProyecto` AND `fk_correo` <=> '" . $_SESSION["correo"] . "'";
@@ -116,7 +127,7 @@ function listarProyectosDelPropietario()
 function devolverProyectoporID()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'listarProyectoPorid') {
-        if (gestionarSesionyRol(90) == 1) {
+        if (gestionarSesionyRol(50) == 1) {
             if (isset($_POST['idProyecto'])) {
                 $consulta =  "SELECT * FROM Proyectos WHERE pk_idProyecto <=> '" . filtrado($_POST['idProyecto']) . "'";
                 $controlador = new ConectorBD();
@@ -145,7 +156,7 @@ function devolverProyectoporID()
 function actualizarProyecto()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'actualizarProyecto') {
-        if (gestionarSesionyRol(90) == 1) {
+        if (gestionarSesionyRol(50) == 1) {
             //  var_dump($_POST);
 
             if (isset($_POST['idProyecto'])) {
@@ -199,7 +210,7 @@ function actualizarProyecto()
 function devolverAdministradoresProyecto()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'devolverAdministradores') {
-        if (gestionarSesionyRol(90) == 1) {
+        if (gestionarSesionyRol(50) == 1) {
             if (isset($_POST['idProyecto'])) {
                 $consulta =  "SELECT fk_correo FROM `Usuarios:Proyectos` WHERE `fk_idProyecto` <=> '" . filtrado($_POST['idProyecto']) . "'";
                 $controlador = new ConectorBD();

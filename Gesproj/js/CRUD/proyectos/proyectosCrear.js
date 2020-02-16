@@ -109,7 +109,7 @@ function solicitarDatosAdministradores() {
             type: "POST",
             url: webService,
             data: {
-                'accion': 'listadoAdministradores'
+                'accion': 'listadoModeradoresYAdministradores'
             },
         })
         .done(function (data) {
