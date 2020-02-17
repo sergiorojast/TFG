@@ -375,7 +375,7 @@ function devolverAdministradores()
             $controlador =  new ConectorBD();
 
 
-            $consulta = "select pk_correo  from Usuarios where rol >= 90";
+            $consulta = "select pk_correo  from Usuarios where rol >= 50";
 
             $filas = $controlador->consultarBD($consulta);
             $filas->setFetchMode(PDO::FETCH_NUM);

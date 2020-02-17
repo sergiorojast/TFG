@@ -14,7 +14,7 @@ $(function () {
 
 
 
-
+    enviarActualizacionAdministradores();
 
 })
 
@@ -180,7 +180,24 @@ function validarFormularioUpdate() {
         },
 
         errorElement: "small",
+        errorPlacement: function (error, element) {
+            // Add the `invalid-feedback` class to the error element
+            error.addClass("invalid-feedback");
 
+
+            if (element.prop("type") === "checkbox") {
+                error.insertAfter(element.next("label"));
+            } else {
+                error.insertAfter(element);
+
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-valid").removeClass("is-invalid");
+        },
         messages: {
             'eNombreProyecto': {
                 required: "Dato requerido"
@@ -200,13 +217,18 @@ function validarFormularioUpdate() {
 }
 
 function volverAtras() {
+
+    $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
 
 
-    $.post('vistas/proyectos/proyectosResumen.html', function (htmle) {
-        $('#contenido').html(htmle);
-    }, 'html');
+    setTimeout(function () {
+        $.post('vistas/Proyectos/proyectosResumen.html', function (htmle) {
+            $('#contenido').html(htmle);
+        }, 'html');
+    }, 1000)
+
 }
 
 function agrearFuncionalidadSelectorAdministradores() {
@@ -216,11 +238,12 @@ function agrearFuncionalidadSelectorAdministradores() {
         let correoSeleccionado = $('#selectorAdministradores').val();
         if (correoSeleccionado !== 'Seleccionar Administradores...') {
 
-            $('#listadoAdministradores').append("<li value='" + correoSeleccionado + "'>" + correoSeleccionado + "</li>");
+            $('#listadoAdministradores').append("<li class='list-group-item' value='" + correoSeleccionado + "'> <button class='btn btn-outline-danger'><i class='fas fa-trash'></i></button> " + correoSeleccionado + "</li>");
             $("#selectorAdministradores option[value='" + correoSeleccionado + "']").remove();
 
-            $("#listadoAdministradores li[value='" + correoSeleccionado + "']").click(function (e) {
-                let correo = $(this).attr('value');
+            $("#listadoAdministradores li[value='" + correoSeleccionado + "'] button").click(function (e) {
+
+                let correo = $(this).parent("li").attr('value');
                 $('#selectorAdministradores').append("<option value='" + correo + "'>" + correo + "</option>");
 
                 $("#listadoAdministradores li[value='" + correoSeleccionado + "']").remove()
@@ -241,7 +264,7 @@ function dibujarAdministradores(datos) {
     $('#listadoAdministradores').empty();
 
     for (let i = 0; i < datos.length; i++) {
-        $('#listadoAdministradores').append("<li value='" + datos[i]['fk_correo'] + "'>" + datos[i]['fk_correo'] + "</li>")
+        $('#listadoAdministradores').append("<li class='list-group-item' value='" + datos[i]['fk_correo'] + "'><button class='btn btn-outline-danger'><i class='fas fa-trash'></i></button> " + datos[i]['fk_correo'] + "</li>")
 
         //Eliminamos la opcion de añadir a este usuario en select
         $("#selectorAdministradores option").each(function (it, e) {
@@ -251,8 +274,9 @@ function dibujarAdministradores(datos) {
             }
         })
         //añadimos el  evento para eliminar el elemento de la lista 
-        $('#listadoAdministradores li:last').click(function (e) {
-            let correo = $(this).attr('value');
+        $('#listadoAdministradores li:last button').click(function (e) {
+
+            let correo = $(this).parent("li").attr('value');
             $('#selectorAdministradores').append("<option value='" + correo + "'>" + correo + "</option>");
 
             $("#listadoAdministradores li[value='" + correo + "']").remove()
@@ -296,6 +320,7 @@ function solicitarDatosAdministradores() {
 
             if (isNaN(data)) {
                 let datos = JSON.parse(data);
+
 
                 for (let i = 0; i < datos.length; i++) {
                     $('#selectorAdministradores').append("<option value='" + datos[i] + "'> " + datos[i] + " </option>");
@@ -347,6 +372,7 @@ function enviarActualizacionProyecto() {
             },
         })
         .done(function (datos) {
+
             if (datos == 1) {
                 mensajeSuccess('Proyecto modificado');
             } else if (datos == -1) {
@@ -360,5 +386,61 @@ function enviarActualizacionProyecto() {
         .fail(function () {
             falloAjax();
         })
+}
+//funcion encargada de optener del listado los administradores del proyecto.
+function enviarActualizacionAdministradores() {
+
+    //asignamos el evento al boton de actualizar.
+    $('#botonActualizarAdministradores').click(function (evento) {
+
+        $('#botonActualizarAdministradores').html(preload);
+        let listado;
+        let datos = new Array(); //los correos que se le enviara al servicio.
+
+        listado = $('#listadoAdministradores').children();
+        listado.each(function (i, e) {
+            datos.push($(e).attr('value'));
+        })
+
+        if (datos.length != 0) {
+            EnviarDatosActualizacionAdministradores(datos);
+        } else {
+            mensajeDanger('No se han selecionado administradores', 'error en la inserción de datos');
+            $('#botonActualizarAdministradores').html("<i class='fas fa-upload'></i> Actualizar");
+
+        }
+    })
+
+    function EnviarDatosActualizacionAdministradores(datos) {
+        $.ajax({
+                type: "POST",
+                url: webService,
+                data: {
+                    'accion': 'actualizarAdministradoresProyecto',
+                    'id': $('#cIDProyecto').val(),
+                    'correos': datos
+                },
+            })
+            .done(function (datos) {
+                if(datos == 1){
+                    mensajeSuccess('Administrador/es añadido al proyecto','Cambios almacenados')
+                }else if(datos == -1){
+                    mensajeInfo('Usuario sin permisos para realizar esta acción','Notificación');
+                }else if( datos == -2 || datos ==-3){
+                    mensajeWarning('No se han introducido administradores');
+                }else if(datos  == -4){
+                    mensajeWarning('Error en la consulta de insercion de administradores','Contacte al programador.')
+                }else if(datos  == -5){
+                    mensajeWarning('Error en la consulta de borrado de administradores','Contacte al programador.')
+                }
+
+                $('#botonActualizarAdministradores').html("<i class='fas fa-upload'></i> Actualizar");
+            })
+            .fail(function (datos) {
+                falloAjax();
+                $('#botonActualizarAdministradores').html("<i class='fas fa-upload'></i> Actualizar");
+            })
+    }
+
 }
 //#endregion

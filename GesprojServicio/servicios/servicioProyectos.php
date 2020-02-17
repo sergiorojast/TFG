@@ -5,7 +5,7 @@ listarProyectos();
 devolverProyectoporID();
 actualizarProyecto();
 devolverAdministradoresProyecto();
-
+actualizarAdministradoresProyecto();
 /**
  * Funcion encargada  de crear proyectos, necesita un nivel de permisos 50 o superior
  * 
@@ -223,6 +223,81 @@ function devolverAdministradoresProyecto()
             }
         } else {
             echo -1;
+        }
+    }
+}
+
+
+/**
+ * Funcion encargada de actualizar los datos de los administradores de los proyectos.
+ * @param idProyecto;
+ * @param accion;
+ * @param correos{array};
+ * 
+ * @return 1; // todo ok.
+ * @return -1; //sin permisos para realizar esta accion.
+ * @return -2; // faltan datos.
+ * @return -3; // No se han proporcionado correos.
+ * @return -4; // Error en la consulta de insercion de nuevos administradores.
+ * @return -5; // Error en la consulta de borrado de administradores.
+ */
+function actualizarAdministradoresProyecto()
+{
+    $administradoresAntiguos = [];
+    $resultado = true; // variable que controla el estado del servicio, si no ocurre nada dara un true.
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'actualizarAdministradoresProyecto') {
+        if (gestionarSesionyRol(50) == 1) {
+            if (isset($_POST['id']) && isset($_POST['correos'])) {
+                if (count($_POST['correos']) != 0) {
+                    //consultamos los administradores actuales del proyecto.accordion
+                    $consulta =  "SELECT fk_correo FROM `Usuarios:Proyectos` WHERE fk_idProyecto = " . filtrado($_POST["id"]);
+                    $conector = new ConectorBD();
+                    $filas  = $conector->consultarBD($consulta);
+
+                    while ($fila  = $filas->fetch()) {
+
+                        array_push($administradoresAntiguos, $fila[0]);
+                    }
+
+                    // var_dump($administradoresAntiguos);
+                    //adición de nuevos administradores.
+                    for ($i = 0; $i < count($_POST['correos']); $i++) {
+                        if (!in_array($_POST['correos'][$i], $administradoresAntiguos)) {
+                            $consulta  = " INSERT INTO `Usuarios:Proyectos` (`fk_correo`, `fk_idProyecto`) VALUES ('" . filtraCorreo($_POST['correos'][$i]) . "','" . $_POST['id'] . "')";
+
+                            if (!$conector->actualizarBD($consulta)) {
+                                echo -4; // error en la insercion de los nuevos administradores
+                                $resultado = false;
+                            }
+                        }
+                    }
+                    //borrado de los administradores.
+                    for ($i = 0; $i < count($administradoresAntiguos); $i++) {
+                        if (!in_array($administradoresAntiguos[$i], $_POST['correos'])) {
+                            $consulta =  "DELETE FROM `Usuarios:Proyectos` WHERE fk_correo = '" . $administradoresAntiguos[$i] . "'  AND fk_idProyecto =  '" . $_POST['id'] . "'";
+
+                           // echo $consulta;
+
+                            if (!$conector->actualizarBD($consulta)) {
+                                echo -5; // Error en el borrado de los antiguos administradores.
+
+                                $resultado  = false;
+                            }
+                        }
+                    }
+
+                    if ($resultado) {
+                        echo 1; //todo ok;
+                    }
+                } else {
+                    echo -3; // no se han proporcionado correos.
+                }
+            } else {
+                echo -2; //faltan datos.
+            }
+        } else {
+            echo -1; // No tiene permisos;
         }
     }
 }
