@@ -63,3 +63,4 @@ require_once('servicios/servicioProyectos.php');
 unset($_POST);
 $_POST = null;
 $_POST = [];
+

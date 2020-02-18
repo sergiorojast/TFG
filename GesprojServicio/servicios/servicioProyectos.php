@@ -6,6 +6,7 @@ devolverProyectoporID();
 actualizarProyecto();
 devolverAdministradoresProyecto();
 actualizarAdministradoresProyecto();
+finalizarProyecto();
 /**
  * Funcion encargada  de crear proyectos, necesita un nivel de permisos 50 o superior
  * 
@@ -269,6 +270,8 @@ function actualizarAdministradoresProyecto()
                             if (!$conector->actualizarBD($consulta)) {
                                 echo -4; // error en la insercion de los nuevos administradores
                                 $resultado = false;
+                            } else {
+                                enviarNotificacionAdicionAdministradorProyecto(filtraCorreo($_POST['correos'][$i]), $_POST['id']);
                             }
                         }
                     }
@@ -277,12 +280,14 @@ function actualizarAdministradoresProyecto()
                         if (!in_array($administradoresAntiguos[$i], $_POST['correos'])) {
                             $consulta =  "DELETE FROM `Usuarios:Proyectos` WHERE fk_correo = '" . $administradoresAntiguos[$i] . "'  AND fk_idProyecto =  '" . $_POST['id'] . "'";
 
-                           // echo $consulta;
+                            // echo $consulta;
 
                             if (!$conector->actualizarBD($consulta)) {
                                 echo -5; // Error en el borrado de los antiguos administradores.
 
                                 $resultado  = false;
+                            } else {
+                                enviarNotificacionBorradoAdministradorProyecto($administradoresAntiguos[$i], $_POST['id']);
                             }
                         }
                     }
@@ -298,6 +303,40 @@ function actualizarAdministradoresProyecto()
             }
         } else {
             echo -1; // No tiene permisos;
+        }
+    }
+}
+
+
+/**
+ * Funcion encargada de finalizar los proyectos;
+ * 
+ * @return 1;//todo ok
+ * @return -1; //faltan permisos.
+ * @return -2;//faltan datos;
+ * @return -3; // fallo en la consulta;
+ */
+function finalizarProyecto()
+{
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'finalizarProyecto') {
+        if (gestionarSesionyRol(50) == 1) {
+ 
+            if(isset($_POST['id'])&&isset($_POST['fFinalizacion'])){
+                //si todos los datos estan bien, creamos la consulta.
+                $consulta =  "UPDATE `Proyectos` SET `fechaFinalizacion` = '".$_POST['fFinalizacion']."',`estado` = 'Finalizado' WHERE pk_idProyecto = '".$_POST['id']."'";
+                $conector = new ConectorBD();
+
+                if($conector->actualizarBD($consulta)){
+                    echo 1; //todo ok;
+                }else{
+                    echo -3;// Fallo en la consulta.
+                }
+            }else{
+                echo -2;//faltan datos;
+            }
+        }else{
+            echo -1; // permisos requeridos.
         }
     }
 }

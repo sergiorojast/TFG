@@ -61,7 +61,10 @@ function agregarDatos(datos) {
     $('#eFechaCreacionProyecto').val(fechaInicio);
 
     if (fechaFinalizacion !== null || fechaFinalizacion !== undefined) {
-        $('#eFechaFinalizacionProyecto').val(fechaFinalizacion);
+        if (fechaFinalizacion != "0000-00-00 00:00:00") {
+            $('#eFechaFinalizacionProyecto').val(fechaFinalizacion);
+        }
+
     }
 
     rellenarSelectConEstados(estado);
@@ -76,15 +79,66 @@ function agregarEventoBotonFinalizar() {
 
     if ($('#eFechaFinalizacionProyecto').val() == "" || $('#eFechaFinalizacionProyecto').val() == "" == null || $('#eFechaFinalizacionProyecto').val() == undefined) {
         $('#botonFinalizar').click(function () {
+
+
+
             let fecha = new Date();
             fecha.setHours(fecha.getHours() + 1);
             fecha = fecha.toJSON();
             let fechaFormateada = fecha.slice(0, -5).replace("T", " ");
             //fechaFormateada = fechaFormateada.replace("T", " ");
             $('#eFechaFinalizacionProyecto').val(fechaFormateada);
+
+
+            finalizarProyecto();
         })
     } else {
         $('#botonFinalizar').addClass('disabled');
+    }
+    /**
+     * Funcion encargada de enviar los datos para dar un proyecto como finalizado.
+     * @param id;
+     * @param fechaFinalizacion;
+     */
+    function finalizarProyecto() {
+        $.ajax({
+                type: "POST",
+                url: webService,
+                data: {
+                    'accion': 'finalizarProyecto',
+                    'id': $('#cIDProyecto').val(),
+                    'fFinalizacion': $('#eFechaFinalizacionProyecto').val()
+                },
+
+            })
+            .done(function (datos) {
+
+                if (datos == 1) {
+                    mensajeSuccess("Proyecto finalizado.")
+                    //eliminamos los botones  de acción.
+                    $('#controlModificacionProyecto').empty();
+                    $('#botonActualizarAdministradores').remove();
+
+                    $('#eNombreProyecto').addClass('disabled');
+                    $('#eDescripcionProyecto').addClass('disabled');
+                    $('#horas').addClass('disabled');
+                    $('#minutos').addClass('disabled');
+
+                    $('#listadoAdministradores li button').addClass('disabled');
+                    $('#listadoAdministradores li button').off('click');
+                    $('#botonSeleccionarAdministradores').off('click');
+
+                } else if (datos == -1) {
+                    mensajeDanger('Sin permisos para realizar esta acción');
+                } else if (datos == -2) {
+                    mensajeDanger("Faltan datos", "Error");
+                } else if (datos == -3) {
+                    mensajeDanger("Fallo en la consulta", "Error");
+                }
+            })
+            .fail(function (datos) {
+                falloAjax();
+            })
     }
 }
 
@@ -114,8 +168,21 @@ function rellenarSelectConEstados(estado) {
     }
 
     if (estado === 'Finalizado') {
-        boton.addClass('d-none');
-        selector.addClass('d-none');
+        $('#controlModificacionProyecto').empty();
+        $('#botonActualizarAdministradores').remove();
+
+
+        setTimeout(function () {
+            $('#listadoAdministradores li button').addClass('disabled');
+            $('#listadoAdministradores li button').off('click');
+            $('#botonSeleccionarAdministradores').off('click');
+
+            $('#eNombreProyecto').attr('readonly', true);
+            $('#eDescripcionProyecto').attr('readonly', true);
+            $('#horas').attr('readonly', true);
+            $('#minutos').attr('readonly', true);
+        }, 1000)
+
     }
     // if (estado === 'Finalizado') {
     //     selector.addClass('btn-secondary');
@@ -422,16 +489,18 @@ function enviarActualizacionAdministradores() {
                 },
             })
             .done(function (datos) {
-                if(datos == 1){
-                    mensajeSuccess('Administrador/es añadido al proyecto','Cambios almacenados')
-                }else if(datos == -1){
-                    mensajeInfo('Usuario sin permisos para realizar esta acción','Notificación');
-                }else if( datos == -2 || datos ==-3){
+
+                console.log(datos)
+                if (datos == 1) {
+                    mensajeSuccess('Administrador/es añadido al proyecto', 'Cambios almacenados')
+                } else if (datos == -1) {
+                    mensajeInfo('Usuario sin permisos para realizar esta acción', 'Notificación');
+                } else if (datos == -2 || datos == -3) {
                     mensajeWarning('No se han introducido administradores');
-                }else if(datos  == -4){
-                    mensajeWarning('Error en la consulta de insercion de administradores','Contacte al programador.')
-                }else if(datos  == -5){
-                    mensajeWarning('Error en la consulta de borrado de administradores','Contacte al programador.')
+                } else if (datos == -4) {
+                    mensajeWarning('Error en la consulta de insercion de administradores', 'Contacte al programador.')
+                } else if (datos == -5) {
+                    mensajeWarning('Error en la consulta de borrado de administradores', 'Contacte al programador.')
                 }
 
                 $('#botonActualizarAdministradores').html("<i class='fas fa-upload'></i> Actualizar");
