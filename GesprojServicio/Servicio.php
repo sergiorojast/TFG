@@ -56,7 +56,10 @@ require_once('servicios/servicioUsuario.php');
  */
 require_once('servicios/servicioProyectos.php');
 
-
+/**
+ * Gestiona todo lo relacionado con las tareas.
+ */
+require_once('servicios/servicioTareas.php');
 
 
 //limpio la variable POST

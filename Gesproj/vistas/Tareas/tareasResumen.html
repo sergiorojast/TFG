@@ -1,0 +1,43 @@
+<div class="card">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center">Resumen Tareas por proyecto</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 col-lg-10">
+                <a class="btn" id="">Resumen Tareas</a>
+
+
+            </div>
+            <div class="col-6 col-lg-2">
+                <button id='crearTarea' class="btn btn-success"> <i class="fas fa-plus"></i> Crear Tarea</button>
+            </div>
+            <hr>
+        </div>
+
+        <div class="nav nav-tabs " id="listaProyectos" role="tablist">
+            <!-- Selector de proyecto -->
+        </div>
+        </nav>
+
+        <div class="row">
+            <div class="col text-center">
+                <button class="m-2 btn btn-lg btn-success"><i class="fas fa-plus"></i> Crear tarea para proyecto</button>
+            </div>
+        </div>
+
+        <div class="" id="listadoTareas">
+
+
+        </div>
+
+
+    </div>
+
+    <script>
+        url = undefined;
+        url = "js/CRUD/tareas/tareasResumen.js";
+        $.getScript(url);
+    </script>

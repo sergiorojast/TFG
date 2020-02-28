@@ -104,6 +104,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
   $('#cerrarSesion').click(botonCerrarSesion);
   $('#tablero').click(cargarTablero);
   $('#crudProyectos').click(cargarProyectos);
+  $('#botonTareas').click(botonTareas);
 
 
 
@@ -166,6 +167,23 @@ function aniadeFuncionalidadBotonesBarraLateral() {
         falloAjax();
       });
   }
+
+  function botonTareas() {
+
+    comprobarSesion();
+
+    $('#contenido').fadeToggle('slow');
+    $('#contenido').empty();
+    $('#contenido').html(preload);
+
+
+    setTimeout(function () {
+      $.post('vistas/Tareas/tareasResumen.html', function (htmle) {
+        $('#contenido').html(htmle);
+      }, 'html');
+    }, 1000)
+  }
+
 
   function cargarProyectos() {
 

@@ -1,0 +1,78 @@
+<div class="card">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center">Crear Tareas</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 col-lg-10">
+                <a class="btn" id="volverResumenTareas">Resumen tareas</a> <a class="btn"><span
+                        class="fas fa-arrow-right"></span> </a> <a id="volverListado" class="btn">Crear tareas </a>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col col-lg-6">
+                        <div class="card">
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="text-center"> Datos de la tarea</h4>
+                                    <hr class="ml-5 mr-5 mt-0">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col p-4">
+                                    <form id="formularioCreacionTarea">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="nombreTarea">Nombre de la tarea</label>
+                                                    <input type="text" name="descripcionTarea" class="form-control"
+                                                        id="nombreTarea" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="nombreTarea">Descripción de la tarea</label>
+                                                    <textarea name="descripcionTarea" class="form-control"
+                                                        id="descripcionTarea" rows="5"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col col-lg-6">
+                        <div class="card">
+                            <div class="row">
+                                <div class="col">
+                                    <h4 class="text-center"> Listado de usuarios</h4>
+                                    <p class="text-center"><small>Listado de usuarios que tienen permitida la creación
+                                            de
+                                            anotaciones en esta tarea</small></p>
+                                    <hr class="ml-5 mr-5 mt-0">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        url = undefined;
+        url = "js/CRUD/tareas/tareasResumen.js";
+        // $.getScript(url);
+    </script>
