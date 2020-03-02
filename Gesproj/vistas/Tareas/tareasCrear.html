@@ -15,12 +15,12 @@
         <div class="row">
             <div class="col">
                 <div class="row">
-                    <div class="col col-lg-6">
+                    <div id="capaTarea" class="col col-lg">
                         <div class="card">
                             <div class="row">
                                 <div class="col">
                                     <h4 class="text-center"> Datos de la tarea</h4>
-                                    <hr class="ml-5 mr-5 mt-0">
+                                    <hr class="ml-5 mr-5 m-0">
                                 </div>
                             </div>
                             <div class="row">
@@ -30,7 +30,7 @@
                                             <div class="col">
                                                 <div class="form-group">
                                                     <label for="nombreTarea">Nombre de la tarea</label>
-                                                    <input type="text" name="descripcionTarea" class="form-control"
+                                                    <input type="text" name="nombreTarea" class="form-control"
                                                         id="nombreTarea" required>
                                                 </div>
                                             </div>
@@ -38,9 +38,65 @@
                                         <div class="row">
                                             <div class="col">
                                                 <div class="form-group">
-                                                    <label for="nombreTarea">Descripción de la tarea</label>
+                                                    <label for="descripcionTarea">Descripción de la tarea</label>
                                                     <textarea name="descripcionTarea" class="form-control"
-                                                        id="descripcionTarea" rows="5"></textarea>
+                                                        id="descripcionTarea" rows="4"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label for="listadoProyectos">Seleccione un proyecto</label>
+                                                    <select class="form-control" id="listadoProyectos">
+
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col ">
+                                                <div class="form-group card p-2 ">
+                                                    <p><span class="fa fa-clock text-primary"></span>Tiempo estimado:
+                                                    </p>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <label class="" for="inlineFormInputGroup">Horas</label>
+                                                            <div class="input-group mb-1">
+                                                                <div class="input-group-prepend">
+                                                                    <div class="input-group-text"><span
+                                                                            class="text-primary fa fa-hourglass-start"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <input type="number" min="0" value="0"
+                                                                    class="form-control col " id="horas">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col">
+                                                            <label class="" for="inlineFormInputGroup">Minutos</label>
+                                                            <div class="input-group mb-1">
+                                                                <div class="input-group-prepend">
+                                                                    <div class="input-group-text"><span
+                                                                            class="text-primary fa fa-hourglass-end"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <input type="number" min="0" max="59" value="0"
+                                                                    class="form-control col " id="minutos">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col text-center">
+                                                <div class="btn-group" role="group">
+                                                    <button type="reset" class="btn btn-secondary"><i
+                                                            class="fas fa-trash"></i> Borrar</button>
+                                                    <button type="button" id="enviarCrearTarea"
+                                                        class="btn btn-success"><i class="fas fa-upload"></i>
+                                                        Crear</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -51,7 +107,7 @@
 
                         </div>
                     </div>
-                    <div class="col col-lg-6">
+                    <div id='capaUsuario'class="col col-lg-6 d-none">
                         <div class="card">
                             <div class="row">
                                 <div class="col">
@@ -73,6 +129,6 @@
 
     <script>
         url = undefined;
-        url = "js/CRUD/tareas/tareasResumen.js";
-        // $.getScript(url);
+        url = "js/CRUD/tareas/tareasCrear.js";
+        $.getScript(url);
     </script>

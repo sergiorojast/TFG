@@ -7,6 +7,8 @@ actualizarProyecto();
 devolverAdministradoresProyecto();
 actualizarAdministradoresProyecto();
 finalizarProyecto();
+devolverTodosProyectosID();
+
 /**
  * Funcion encargada  de crear proyectos, necesita un nivel de permisos 50 o superior
  * 
@@ -321,22 +323,47 @@ function finalizarProyecto()
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'finalizarProyecto') {
         if (gestionarSesionyRol(50) == 1) {
- 
-            if(isset($_POST['id'])&&isset($_POST['fFinalizacion'])){
+
+            if (isset($_POST['id']) && isset($_POST['fFinalizacion'])) {
                 //si todos los datos estan bien, creamos la consulta.
-                $consulta =  "UPDATE `Proyectos` SET `fechaFinalizacion` = '".$_POST['fFinalizacion']."',`estado` = 'Finalizado' WHERE pk_idProyecto = '".$_POST['id']."'";
+                $consulta =  "UPDATE `Proyectos` SET `fechaFinalizacion` = '" . $_POST['fFinalizacion'] . "',`estado` = 'Finalizado' WHERE pk_idProyecto = '" . $_POST['id'] . "'";
                 $conector = new ConectorBD();
 
-                if($conector->actualizarBD($consulta)){
+                if ($conector->actualizarBD($consulta)) {
                     echo 1; //todo ok;
-                }else{
-                    echo -3;// Fallo en la consulta.
+                } else {
+                    echo -3; // Fallo en la consulta.
                 }
-            }else{
-                echo -2;//faltan datos;
+            } else {
+                echo -2; //faltan datos;
             }
-        }else{
+        } else {
             echo -1; // permisos requeridos.
+        }
+    }
+}
+/**
+ * Funcion encargada de devolver un JSON con los nombres de los proyectos  y su id, para
+ * la asignación de tareas.
+ * 
+ * @return JSON;
+ * @return -1; // el usuario no tiene permisos para listar los proyectos
+ */
+function devolverTodosProyectosID()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'listarProyectosEID') {
+        if (gestionarSesionyRol(90) == 1) {
+            $consulta = "SELECT pk_idProyecto, nombre FROM Proyectos";
+            $controlador =  new ConectorBD();
+            $resultado  = [];
+            $filas = $controlador->consultarBD($consulta);
+            while ($fila = $filas->fetch(PDO::FETCH_ASSOC)) {
+                array_push($resultado, $fila);
+            }
+
+            echo json_encode($resultado);
+        } else {
+            echo -1;
         }
     }
 }
