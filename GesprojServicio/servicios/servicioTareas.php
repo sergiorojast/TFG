@@ -5,11 +5,17 @@ listarProyectosYTareas();
 solicitarDatosTareaProyectoPorIdProyecto();
 
 insertarTarea();
+insertarUsuariosQuePuedenAniadirNotificaciones();
 
+/**
+ * 
+ * @return 2;// el usuario no tiene ninguna tarea asignada.
+ * @return JSON;//proyectos en json
+ */
 function listarProyectosYTareas()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'solicitarProyectosYtareas') {
-        if (gestionarSesionyRol(0) == 1) {
+        if (controlarRolExacto(50)) {
 
             $respuesta =  []; // variable que se usara para almacenar los proyectos y enviarlos como json
             //echo $_SESSION['correo'];
@@ -17,23 +23,40 @@ function listarProyectosYTareas()
             $consulta = 'SELECT
             pk_idProyecto ,
             nombre AS nombreProyecto
-            -- ,
-            -- Proyectos.descripcion AS descripcionProyecto,
-            -- Proyectos.fechaInicio AS fechaInicioProyecto,
-            -- Proyectos.fechaFinalizacion As fechaFinalizacionProyecto,
-            -- Proyectos.estado AS estadoProyecto,
-            -- Proyectos.estimacion AS estimacionProyecto,
-            -- pk_idTarea,
-            -- fk_idProyecto,
-            -- nombreTarea,
-            -- Tareas.descripcion AS descripcionTarea,
-            -- Tareas.fechaInicio AS fechaInicioTare,
-            -- Tareas.fechaFinalizacion AS fechaFinalizacionTarea,
-            -- Tareas.estado AS estadoTarea,
-            -- Tareas.estimacion AS estimacionTarea,
-            -- fk_correo,
-            -- fk_idTarea
+     
             
+        FROM
+            Proyectos,
+            `Usuarios:Proyectos`
+        WHERE
+            fk_correo = \'' . $_SESSION['correo'] . '\' && fk_idProyecto = pk_idProyecto';
+
+            //lanzamos la consulta.
+
+            $controlador =  new ConectorBD();
+
+
+
+            $resultados =  $controlador->consultarBD($consulta);
+
+
+
+            while ($resultado = $resultados->fetch(PDO::FETCH_ASSOC)) {
+
+                array_push($respuesta, $resultado);
+            }
+
+
+            echo json_encode($respuesta);
+        } else if (controlarRolExacto(0)) {
+
+            $respuesta =  []; // variable que se usara para almacenar los proyectos y enviarlos como json
+            //echo $_SESSION['correo'];
+
+            $consulta = 'SELECT
+            pk_idProyecto ,
+            nombre AS nombreProyecto
+     
             
         FROM
             Proyectos,
@@ -41,19 +64,58 @@ function listarProyectosYTareas()
             `Usuarios:Tareas`
         WHERE
             fk_correo = \'' . $_SESSION['correo'] . '\' && pk_idTarea = fk_idTarea && fk_idProyecto = pk_idProyecto';
-            // echo $consulta;
+
             //lanzamos la consulta.
 
             $controlador =  new ConectorBD();
 
+
+
             $resultados =  $controlador->consultarBD($consulta);
+            if ($resultados->fetch()) {
+                while ($resultado = $resultados->fetch(PDO::FETCH_ASSOC)) {
 
-            while ($resultado = $resultados->fetch(PDO::FETCH_ASSOC)) {
+                    array_push($respuesta, $resultado);
+                }
 
-                array_push($respuesta, $resultado);
+                echo json_encode($respuesta);
+            } else {
+                echo 2; // no tiene ninguna tarea este usuario
             }
+        } else if (controlarRolExacto(90)) {
 
-            echo json_encode($respuesta);
+            $respuesta =  []; // variable que se usara para almacenar los proyectos y enviarlos como json
+            //echo $_SESSION['correo'];
+
+            $consulta = 'SELECT
+            pk_idProyecto ,
+            nombre AS nombreProyecto
+     
+            
+        FROM
+            Proyectos,
+            Tareas,
+            `Usuarios:Tareas`
+        WHERE
+            fk_correo = \'' . $_SESSION['correo'] . '\' && pk_idTarea = fk_idTarea && fk_idProyecto = pk_idProyecto';
+
+            //lanzamos la consulta.
+
+            $controlador =  new ConectorBD();
+
+
+
+            $resultados =  $controlador->consultarBD($consulta);
+            if ($resultados->fetch()) {
+                while ($resultado = $resultados->fetch(PDO::FETCH_ASSOC)) {
+
+                    array_push($respuesta, $resultado);
+                }
+
+                echo json_encode($respuesta);
+            } else {
+                echo 2; // no tiene ninguna tarea este usuario
+            }
         }
     }
 }
@@ -93,8 +155,9 @@ function solicitarDatosTareaProyectoPorIdProyecto()
             `Usuarios:Tareas`
         WHERE
             fk_correo = \'' . $_SESSION['correo'] . '\' && pk_idTarea = fk_idTarea && fk_idProyecto = pk_idProyecto && fk_idProyecto=' . filtrado($_POST['idProyecto']);
-            // echo $consulta;
+
             //lanzamos la consulta.
+            //echo $consulta;
 
             $controlador =  new ConectorBD();
             //pasamos la consulta  directamente a js
@@ -248,6 +311,48 @@ function insertarTarea()
             }
         } else {
             echo -1;
+        }
+    }
+}
+
+/**
+ * Funcion encargada de recivir un JSON con los usuarios que podran añadir anotaciones a la tarea.
+ * 
+ * @return 1; //todo ok;
+ * @return -1; //fallo ne la insercion de los usuarios.
+ */
+
+function insertarUsuariosQuePuedenAniadirNotificaciones()
+{
+
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'aniadeUsuariosTareaParaNotificaciones') {
+        if (gestionarSesionyRol(90) == 1) {
+            $estado = true;
+
+            $usuarios = json_decode($_POST['usuarios']);
+
+            $conector = new ConectorBD();
+            //obtenemos el id de la tarea a partir del nombre
+            $consulta = "SELECT pk_idTarea FROM Tareas WHERE nombreTarea = '" . filtrado($_POST['nombreTarea']) . "'";
+
+            $idTarea = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+            for ($i = 0; $i < count($usuarios); $i++) {
+                $consulta = "INSERT INTO `Usuarios:Tareas:PermisosNotificaciones`(`fk_idTarea`, `fk_correo`) VALUES ('".$idTarea[0]['pk_idTarea']."','".$usuarios[$i]."')";
+                
+                if($conector->actualizarBD($consulta)){
+
+                }else{
+                    $estado = false;
+                }
+            }
+
+            if($estado){
+                echo 1;
+            }else{
+                echo -1;
+            }
         }
     }
 }

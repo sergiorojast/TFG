@@ -92,7 +92,7 @@
                                         <div class="row">
                                             <div class="col text-center">
                                                 <div class="btn-group" role="group">
-                                                    <button type="reset" class="btn btn-secondary"><i
+                                                    <button type="reset" id="botonReset" class="btn btn-secondary"><i
                                                             class="fas fa-trash"></i> Borrar</button>
                                                     <button type="button" id="enviarCrearTarea"
                                                         class="btn btn-success"><i class="fas fa-upload"></i>
@@ -107,7 +107,7 @@
 
                         </div>
                     </div>
-                    <div id='capaUsuario'class="col col-lg-6 d-none">
+                    <div id='capaUsuario' class="col col-lg-6 d-none">
                         <div class="card">
                             <div class="row">
                                 <div class="col">
@@ -117,6 +117,37 @@
                                             anotaciones en esta tarea</small></p>
                                     <hr class="ml-5 mr-5 mt-0">
                                 </div>
+                            </div>
+                            <div class="col m-1">
+
+                                <div class="row p-1">
+                                    <div class="col">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <button class="btn btn-outline-primary" id="botonSeleccionarUsuarios"
+                                                    type="button">Añadir</button>
+                                            </div>
+                                            <select class="custom-select" id="selectorUsuarios">
+                                                <option selected>Seleccionar usuarios...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <ul class="list-group" id="listadoUsuarios">
+
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col text-center m-2">
+                                        <button class="btn btn-success" id="botonaniadirUsuarios" type="button"> <i
+                                                class='fas fa-upload'></i> Añadir</button>
+                                    </div>
+                                </div>
+
                             </div>
 
                         </div>

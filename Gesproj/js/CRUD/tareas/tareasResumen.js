@@ -39,26 +39,33 @@ function solicitarProyectosPorTareas() {
 
         })
         .done(function (datos) {
+            //console.log(datos)
+            if (datos == 2) {
+                $('#listadoTareas').empty();
+                $('#crearTareaSegunProyecto').remove();
+                $('#listadoTareas').html("<h4 class='text-center'>Usted no tiene ninguna tarea, ni es administrador de ningun proyecto.</h4>")
+            } else {
+                let respuesta = JSON.parse(datos);
 
-            //console.log(JSON.parse(datos));
-            let respuesta = JSON.parse(datos);
 
-            for (let i = 0; i < respuesta.length; i++) {
+                for (let i = 0; i < respuesta.length; i++) {
 
-                //le meto un espacio a la clave del array, porque como es un identificador numerico, nos crea un array con X posiciones vacias hasta llegar al indice.
-                // ejemplo, si el indice es 1001, nos crea un array con 1002 posiciones y las 1001 posiciones anteriores estan vacias.
-                if (proyectos[respuesta[i]['pk_idProyecto'] + " "]) {
-                    //si existe el array añadimos el objeto al completo.
-                    proyectos[respuesta[i]['pk_idProyecto'] + " "].push(respuesta[i]);
-                } else {
-                    //si no existe la entrada en el array la creamos con los datos necesarios.
-                    proyectos[respuesta[i]['pk_idProyecto'] + " "] = [respuesta[i]];
+                    //le meto un espacio a la clave del array, porque como es un identificador numerico, nos crea un array con X posiciones vacias hasta llegar al indice.
+                    // ejemplo, si el indice es 1001, nos crea un array con 1002 posiciones y las 1001 posiciones anteriores estan vacias.
+                    if (proyectos[respuesta[i]['pk_idProyecto'] + " "]) {
+                        //si existe el array añadimos el objeto al completo.
+                        proyectos[respuesta[i]['pk_idProyecto'] + " "].push(respuesta[i]);
+                    } else {
+                        //si no existe la entrada en el array la creamos con los datos necesarios.
+                        proyectos[respuesta[i]['pk_idProyecto'] + " "] = [respuesta[i]];
+                    }
+
                 }
 
+
+                dibujarProyectos(proyectos);
             }
 
-
-            dibujarProyectos(proyectos);
 
         })
         .fail(function (datos) {
@@ -76,11 +83,19 @@ function solicitarDatosPorId(id) {
             },
         })
         .done(function (datos) {
+          //  console.log(datos)
+            if (datos == '[]') {
 
-            //añadimos un preload para mostrar la espera de las tareas.
-            $('#listadoTareas').html(preloadAzul);
+                $('#listadoTareas').html("")
+                dibujarDatosProyectoSinTareas(datos);
+            } else {
 
-            dibujarTareasPorProyectos(JSON.parse(datos));
+
+                //añadimos un preload para mostrar la espera de las tareas.
+                $('#listadoTareas').html(preloadAzul);
+
+                dibujarTareasPorProyectos(JSON.parse(datos));
+            }
         })
         .fail(function (datos) {
             falloAjax();
@@ -134,6 +149,37 @@ function asignarEventosPestanias() {
         solicitarDatosPorId($(this).attr('data-idProyecto'))
     })
 }
+
+function dibujarDatosProyectoSinTareas(datos) {
+    let elementos = "   <div class='container'>" +
+        " <br>" +
+        "  <div class='row '>" +
+        "      <div class='col col-lg-4'>Nombre: <strong>" + datos[0]['nombreProyecto'] + "</strong></div>";
+
+    if (datos[0]['estadoProyecto'] == "En curso") {
+        elementos += "     <div class='col col-lg-3'> <span class='badge badge-success'>" + datos[0]['estadoProyecto'] + "</span></div>"
+    } else if (datos[0]['estadoProyecto'] == "En espera") {
+        elementos += "     <div class='col col-lg-3'> <span class='badge badge-warning'>" + datos[0]['estadoProyecto'] + "</span></div>"
+    } else if (datos[0]['estadoProyecto'] == "Creado") {
+        elementos += "     <div class='col col-lg-3'> <span class='badge badge-primary'>" + datos[0]['estadoProyecto'] + "</span></div>"
+    } else if (datos[0]['estadoProyecto'] == "Finalizado") {
+        elementos += "     <div class='col col-lg-3'> <span class='badge badge-secondary'>" + datos[0]['estadoProyecto'] + "</span></div>"
+    }
+
+    // "     <div class='col col-lg-3'>" + datos[0]['estadoProyecto'] + "</div>";
+
+
+    elementos += "      <div class='col col-lg-3'> tiempo estimado: <strong>" + datos[0]['estimacionProyecto'] + "</strong></div>" +
+        "      <div class='col col-lg-2'> id: <input type='text' size='5' class='form-control-sm' disabled readonly" +
+        "             id='idProyecto' value='" + datos[0]['pk_idProyecto'] + "'></div>" +
+        "" +
+        "  </div>" +
+        "  <hr>";
+
+    $('#listadoTareas').html(elementos);
+
+
+}
 /**
  * funcion encargada de dibujar en el dom las tareas de cada proyecto.
  */
@@ -162,11 +208,13 @@ function dibujarTareasPorProyectos(datos) {
         "             id='idProyecto' value='" + datos[0]['pk_idProyecto'] + "'></div>" +
         "" +
         "  </div>" +
+        "  </div>" +
+        "  </div>" +
         "  <hr>";
 
 
 
-    console.log(datos)
+
 
     for (let i = 0, j = 1; i < datos.length; i++, j++) {
 

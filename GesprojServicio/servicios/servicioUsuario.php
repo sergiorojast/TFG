@@ -24,6 +24,8 @@ datosUsuarioLogueado();
 
 editarUsuarioActual();
 
+devolverTodosLosUsuarios();
+
 /**
  * 
  * 
@@ -371,7 +373,7 @@ function devolverAdministradores()
 {
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'listadoAdministradores') {
-        if (gestionarSesionyRol(90) == 1) {
+        if (gestionarSesionyRol(50) == 1) {
             $controlador =  new ConectorBD();
 
 
@@ -627,6 +629,29 @@ function editarUsuarioActual()
                 }
                 //  echo $consulta;
             }
+        }
+    }
+}
+
+/**
+ * Funcion encargada de suministrar una lista de usuarios moderadores y administradores para seleccionar
+ * los permisos que tiene cada uno a la hora de agregar notificaciones a las tareas. Devolvera los datos para añadirlos a un select
+ * @return JSON;
+ * @return -1;//fallo relacionado con los permisos.
+ */
+function devolverTodosLosUsuarios()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'obtenerUsuarios') {
+        if (gestionarSesionyRol(90)) {
+            $consulta = "SELECT pk_correo, nombre , apellidos FROM Usuarios";
+
+            $conector =  new ConectorBD();
+
+            $resultado = $conector->consultarBD($consulta);
+
+            echo json_encode($resultado->fetchAll(PDO::FETCH_ASSOC));
+        } else {
+            echo -1;
         }
     }
 }

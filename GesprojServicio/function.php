@@ -74,6 +74,17 @@ function controlarRol(int $rolRequerido)
 
     return $resultado;
 }
+//comprueba si el rol requerido es mayor o menor  que el del usuario de manera exacta.
+function controlarRolExacto(int $rolRequerido)
+{
+    $resultado  = false;
+    if ((int)$_SESSION['rol'] == (int)$rolRequerido) {
+        $resultado = true;
+    }
+
+    return $resultado;
+}
+
 
 //comprueba si el usuario existe;
 function comprobarUsuario(string $correo)
