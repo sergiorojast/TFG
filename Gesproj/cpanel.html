@@ -83,31 +83,35 @@
                 </div>
             </div>
             <hr class="bg-light m-2 separadorClaro">
-            <div class="row ">
-                <div class="col">
-                    <p class="p-0 m-0">
-                        <a class="p-0 m-0 text-light btn botonesBarraLateral" id="crudUsuarios">
-                            <span class="fa fa-user" data-toggle="tooltip" data-placement="right" title="Usuarios">
+            <div id="columnaUsuario">
+                <div class="row ">
+                    <div class="col">
+                        <p class="p-0 m-0">
+                            <a class="p-0 m-0 text-light btn botonesBarraLateral" id="crudUsuarios">
+                                <span class="fa fa-user" data-toggle="tooltip" data-placement="right" title="Usuarios">
 
-                            </span>
-                            <small id="textoBarraLateral">Usuarios </small>
-                        </a>
-                    </p>
+                                </span>
+                                <small id="textoBarraLateral">Usuarios </small>
+                            </a>
+                        </p>
+                    </div>
                 </div>
+                <hr class="bg-light m-2 separadorOscuro">
             </div>
-            <hr class="bg-light m-2 separadorOscuro">
-            <div class="row">
-                <div class="col">
-                    <p class="p-0 m-0">
-                        <a class="p-0 m-0 text-light btn botonesBarraLateral" id="crudProyectos">
-                            <span class="fa fa-project-diagram" data-toggle="tooltip" data-placement="right"
-                                title="Proyectos"></span>
-                            <small id="textoBarraLateral"> Proyectos</small>
-                        </a>
-                    </p>
+            <div id="columnaProyectos">
+                <div class="row">
+                    <div class="col">
+                        <p class="p-0 m-0">
+                            <a class="p-0 m-0 text-light btn botonesBarraLateral" id="crudProyectos">
+                                <span class="fa fa-project-diagram" data-toggle="tooltip" data-placement="right"
+                                    title="Proyectos"></span>
+                                <small id="textoBarraLateral"> Proyectos</small>
+                            </a>
+                        </p>
+                    </div>
                 </div>
+                <hr class="bg-light m-2 separadorOscuro">
             </div>
-            <hr class="bg-light m-2 separadorOscuro">
             <div class="row">
                 <div class="col">
                     <p class="p-0 m-0">
@@ -124,10 +128,10 @@
             <div class="row ">
                 <div class="col ">
                     <p class="p-0 m-0">
-                        <a class="p-0 m-0 text-light btn botonesBarraLateral">
+                        <a class="p-0 m-0 text-light btn botonesBarraLateral disabled">
                             <span class="fa fa-sticky-note" data-toggle="tooltip" data-placement="right"
                                 title="Anotaciones"></span>
-                            <small id="textoBarraLateral"> Anotaciones</small>
+                            <small id="textoBarraLateral"> Notificaciones</small>
                         </a>
                     </p>
                 </div>
@@ -176,6 +180,8 @@
     <script src="lib/toastr-master/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.3.3/bootbox.min.js"></script>
     <script src="lib/chart/js/Chart.bundle.min.js"></script>
+
+
     <script src="js/main.js"></script>
     <script src="js/controladorCpanel.js" async></script>
 

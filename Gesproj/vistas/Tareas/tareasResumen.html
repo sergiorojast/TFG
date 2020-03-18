@@ -12,7 +12,7 @@
 
             </div>
             <div class="col-6 col-lg-2">
-                <button id='crearTarea' class="btn btn-success"> <i class="fas fa-plus"></i> Crear Tarea</button>
+                <button id='crearTarea' class="btn btn-success"> <i class="fas fa-user-shield"></i> Crear Tarea</button>
             </div>
             <hr>
         </div>
@@ -24,7 +24,8 @@
 
         <div class="row">
             <div class="col text-center">
-                <button id='crearTareaSegunProyecto' class="m-2 btn btn-lg btn-success"><i class="fas fa-plus"></i> Crear tarea para proyecto</button>
+                <button id='crearTareaSegunProyecto' class="m-2 btn btn-lg btn-success"><i class="fas fa-plus"></i>
+                    Crear tarea para proyecto</button>
             </div>
         </div>
 
@@ -35,7 +36,346 @@
 
 
     </div>
+    <!-- Modal para la creacion de nuevas tareas MODERADORES -->
+    <div class="modal" id="modalModeradorCrearTarea" tabindex="-1" role="dialog">
+        <div class="modal-dialog  modal-lg " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Creación nueva tarea según proyecto</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div id="capaTarea" class="col col-lg">
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="text-center"> Datos de la tarea</h4>
+                                        <hr class="ml-5 mr-5 m-0">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col p-4">
+                                        <form id="formularioCreacionTareaModal">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label for="nombreTarea">Nombre de la tarea</label>
+                                                        <input type="text" name="nombreTarea" class="form-control"
+                                                            id="nombreTarea" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label for="descripcionTarea">Descripción de la tarea</label>
+                                                        <textarea name="descripcionTarea" class="form-control"
+                                                            id="descripcionTarea" rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
 
+                                            <div class="row">
+                                                <div class="col ">
+                                                    <div class="form-group card p-2 ">
+                                                        <p><span class="fa fa-clock text-primary"></span>Tiempo
+                                                            estimado:
+                                                        </p>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <label class="" for="inlineFormInputGroup">Horas</label>
+                                                                <div class="input-group mb-1">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text"><span
+                                                                                class="text-primary fa fa-hourglass-start"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="number" min="0" value="0"
+                                                                        class="form-control col " name="horas"
+                                                                        id="horas">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label class=""
+                                                                    for="inlineFormInputGroup">Minutos</label>
+                                                                <div class="input-group mb-1">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text"><span
+                                                                                class="text-primary fa fa-hourglass-end"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="number" min="0" max="59" value="0"
+                                                                        class="form-control col " name="minutos"
+                                                                        id="minutos">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id='capaUsuario' class="col mt-3 col-lg">
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="text-center"> Listado de usuarios</h4>
+                                        <p class="text-center"><small>Listado de usuarios que tienen permitida la
+                                                creación
+                                                de
+                                                anotaciones en esta tarea</small></p>
+                                        <hr class="ml-5 mr-5 mt-0">
+                                    </div>
+                                </div>
+                                <div class="col m-1">
+
+                                    <div class="row p-1">
+                                        <div class="col">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-outline-primary"
+                                                        id="botonSeleccionarUsuarios" type="button">Añadir</button>
+                                                </div>
+                                                <select class="custom-select" id="selectorUsuariosModal">
+                                                    <option selected>Seleccionar usuarios...</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <ul class="list-group" id="listadoUsuarios">
+
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                        Cerrar</button>
+                    <button type="reset" id='resetFormularioModal' class="btn btn-secondary"><i
+                            class="fas fa-trash"></i> Borrar</button>
+                    <button type="button" id='botonEnviarFormularioModal' class="btn btn-success"><i
+                            class="fas fa-upload"></i> Crear tarea</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para editar tareas moderador y administrador -->
+    <div class="modal" id="modalEditarTarea" tabindex="-1" role="dialog">
+        <div class="modal-dialog  modal-lg " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edición tarea segun proyecto</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div id="capaTareaEdicion" class="col col-lg-7">
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="text-center"> Datos de la tarea</h4>
+                                        <hr class="ml-5 mr-5 m-0">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col p-4">
+                                        <form id="formularioEdicionTarea">
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <div class="form-group">
+                                                        <label for="nombreTareaEdicion">Nombre de la tarea</label>
+                                                        <input type="text" name="nombreTareaEdicion"
+                                                            class="form-control" id="nombreTareaEdicion" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-3">
+                                                    <div class="form-group">
+                                                        <label for="nombreTareaEdicion">ID</label>
+                                                        <input type="text" class="form-control" id="idTareaEditar"
+                                                            readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label for="descripcionTareaEdicion">Descripción de la
+                                                            tarea</label>
+                                                        <textarea name="descripcionTareaEdicion" class="form-control"
+                                                            id="descripcionTareaEdicion" rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label for="fechaCreacionTareaEditar">Fecha de creación</label>
+                                                        <input type="text" name="fechaCreacionTareaEditar"
+                                                            class="form-control" id="fechaCreacionTareaEditar" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col ">
+                                                    <div class="form-group card p-2 ">
+                                                        <p><span class="fa fa-clock text-primary"></span>Tiempo
+                                                            estimado:
+                                                        </p>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <label class="" for="inlineFormInputGroup">Horas</label>
+                                                                <div class="input-group mb-1">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text"><span
+                                                                                class="text-primary fa fa-hourglass-start"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="number" min="0" value="0"
+                                                                        class="form-control col " name="horasEdicion"
+                                                                        id="horasEdicion">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <label class=""
+                                                                    for="inlineFormInputGroup">Minutos</label>
+                                                                <div class="input-group mb-1">
+                                                                    <div class="input-group-prepend">
+                                                                        <div class="input-group-text"><span
+                                                                                class="text-primary fa fa-hourglass-end"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <input type="number" min="0" max="59" value="0"
+                                                                        class="form-control col " name="minutosEdicion"
+                                                                        id="minutosEdicion">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label for="selectorEstadoTarea">Estado</label>
+                                                        <select class="form-control" name="selectorEstadoTarea"
+                                                            id="selectorEstadoTarea">
+                                                            <option value="Creado">Creado</option>
+                                                            <option value="En curso">En curso</option>
+                                                            <option value="En espera">En espera</option>
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div id="capaTareaEdicion" class="col col-lg-5">
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="text-center"> Administrador de la tarea</h4>
+                                        <hr class="ml-5 mr-5 m-0 mb-2">
+                                        
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <ul class="list-group p-1" id='listaAdministradores'>
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mt-2">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="text-center"> Listado de usuarios</h4>
+                                        <hr class="ml-5 mr-5 mt-0">
+
+                                        <p class="text-center text-secondary"><small>Listado de usuarios que tienen
+                                                permitida la
+                                                creación
+                                                de
+                                                anotaciones en esta tarea</small></p>
+
+                                    </div>
+                                </div>
+                                <div class="col m-1">
+
+                                    <div class="row p-1">
+                                        <div class="col">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-outline-primary"
+                                                        id="botonSeleccionarUsuariosEdicion"
+                                                        type="button">Añadir</button>
+                                                </div>
+                                                <select class="custom-select" id="selectorUsuariosModalEdicion">
+                                                    <option selected>Seleccionar usuarios...</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <ul class="list-group" id="listadoUsuariosEdicion">
+
+                                            </ul>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>
+                        Cerrar</button>
+                    <!-- <button type="reset" id='resetFormularioModalEdicion' class="btn btn-secondary"><i
+                            class="fas fa-trash"></i> Borrar</button> -->
+                    <button type="button" id='botonEnviarFormularioModalEdicion' class="btn btn-success"><i
+                            class="fas fa-upload"></i> Actualizar tarea</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         url = undefined;
         url = "js/CRUD/tareas/tareasResumen.js";

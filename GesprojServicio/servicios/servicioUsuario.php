@@ -642,7 +642,7 @@ function editarUsuarioActual()
 function devolverTodosLosUsuarios()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'obtenerUsuarios') {
-        if (gestionarSesionyRol(90)) {
+        if (gestionarSesionyRol(50)) {
             $consulta = "SELECT pk_correo, nombre , apellidos FROM Usuarios";
 
             $conector =  new ConectorBD();

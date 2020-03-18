@@ -285,6 +285,10 @@ function enviarTarea() {
                 mensajeDanger("Ya existe una tarea con ese mismo nombre, la tarea no sera creada", "¡ERROR!");
                 mensajeInfo('Usuario añadido como administrador del proyecto', 'Información');
 
+            } else if (datos == -9) {
+                mensajeDanger("La tarea que se quiere crear excede el tiempo estimado del proyecto", "¡ERROR!");
+              
+
             }
         })
         .fail(falloAjax);

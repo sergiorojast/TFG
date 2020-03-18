@@ -11,11 +11,13 @@ $(function () {
 
     solicitarDatosAdministradores();
 
-
-
-
     enviarActualizacionAdministradores();
 
+    //colocamos un preload en la zona de tareas
+
+    $('#zonaPreload').html(preloadRojo);
+
+    solicitarTareas();
 })
 
 //#region funcionalidad
@@ -420,6 +422,38 @@ function solicitarAdministradoresProyecto() {
     }).done(function (datos) {
         dibujarAdministradores(JSON.parse(datos));
     }).fail(falloAjax);
+}
+
+
+function solicitarTareas() {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'obtenerTareasPorIdProyecto',
+                'id': $('#cIDProyecto').val()
+            },
+
+        }).done(function (e) {
+           
+
+            if(e==1){
+                $('#zonaPreload').html('<small>Este proyecto no tiene tareas creadas.</small>');
+                $('#zonaPreload').addClass('text-center');
+            }else if( e == -1){
+                mensajeDanger('No tienes permisos para realizar esta accion', '¡ERROR!');
+            }else if( e == -2){
+                mensajeDanger('falta el id del proyecto', '¡ERROR!');
+            }else{
+                $('#zonaPreload').empty();
+                let tareas  = JSON.parse(e);
+                for (let i = 0; i < tareas.length; i++) {
+                   //console.log(tareas[i])
+                    $('#listaTareas').append("<li class='list-group-item'> <span class='fas fa-stream text-info'></span>  "+tareas[i]['nombreTarea']+"</li>")
+                }
+            }
+        })
+        .fail(falloAjax);
 }
 //#endregion
 //#region EnvioDeDatos

@@ -61,9 +61,9 @@ function agregarDatosProyectosAlDoM(datos) {
         }
         //construimos el elmento que nos muestra los proyectos
         carta = "<div class='col-6 col-sm-4 col-lg-3 mb-2 ' >" +
-            "<div class = 'card' id='cartasProyectos' >" +
+            "<div class = 'card rounded-lg' id='cartasProyectos' >" +
             "<div class = 'row' >" +
-            "<div class = 'col col-sm-6'>" +
+            "<div class = 'col col-sm-4'>" +
             "<span id='idProyecto' class='d-none'>" + datos[i]['pk_idProyecto'] + "</span>";
 
 
@@ -106,7 +106,7 @@ function agregarDatosProyectosAlDoM(datos) {
             barraDeProgreso = "";
         }
 
-        carta += "<div class ='col col-sm-6'> <small>" + datos[i]['nombre'] + " </small> </div>";
+        carta += "<div class ='col col-sm-8 text-truncate'> <small>" + datos[i]['nombre'] + " </small> </div>";
 
         carta += "</div>";
         carta += "<hr class='m-2 bg-secondary'>";
@@ -116,7 +116,7 @@ function agregarDatosProyectosAlDoM(datos) {
             "</div>";
 
         carta += "<div class='row m-1'>" +
-            "<div class='col'> <small>" + datos[i]['descripcion'] + "</small></div>" +
+            "<div class='col text-truncate'> <small>" + datos[i]['descripcion'] + "</small></div>" +
             "</div>";
         carta += "<hr class='m-2 bg-secondary'>";
 

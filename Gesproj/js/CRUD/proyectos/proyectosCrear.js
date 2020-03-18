@@ -29,11 +29,13 @@ function agregarFuncionalidadBotonesRetroceder() {
  * procedimiento encargado de cambiar  la vista por el resumen de proyectos.
  */
 function volverAtras() {
+
+    $('#contenido').fadeToggle();
     $('#contenido').empty();
     $('#contenido').html(preload);
 
 
-    $.post('vistas/proyectos/proyectosResumen.html', function (htmle) {
+    $.post('vistas/Proyectos/proyectosResumen.html', function (htmle) {
         $('#contenido').html(htmle);
     }, 'html');
 }
@@ -51,13 +53,13 @@ function validarFormulario() {
             'eDescripcionProyecto': {
                 required: true,
                 minlength: 10,
-                maxlength: 6000
+                maxlength: 60000
 
             },
             'horas': {
                 number: true,
                 min: 0,
-                max: 99999
+                max: 999
             },
             'minutos': {
                 number: true,

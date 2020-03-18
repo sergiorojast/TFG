@@ -8,6 +8,8 @@ window.addEventListener('load', function () {
 
   cargarTablero();
 
+  controlBotonesPorRol();
+
 })
 
 /**
@@ -26,7 +28,7 @@ function controladorBarraLateral() {
     if (estadoBarraLateral) {
       $('#barraLateral .row p').addClass('text-center');
       $('#barraLateral').animate({
-        width: '5%'
+        width: '75px'
       }, {
         step: function () {
           contadorGiroIcono = parseInt(contadorGiroIcono + 5);
@@ -61,7 +63,7 @@ function controladorBarraLateral() {
       $('#barraLateral .row p').removeClass('text-center');
       contadorGiroIcono = 45;
       $('#barraLateral').animate({
-        width: '10%'
+        width: '140px'
       }, {
         step: function () {
           contadorGiroIcono = parseInt(contadorGiroIcono + 5);
@@ -266,4 +268,56 @@ function cargarTablero() {
       $('#contenido').html(htmle);
     }, 'html');
   }, 1000);
+}
+/**
+ * Funcion encargada de ocultar los botones para los usuarios que no tengan los permisos.
+ */
+function controlBotonesPorRol() {
+  let cookies = document.cookie.split(';');
+  let cookie;
+  let rol;
+
+
+
+  for (let i = 0; i < cookies.length; i++) {
+    let aux = cookies[i].split('=');
+
+    if (aux[0] == " usuario" || aux[0] == "usuario") {
+      cookie = aux[1];
+    }
+  }
+
+  cookie = cookie.split(',')
+  for (let i = 0; i < cookie.length; i++) {
+    aux = cookie[i].split(':');
+
+    if (aux[0] == '"rol"') {
+      rol = aux[1].substr(0, aux[1].length - 1);
+
+    }
+
+  }
+  rolUsuario = rol;
+
+  if (rolUsuario == 0) {
+    //eliminamos los botones de la barra lateral izquierda
+    $('#columnaUsuario').remove();
+    $('#columnaProyectos').remove();
+    //eliminamos crear tarea de la seccion tareas
+    $('#crearTarea').remove();
+    //Eliminamos las option del select de editar usuario actual
+    $('#administrador').remove();
+    $('#moderador').remove();
+
+
+  } else if (rolUsuario == 50) {
+    //eliminamos los botones de la barra lateral izquierda
+    $('#columnaUsuario').remove();
+    //eliminamos crear tarea de la seccion tareas
+    $('#crearTarea').remove();
+    //Eliminamos las option del select de editar usuario actual
+    $('#administrador').remove();
+
+
+  }
 }

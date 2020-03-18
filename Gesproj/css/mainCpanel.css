@@ -9,7 +9,7 @@
 
 #barraLateral {
 
-  width: 10%;
+  width: 140px;
   height: 100vh;
   position: fixed;
   z-index: 1;
@@ -66,3 +66,4 @@
   max-width: 50%;
   height: auto;
 }
+

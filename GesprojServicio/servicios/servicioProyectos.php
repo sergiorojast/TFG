@@ -27,8 +27,9 @@ function crearProyecto()
                     $token = true;
                     $nombre = filtrado($_POST['nombre']);
                     $descripcion = filtrado($_POST['descripcion']);
-
-
+                    $descripcion = htmlspecialchars($descripcion);
+                    $descripcion = addslashes($descripcion);
+                   
                     $horas = (int) filtrado($_POST['horas']);
                     $minutos  = (int) filtrado($_POST['minutos']);
 
@@ -44,7 +45,7 @@ function crearProyecto()
 
                     //insertamos el proyecto en la base de datos
                     $consulta =  "INSERT INTO `Proyectos`(`nombre`, `descripcion`, `estado`, `estimacion`) VALUES ('" . $nombre . "','" . $descripcion . "','Creado','" . $estimacion . "')";
-
+                   
                     $conector = new ConectorBD();
                     if ($conector->actualizarBD($consulta)) {
 

@@ -6,7 +6,8 @@ var js = '/js/';
 var repositorioImagenes = 'http://www.iestrassierra.net/alumnado/curso1920/DAWS/daws1920a7/GesprojServicio/imagenes';
 
 //preload normales.
-var preload = "<div class='text-center'><div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div> </div>";
+var preload = "<div class='text-center'><div class='spinner-border ' role='status'><span class='sr-only'>Loading...</span></div> </div>";
+var preloadPequenio = "<div class='text-center'><div class='spinner-border spinner-border-sm' role='status'><span class='sr-only'>Loading...</span></div> </div>";
 var preloadAzul = "<div class='text-center'><div class='spinner-border text-primary' role='status'><span class='sr-only'>Loading...</span></div> </div>";
 var preloadRojo = "<div class='text-center'><div class='spinner-border text-danger' role='status'><span class='sr-only'>Loading...</span></div> </div>";
 var preloadVerde = "<div class='text-center'><div class='spinner-border text-success' role='status'><span class='sr-only'>Loading...</span></div> </div>";
@@ -25,6 +26,8 @@ toastr.options.preventDuplicates = true;
 //Añadimos boton cerrar
 toastr.options.closeButton = true;
 
+
+var rolUsuario = null;
 function falloAjax() {
     toastr.error('Parece haber un error en la petición AJAX, le recomendamos que pruebe en unos minutos', 'Error AjaX!', {
         timeOut: 5000
