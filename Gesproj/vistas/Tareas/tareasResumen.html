@@ -305,7 +305,7 @@
                                     <div class="col">
                                         <h4 class="text-center"> Administrador de la tarea</h4>
                                         <hr class="ml-5 mr-5 m-0 mb-2">
-                                        
+
 
                                     </div>
                                 </div>
@@ -376,6 +376,79 @@
             </div>
         </div>
     </div>
+    <!--Cierre modal de modificación  -->
+
+    <!-- Modal de anotaciones -->
+
+    <div class="modal" id="modalAnotaciones" tabindex="-1" role="dialog">
+        <div class="modal-dialog  modal-lg " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Anotaciones</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-8">
+
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col">
+
+                                        <input type="hidden" id="idTareaModalAnotaciones">
+                                        <div id="datosTareaModalNotificaciones">
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <hr class="ml-5 mr-5">
+
+                                <div class="row p-2">
+                                    <div class="col">
+
+                                        <ul class='list-group' id='listaAnotacionesModal'>
+                                            <li class='list-group-item active'>
+                                                <h4> Anotaciones de la Tarea</h4>
+                                            </li>
+                                            <li class='list-group-item'>Dapibus ac facilisis in</li>
+                                            <li class='list-group-item'>Morbi leo risus</li>
+                                            <li class='list-group-item'>Porta ac consectetur ac</li>
+                                            <li class='list-group-item'>Vestibulum at eros</li>
+                                        </ul>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 ">
+
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col">
+                                        <h4 class="text-center">Acciones</h4>
+                                        <hr class="ml-5 mr-5">
+                                        <div id="accionesModalAnotaciones" class="p-1">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Cierre modal de anotaciones -->
     <script>
         url = undefined;
         url = "js/CRUD/tareas/tareasResumen.js";

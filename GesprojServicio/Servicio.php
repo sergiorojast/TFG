@@ -60,6 +60,10 @@ require_once('servicios/servicioProyectos.php');
  * Gestiona todo lo relacionado con las tareas.
  */
 require_once('servicios/servicioTareas.php');
+/**
+ * Gestiona todo lo relacionado con las Anotaciones.
+ */
+require_once('servicios/servicioAnotaciones.php');
 
 
 //limpio la variable POST

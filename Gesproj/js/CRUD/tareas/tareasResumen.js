@@ -30,7 +30,8 @@ $(function () {
 
     botonesModalEditarTareaPorProyecto();
 
-    // funcionalidadModalEdicionTareas();
+    eventosAlCerrarModales();
+
 })
 
 
@@ -160,12 +161,126 @@ function solicitarTareaPorID(id) {
         })
         .fail(falloAjax);
 }
+
+
+function solicitarAnotacionesPorTarea(id, btn) {
+
+
+
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'obtenerAnotacionesPorTarea',
+                'id': id
+            }
+        }).done(function (e) {
+
+            let elementos = "";
+
+            if (e == 1) {
+                //tarea sin anotaciones
+                //vaciamos la lista.
+                $('#listaAnotacionesModal').empty();
+                elementos = " <li class='list-group-item active'> <h4> Anotaciones de la Tarea </h4> </li> ";
+                elementos += " <li class='list-group-item list-group-item-warning'> Esta tarea no tiene anotaciones </li>";
+                $('#listaAnotacionesModal').append(elementos);
+            } else if (e == -1) {
+                mensajeDanger('Faltan datos en la solicitud, contacte con el administrador', 'ERROR')
+            } else if (e == -2) {
+                mensajeDanger('Su usuario no tiene permisos para visualizar las anotaciones de esta tarea');
+            } else {
+                let anotaciones = JSON.parse(e);
+
+                //vaciamos la lista de anotaciones
+                $('#listaAnotacionesModal').empty();
+                elementos = " <li class='list-group-item active'> <h4> Anotaciones de la Tarea </h4> </li> ";
+                for (let i = 0; i < anotaciones.length; i++) {
+
+                    elementos += "<li class='list-group-item'>";
+                    elementos += "<div class='row'>";
+                    elementos += "<div class='col-10'><small><strong>Nombre:<br> </strong>" + anotaciones[i]['nombre'];
+                    elementos += "</small></div>";
+                    elementos += "<div class='col-2'><button data-toggle='tooltip' data-placement='top' title='" + anotaciones[i]['fk_correo'] + "' class='btn btn-sm btn-info disabled'><i class='fas fa-user'></i></button>";
+                    elementos += "</div>";
+                    elementos += "</div>";
+                    elementos += "<hr class='ml-5 mr-5'>";
+                    elementos += "<div class='row'>";
+
+
+                    if (anotaciones[i]['descripcion'].length > 60) {
+                        elementos += "<div class='col text-truncate mt-1 ' id='descripcion'><small><strong class=''>Descripción: </strong> <button data-estado='false' id='ampliarDescipcion' class='btn btn-sm'><i class='fas fa-chevron-down'></i></button> <br> "
+
+                    } else {
+                        elementos += "<div class='col text-truncate '><small><strong class=''>Descripción: </strong><br> "
+
+                    }
+                    elementos += anotaciones[i]['descripcion'];
+                    elementos += "</small></div>";
+                    elementos += "</div>";
+                    elementos += "</li>";
+                    $('#listaAnotacionesModal').append(elementos);
+                    elementos = "";
+
+
+                    $('button #ampliarDescipcion:last').off('click');
+                 
+                    $('div #descripcion button#ampliarDescipcion:last').click(function (e) {
+
+                        let descripcion = $(this).parent().parent();
+                        let boton = this;
+
+                        
+                       
+
+
+                        if ($(boton).attr('data-estado') == 'true') {
+                            $(descripcion).addClass('text-truncate');
+                            $(boton).html('<i class="fas fa-chevron-down"></i>')
+                            $(boton).attr('data-estado', 'false');
+                        } else {
+                            $(descripcion).removeClass('text-truncate');
+                            $(boton).html('<i class="fas fa-chevron-up"></i>')
+                            $(boton).attr('data-estado', 'true')
+                        }
+                    })
+                }
+
+                $('#listaAnotacionesModal button[data-toggle="tooltip"]').tooltip();
+
+
+            }
+            $('#modalAnotaciones').modal('show');
+
+            if (btn == "") {
+
+            } else {
+                $(btn).html('<i class="fas fa-th-list"></i>');
+
+            }
+
+        })
+        .fail(falloAjax);
+
+
+
+}
 //#endregion
 
 
 
 
 //#region funcionalidad
+
+function eventosAlCerrarModales() {
+    $('#modalEditarTarea').on('hidden.bs.modal', function (e) {
+
+        $('#listaAdministradores').empty();
+        $('#listadoUsuariosEdicion').empty();
+
+        recargarVista();
+    });
+}
 
 function validarFormularioEditarTarea() {
     let formulario = $('#formularioEdicionTarea');
@@ -370,7 +485,7 @@ function dibujarTareasPorProyectos(datos) {
             elementos += " <div class='row mb-3'>";
         }
         elementos += "<div class='col-6 col-sm-4 col-lg-3 mb-2 '>" +
-            "<div class='card'>" +
+            "<div class='card' id='tareas'>" +
             "<div class='row m-1'>" +
             "<small class='col col-lg-6 text-truncate'>" + datos[i]['nombreTarea'] + "</small>";
 
@@ -389,10 +504,10 @@ function dibujarTareasPorProyectos(datos) {
             "<div class='row m-1'>" +
             "<div class='col'>" +
             "<div class='row'>" +
-            "<small class='col text-secondary'>Descripción:</small>" +
+            "<small class='col '>Descripción:</small>" +
             "</div>" +
             "<div class='row '>" +
-            "<small class='col text-truncate text-secondary'>" + datos[i]['descripcionTarea'] + "</small>" +
+            "<small class='col text-truncate '>" + datos[i]['descripcionTarea'] + "</small>" +
             "</div>" +
             "</div>" +
             "</div>" +
@@ -400,10 +515,10 @@ function dibujarTareasPorProyectos(datos) {
             "<div class='row m-1'>" +
             "<div class='col'>" +
             "<div class='row'>" +
-            "<small class='col text-secondary'>Fecha de creación:</small>" +
+            "<small class='col '>Fecha de creación:</small>" +
             "</div>" +
             "<div class='row '>" +
-            "<small class='col text-secondary'>" + datos[i]['fechaInicioTare'] + "</small>" +
+            "<small class='col '>" + datos[i]['fechaInicioTare'] + "</small>" +
             "</div>" +
             "</div>" +
             "</div>" +
@@ -439,8 +554,11 @@ function dibujarTareasPorProyectos(datos) {
 
             elementos += "<button type='button' id='botonEliminarTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-danger'><i class='fas fa-trash'></i></button>";
             elementos += "<button type='button' id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-info '><i class='fas fa-pen'></i></button>"
+            elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
         } else {
             elementos += "<button type='button'  id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-info '><i class='fas fa-pen'></i></button>"
+            elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
+
         }
 
         elementos += " </div>" +
@@ -474,6 +592,8 @@ function dibujarTareasPorProyectos(datos) {
 
 
     eventosBotonesAccionesTareas();
+
+    abrirModalAnotaciones();
 }
 /**
  * Funcion encargada de cargar los datos en el modal de edicion y mostrarlo.
@@ -561,13 +681,7 @@ function cargarDatosModalEditar(datosRaw) {
         $('#modalEditarTarea').modal('show');
 
         //al cerrar los modales, eliminamos las listas.
-        $('#modalEditarTarea').on('hidden.bs.modal', function (e) {
 
-            $('#listaAdministradores').empty();
-            $('#listadoUsuariosEdicion').empty();
-
-            recargarVista();
-        });
 
     }
 
@@ -636,7 +750,7 @@ function eventosBotonesAccionesTareas() {
 
 
     for (let i = 0; i < botonesEditarTarea.length; i++) {
-        // console.log(botonesEditarTarea[i])
+
         $(botonesEditarTarea[i]).click(function () {
             let boton = this;
             $(boton).html(preloadPequenio);
@@ -842,6 +956,8 @@ function recargarVista() {
 
 
 
+
+
     // $('#contenido').empty();
     // $('#contenido').html(preload);
 
@@ -851,6 +967,159 @@ function recargarVista() {
     //         $('#contenido').html(htmle);
     //     }, 'html');
     // }, 1000)
+}
+
+function abrirModalAnotaciones() {
+
+
+
+    $('#contenedorBotonesAccionTarea #botonVerAnotaciones').click(function (e) {
+
+        //obtenemos el id de la tarea y la almacenamos en una variable y en un input hidden;
+        let idTarea = $(this).attr('data-idTarea');
+        $('#idTareaModalAnotaciones').val('idTarea');
+
+        //añadimos preload al boton de las tareas;
+        $(this).html(preloadPequenio);
+
+        let contenedorTarea = ($(this).parent().parent().parent().parent());
+
+        let nombreTarea = $(contenedorTarea).find('small')[0];
+        //obtenemos el nombre de la  tarea, lo haremos a traves del boton.
+
+        $('#datosTareaModalNotificaciones').empty();
+        $('#datosTareaModalNotificaciones').append("<h4 class='text-truncate text-center'>" + $(nombreTarea).text() + "</h4>")
+
+
+        //generamos los botones de acción, donde se podra crear nuevas anotaciones;
+        $('#accionesModalAnotaciones').empty(); //limpiamos la zona.
+        $('#accionesModalAnotaciones').append("<button id='comentarioTarea' class='btn  text-left btn-block btn-primary' data-idTarea=" + idTarea + "><i class='fas fa-plus'></i> Comentario</button>")
+        $('#accionesModalAnotaciones').append("<button disabled id='listaTarea' class='btn  text-left btn-block btn-primary' data-idTarea=" + idTarea + "><i class='fas fa-list-ul'></i> Lista</button>")
+
+        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+        //AÑADIR AUI LOS EVENTOS PARA AÑADIR NUEVAS ANOTACIONES.
+
+
+
+        $('#comentarioTarea').click(function (e) {
+            var envioNuevoComentarioNombre = false;
+            var envioNuevoComentarioDescripcion = false;
+            let idTarea = $(this).attr('data-idTarea');
+            let elementos = "";
+
+
+            elementos += "<li id='formularioCrearAnotacion' class='list-group-item list-group-item'>";
+
+            elementos += "<div class='row form-inline'>";
+            elementos += "<div class='col-11'><small><strong>Nombre: <br><input id='nombreCrearAnotacion' name='nombreCrearAnotacion' type='text' class='form-control'>";
+
+            elementos += "<span class='text-danger' id='errorNombreAnotacion'></span></small></div>";
+            elementos += "<div class='col-1'><button id='cerrarCrearAnotacion' class='btn btn-sm'> <i class='fas fa-times text-danger'></i></button>";
+            elementos += "</small></div>";
+            elementos += "</div>";
+
+            elementos += "<hr class='ml-5 mr-5'>";
+
+            elementos += "<div class='row'>";
+            elementos += "<div class='col-11'><small><strong>Descripción: <textarea id='descripcionCrearAnotacion' name='descripcionAnotacion' class='form-control'></textarea>";
+
+            elementos += "<span class='text-danger' id='errorDescripcion'></span></small></div>";
+            elementos += "</div>";
+
+            elementos += "<div class='row mt-2'>";
+            elementos += "<div class='col text-center'>";
+            elementos += "<button data-idTarea='" + idTarea + "' id='botonEnviarNuevaAnotacionComentario' class='btn btn-success'><i class='fas fa-upload'></i> Crear</button>";
+            elementos += "</div>";
+            elementos += "</div>";
+
+
+
+
+
+
+
+            elementos += "</li>";
+
+
+            $('#listaAnotacionesModal').append(elementos);
+            $('#comentarioTarea').attr('disabled', 'true');
+
+            $('#cerrarCrearAnotacion').click(function (e) {
+
+                $('#formularioCrearAnotacion').remove();
+
+                $('#comentarioTarea').removeAttr('disabled');
+            })
+
+
+
+
+            //validamos el formulario
+            $('#nombreCrearAnotacion').blur(function (e) {
+
+                $('#errorNombreAnotacion').empty();
+                if ($('#nombreCrearAnotacion').val() == "") {
+                    $('#errorNombreAnotacion').html(' Campo requerido.');
+                    envioNuevoComentarioNombre = false;
+
+                } else if ($('#nombreCrearAnotacion').val().length <= 6) {
+                    $('#errorNombreAnotacion').html(' Se necesita un minimo de 6 caracteres.');
+                    envioNuevoComentarioNombre = false;
+
+                } else if ($('#nombreCrearAnotacion').val().length >= 60) {
+                    $('#errorNombreAnotacion').html(' Numero máximo de caracteres alcanzado');
+                    envioNuevoComentarioNombre = false;
+
+                } else {
+                    envioNuevoComentarioNombre = true;
+
+                }
+            })
+
+            $('#descripcionCrearAnotacion').blur(function (e) {
+
+                $('#errorDescripcion').empty();
+                if ($('#descripcionCrearAnotacion').val() == "") {
+                    $('#errorDescripcion').html(' Campo requerido.');
+                    envioNuevoComentarioDescripcion = false;
+
+                } else if ($('#descripcionCrearAnotacion').val().length <= 6) {
+                    $('#errorDescripcion').html(' Se necesita un minimo de 6 caracteres.');
+                    envioNuevoComentarioDescripcion = false;
+
+                } else if ($('#descripcionCrearAnotacion').val().length >= 600) {
+                    $('#errorDescripcion').html(' Numero máximo de caracteres alcanzado');
+                    envioNuevoComentarioDescripcion = false;
+
+                } else {
+                    envioNuevoComentarioDescripcion = true;
+
+                }
+            })
+
+            $('#nombreCrearAnotacion').focus();
+
+            $('#botonEnviarNuevaAnotacionComentario').click(function (e) {
+
+                if (envioNuevoComentarioNombre && envioNuevoComentarioDescripcion) {
+                    //enviamos el nuevo comentario
+                    enviarAnotacionComentario($(this).attr('data-idTarea'), $('#nombreCrearAnotacion').val(), $('#descripcionCrearAnotacion').val());
+                } else {
+                    mensajeDanger('Necesita rellenar los datos para añadir un comentario a la tarea');
+                }
+            })
+        })
+        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+
+
+        //hacemos la llamada  para solitar las anotaciones de la tarea.
+        solicitarAnotacionesPorTarea(idTarea, this);
+
+
+    })
+
 }
 //#endregion
 
@@ -889,7 +1158,7 @@ function enviarTareaModal() {
                     },
                 })
                 .done(function (datos) {
-                    console.log(datos);
+
 
                     if (datos == 1) {
                         mensajeSuccess('Tarea creada con éxito');
@@ -979,7 +1248,7 @@ function enviarDatosModalEdicion() {
 
         })
         .done(function (e) {
-            console.log(e);
+
 
             if (e == 1) {
                 mensajeSuccess('Tarea actualizada con éxito')
@@ -994,6 +1263,55 @@ function enviarDatosModalEdicion() {
             } else if (e == -6) {
                 mensajeDanger('El usuario no es administrador de esta tarea. Tampoco eres administrador de la plaforma', '¡ERROR!')
             }
+        })
+        .fail(falloAjax);
+}
+
+
+function enviarAnotacionComentario(idTarea, nombre, descripcion) {
+
+
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'aniadeNuevaAnotacionComentario',
+                idTarea,
+                nombre,
+                descripcion
+            },
+
+        })
+        .done(function (e) {
+            console.log(e)
+
+            if (e == 2) {
+                mensajeSuccess('Comentario añadido correctamente por administrador de la tarea');
+                solicitarAnotacionesPorTarea(idTarea, "");
+
+                $('#comentarioTarea').removeAttr('disabled');
+            } else if (e == 1) {
+                mensajeSuccess('Comentario añadido correctamente');
+                solicitarAnotacionesPorTarea(idTarea, "");
+
+                $('#comentarioTarea').removeAttr('disabled');
+            } else if (e == -1) {
+                mensajeDanger('Faltan datos', '¡ERROR!')
+            } else if (e == -2) {
+                mensajeDanger('Datos erroneos', '¡ERROR!')
+
+            } else if (e == -3) {
+                mensajeDanger('El usuario no tiene permisos para añadir un nuevo comentario', '¡ERROR!')
+
+            } else if (e == -4) {
+                mensajeDanger('Ya existe una tarea con ese nombre, por favor cambie el nombre de la misma', '¡ERROR!')
+
+            } else if (e == -5) {
+                mensajeDanger('Error en la consulta, contacte con el administrador de la plataforma', '¡ERROR!')
+
+            }
+
+
         })
         .fail(falloAjax);
 }
