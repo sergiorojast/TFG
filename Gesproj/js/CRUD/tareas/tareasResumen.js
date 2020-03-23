@@ -32,6 +32,8 @@ $(function () {
 
     eventosAlCerrarModales();
 
+    ModalSolicitarTarea();
+
 })
 
 
@@ -58,6 +60,7 @@ function solicitarProyectosPorTareas() {
             if (datos == 2) {
                 $('#listadoTareas').empty();
                 $('#crearTareaSegunProyecto').remove();
+                $('#solicitarTareaSegunProyecto').remove();
                 $('#listadoTareas').html("<h4 class='text-center'>Usted no tiene ninguna tarea, ni es administrador de ningun proyecto.</h4>")
             } else {
                 let respuesta = JSON.parse(datos);
@@ -98,7 +101,7 @@ function solicitarDatosPorId(id) {
             },
         })
         .done(function (datos) {
-
+            // console.log(datos);
 
             if (JSON.parse(datos)[0]['pk_idTarea'] == undefined) {
 
@@ -199,9 +202,11 @@ function solicitarAnotacionesPorTarea(id, btn) {
 
                     elementos += "<li class='list-group-item'>";
                     elementos += "<div class='row'>";
-                    elementos += "<div class='col-10'><small><strong>Nombre:<br> </strong>" + anotaciones[i]['nombre'];
+                    elementos += "<div class='col-9'><small><strong>Nombre:<br> </strong>" + anotaciones[i]['nombre'];
                     elementos += "</small></div>";
-                    elementos += "<div class='col-2'><button data-toggle='tooltip' data-placement='top' title='" + anotaciones[i]['fk_correo'] + "' class='btn btn-sm btn-info disabled'><i class='fas fa-user'></i></button>";
+                    elementos += "<div class='col-3'>";
+                    elementos += "<button data-toggle='tooltip' data-placement='top' title='" + anotaciones[i]['fk_correo'] + "' class='btn btn-sm btn-outline-info'><i class='fas fa-user'></i></button>";
+                    elementos += "<button data-toggle='tooltip' id='eliminarAnotacion' data-idAnotacion='" + anotaciones[i]['pk_idAnotacion'] + "' data-placement='bottom' title='eliminar anotación' class='btn btn-sm btn-outline-danger'><i class='fas fa-trash'></i></button>";
                     elementos += "</div>";
                     elementos += "</div>";
                     elementos += "<hr class='ml-5 mr-5'>";
@@ -224,14 +229,14 @@ function solicitarAnotacionesPorTarea(id, btn) {
 
 
                     $('button #ampliarDescipcion:last').off('click');
-                 
+
                     $('div #descripcion button#ampliarDescipcion:last').click(function (e) {
 
                         let descripcion = $(this).parent().parent();
                         let boton = this;
 
-                        
-                       
+
+
 
 
                         if ($(boton).attr('data-estado') == 'true') {
@@ -258,7 +263,16 @@ function solicitarAnotacionesPorTarea(id, btn) {
                 $(btn).html('<i class="fas fa-th-list"></i>');
 
             }
+            //asignamos evento a botones borrar
+            $('div #eliminarAnotacion').click(function (e) {
+                let idAnotacion = $(this).attr('data-idAnotacion');
 
+                $(this).html(preloadPequenio);
+
+                eliminarAnotacion(idAnotacion, this);
+
+
+            })
         })
         .fail(falloAjax);
 
@@ -434,8 +448,14 @@ function dibujarDatosProyectoSinTareas(datos) {
         "             id='idProyecto' value='" + datos[0]['pk_idProyecto'] + "'></div>" +
         "" +
         "  </div>" +
-        "  <hr>" +
-        "<h4 class='text-center'>El proyecto no tiene tareas asignadas</h4>";
+        "  <hr>";
+    if (rolUsuario == 0) {
+        elementos += "<h4 class='text-center'>No tienes tareas asignadas</h4>";
+
+    } else {
+        elementos += "<h4 class='text-center'>El proyecto no tiene tareas asignadas</h4>";
+
+    }
 
     $('#listadoTareas').html(elementos);
 
@@ -555,6 +575,9 @@ function dibujarTareasPorProyectos(datos) {
             elementos += "<button type='button' id='botonEliminarTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-danger'><i class='fas fa-trash'></i></button>";
             elementos += "<button type='button' id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-info '><i class='fas fa-pen'></i></button>"
             elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
+        } else if (rolUsuario == 0) {
+            elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
+
         } else {
             elementos += "<button type='button'  id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-info '><i class='fas fa-pen'></i></button>"
             elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
@@ -1102,6 +1125,8 @@ function abrirModalAnotaciones() {
 
             $('#botonEnviarNuevaAnotacionComentario').click(function (e) {
 
+                $(this).html(preloadPequenio);
+
                 if (envioNuevoComentarioNombre && envioNuevoComentarioDescripcion) {
                     //enviamos el nuevo comentario
                     enviarAnotacionComentario($(this).attr('data-idTarea'), $('#nombreCrearAnotacion').val(), $('#descripcionCrearAnotacion').val());
@@ -1120,6 +1145,61 @@ function abrirModalAnotaciones() {
 
     })
 
+}
+
+function ModalSolicitarTarea() {
+
+    //validamos el formulario de solicitud de nuevas tareas.
+    $('#solicitarTarea').validate({
+
+        rules: {
+            solicitudNombre: {
+                required: true,
+                minlength: 3,
+                maxlength: 60
+            },
+            solicitudDescripcion: {
+                required: true,
+                minlength: 3,
+                maxlength: 600
+            }
+        },
+
+        errorElement: "small",
+        errorPlacement: function (error, element) {
+            // Add the `invalid-feedback` class to the error element
+            error.addClass("invalid-feedback");
+
+
+            if (element.prop("type") === "checkbox") {
+                error.insertAfter(element.next("label"));
+            } else {
+                error.insertAfter(element);
+
+            }
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-invalid").removeClass("is-valid");
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).addClass("is-valid").removeClass("is-invalid");
+        },
+        submitHandler: function (form, event) {
+
+            event.preventDefault();
+            enviarDatosModalSolicitud();
+        }
+    });
+
+    //asignamos el evento al boton enviar;
+    $('#botonEnviarSolicitud').click(function (e) {
+        $('#botonEnviarSolicitud').html(preloadPequenio)
+        $('#solicitarTarea').submit();
+    });
+
+    $('#solicitarTareaSegunProyecto').click(function (e) {
+        $('#modalSolicitud').modal('show');
+    })
 }
 //#endregion
 
@@ -1283,7 +1363,8 @@ function enviarAnotacionComentario(idTarea, nombre, descripcion) {
 
         })
         .done(function (e) {
-            console.log(e)
+
+            $('#botonEnviarNuevaAnotacionComentario').html("<i class='fas fa-upload'></i>");
 
             if (e == 2) {
                 mensajeSuccess('Comentario añadido correctamente por administrador de la tarea');
@@ -1312,6 +1393,73 @@ function enviarAnotacionComentario(idTarea, nombre, descripcion) {
             }
 
 
+        })
+        .fail(falloAjax);
+}
+
+function eliminarAnotacion(id, btn) {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'eliminarAnotacion',
+                id
+            }
+        }).done(function (e) {
+            console.log(e)
+
+            $(btn).html("<i class='fas fa-trash'></i>");
+
+            if (e == 2) {
+                mensajeSuccess('Tarea eliminada con éxito');
+                mensajeInfo('La tarea fue eliminada por un administrador');
+            } else if (e == 1) {
+                mensajeSuccess('Tarea eliminada con éxito');
+            } else if (e == -1) {
+                mensajeDanger('faltan datos para eliminar la tarea');
+            } else if (e == -2) {
+                mensajeDanger('La tarea que intenta borrar no existe');
+            } else if (e == -3) {
+                mensajeDanger('Usted no es propietario de esta anotación');
+            } else if (e == -4) {
+                mensajeDanger('Fallo en la consulta de borrado');
+            }
+
+            solicitarAnotacionesPorTarea($('#idTareaModalAnotaciones').val(), "")
+        })
+        .fail(falloAjax);
+}
+
+
+function enviarDatosModalSolicitud() {
+    let idTarea = $('#idProyecto').val();
+    let nombre = $('#solicitudNombre').val();
+    let desc = $('#solicitudDescripcion').val();
+
+
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'crearAlertaSolicitudTarea',
+                idTarea,
+                nombre,
+                desc
+
+            }
+        })
+        .done(function (e) {
+      
+            $('#botonEnviarSolicitud').html('<i class="fas fa-upload"></i> Enviar');
+            if(e==1){
+                mensajeSuccess('Los administradores del proyecto han sido notificados. Espere su respuesta');
+            }else if(e == -1){
+                mensajeDanger("Faltan datos  para poder solicitar la tarea","¡ERROR!")
+            }else if(e == -2){
+                mensajeDanger("Su usuario no tiene permisos  para solicitar tareas en este proyecto","¡ERROR!")
+            }else if(e == -3){
+                mensajeDanger("Fallo en la consulta de notificaciones","¡ERROR!")
+            }
         })
         .fail(falloAjax);
 }

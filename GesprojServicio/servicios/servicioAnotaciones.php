@@ -1,8 +1,10 @@
 <?php
 
-
 obtenerAnotaciones();
+
 crearAnotacionTipoComentario();
+
+eliminarAnotacion();
 
 
 /**
@@ -192,6 +194,84 @@ function crearAnotacionTipoComentario()
                 }
             } else {
                 echo -1; // faltan datos;
+            }
+        }
+    }
+}
+
+/**
+ * Funcion encargada de eliminar las anotaciones, esta accion la puede acer el usuario propietario de la  anotacion o tanto moderadores de la tarea como los
+ * administradores de la plataforma
+ * 
+ * @return 2; anotacion eliminada por administrador
+ * @return 1; anotacion elminado con exito
+ * @return -1; faltan datos;
+ * @return -2; la anotacion no existe
+ * @return -3; el usuario no es propitario de la anotacion, ni es administrador de la tarea ni de la plataforma
+ * @return -4; Error en la consulta de borrado 
+ */
+
+function eliminarAnotacion()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'eliminarAnotacion') {
+        if (gestionarSesionyRol(0) == 1) {
+
+            if (isset($_POST['id'])) {
+
+                $id = filtrado($_POST['id']);
+                //consultamos que la tarea exista
+                $consulta = "SELECT * FROM Anotaciones WHERE pk_idAnotacion = $id";
+
+                $conector = new ConectorBD();
+
+                $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                if (count($resultado) > 0) {
+                    //consultamos si el usuario es el propietario de la tarea.
+                    $consulta = "SELECT * FROM `Usuarios:Anotaciones` WHERE  `fk_correo` ='" . $_SESSION['correo'] . "' AND `fk_idAnotacion` = $id";
+
+                    $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                    if (count($resultado) > 0) {
+
+                        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+                        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+
+                        //creamos la consulta de borrado.
+                        $consulta = "DELETE FROM `Usuarios:Anotaciones` WHERE `fk_idAnotacion`  = $id; ";
+                        $consulta .= "DELETE FROM `Usuarios:Anotaciones` WHERE `fk_correo`= '" . $_SESSION['correo'] . "' AND `fk_idAnotacion` =$id";
+
+
+                        if ($conector->actualizarBD($consulta)) {
+                            echo 1;
+                        } else {
+                            echo -4; // fallo en la consulta 
+                        }
+
+                        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+                        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+
+                    } else {
+                        if (gestionarSesionyRol(50) == 1) {
+                            //creamos la consulta de borrado.
+                            $consulta = "DELETE FROM `Usuarios:Anotaciones` WHERE `fk_idAnotacion`  = $id; ";
+                            $consulta .= "DELETE FROM `Usuarios:Anotaciones` WHERE `fk_correo`= '" . $_SESSION['correo'] . "' AND `fk_idAnotacion` =$id";
+
+
+                            if ($conector->actualizarBD($consulta)) {
+                                echo 2;
+                            } else {
+                                echo -4; // fallo en la consulta 
+                            }
+                        } else {
+                            echo -3; // el usuario no es propitario de la anotacion, ni es administrador de la tarea ni de la plataforma
+                        }
+                    }
+                } else {
+                    echo -2; // la anotacion no existe.
+                }
+            } else {
+                echo -1; //faltan datos;
             }
         }
     }

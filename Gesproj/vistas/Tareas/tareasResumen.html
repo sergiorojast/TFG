@@ -26,6 +26,8 @@
             <div class="col text-center">
                 <button id='crearTareaSegunProyecto' class="m-2 btn btn-lg btn-success"><i class="fas fa-plus"></i>
                     Crear tarea para proyecto</button>
+                <button id='solicitarTareaSegunProyecto' class="m-2 btn btn-lg btn-info"><i class="fas fa-envelope"></i>
+                    Solicitar una tarea</button>
             </div>
         </div>
 
@@ -324,7 +326,7 @@
                                         <h4 class="text-center"> Listado de usuarios</h4>
                                         <hr class="ml-5 mr-5 mt-0">
 
-                                        <p class="text-center text-secondary"><small>Listado de usuarios que tienen
+                                        <p class="text-center"><small>Listado de usuarios que tienen
                                                 permitida la
                                                 creación
                                                 de
@@ -415,10 +417,7 @@
                                             <li class='list-group-item active'>
                                                 <h4> Anotaciones de la Tarea</h4>
                                             </li>
-                                            <li class='list-group-item'>Dapibus ac facilisis in</li>
-                                            <li class='list-group-item'>Morbi leo risus</li>
-                                            <li class='list-group-item'>Porta ac consectetur ac</li>
-                                            <li class='list-group-item'>Vestibulum at eros</li>
+
                                         </ul>
 
                                     </div>
@@ -449,6 +448,61 @@
     </div>
 
     <!--Cierre modal de anotaciones -->
+
+    <!-- Modal solicitud de tareas -->
+    <div class="modal" id="modalSolicitud" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Solicitar una nueva tarea</h4>
+                    <br>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col text-center">
+                            <small>Se le enviara una notificación a los administradores del proyecto para que creen una
+                                nueva
+                                tarea</small>
+
+                        </div>
+                    </div>
+
+                    <form id='solicitarTarea'>
+                        <div class="form-group">
+                            <label for="solicitudNombre">Nombre</label>
+                            <input type="text" class="form-control" id="solicitudNombre" name="solicitudNombre" required maxlength="60"  minlength="3">
+                        </div>
+                        <div class="form-group">
+                            <label for="solicitudDescripcion">Descripción</label>
+                            <br>
+
+                            <textarea id="solicitudDescripcion" name="solicitudDescripcion"  class="form-control" rows="4" maxlength="600" minlength="3" required></textarea>
+
+                        </div>
+                    </form>
+
+                    <hr class="mr-5 ml-5">
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i
+                                        class="fas fa-times"></i> Cerrar</button>
+                                <button type="button" id="botonEnviarSolicitud" class="btn btn-success"><i class="fas fa-upload"></i>
+                                    Enviar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cierre modal solicitud Tareas -->
     <script>
         url = undefined;
         url = "js/CRUD/tareas/tareasResumen.js";

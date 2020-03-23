@@ -39,6 +39,11 @@ require_once('servicios/servicioLogin.php');
  */
 require_once('servicios/servicioSesiones.php');
 /**
+ * Gestiona todo lo relacionado con las alertas de la plataforma
+ */
+
+require_once('servicios/servicioAlertas.php');
+/**
  * Gestion de todos  los datos exclusivos de usuarios;
  * @method datosIniciales();
  * @method devolverUsuarios();
@@ -66,8 +71,8 @@ require_once('servicios/servicioTareas.php');
 require_once('servicios/servicioAnotaciones.php');
 
 
+
 //limpio la variable POST
 unset($_POST);
 $_POST = null;
 $_POST = [];
-

@@ -309,6 +309,11 @@ function controlBotonesPorRol() {
     $('#administrador').remove();
     $('#moderador').remove();
 
+    //Eliminamos el boton de Crear tarea para proyecto en la vista de tareas ya que este solo tienen acceso administradores y moderadores.
+    $('#crearTareaSegunProyecto').remove();
+
+
+
 
   } else if (rolUsuario == 50) {
     //eliminamos los botones de la barra lateral izquierda
@@ -317,7 +322,21 @@ function controlBotonesPorRol() {
     $('#crearTarea').remove();
     //Eliminamos las option del select de editar usuario actual
     $('#administrador').remove();
+    //eliminamos el boton de solicitar tareas para los moderadores 
+    $('#solicitarTareaSegunProyecto').remove();
+
+
+
+  } else if (rolUsuario == 90) {
+
+    //eliminamos el boton de solicitar tareas para los administradores
+    $('#solicitarTareaSegunProyecto').remove();
+
 
 
   }
+}
+
+function comprobarNotificaciones(){
+  
 }

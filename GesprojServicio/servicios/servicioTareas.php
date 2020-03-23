@@ -150,18 +150,19 @@ function solicitarDatosTareaProyectoPorIdProyecto()
             Tareas.estado AS estadoTarea,
             Tareas.estimacion AS estimacionTarea,
             fk_correo,
-            fk_idTarea
+            fk_idTarea,
+            `Usuarios:Tareas:PermisosNotificaciones`.fk_idTarea
             
             
         FROM
             Proyectos,
             Tareas,
-            `Usuarios:Tareas`
+            `Usuarios:Tareas:PermisosNotificaciones`
         WHERE
             fk_correo = \'' . $_SESSION['correo'] . '\' && pk_idTarea = fk_idTarea && fk_idProyecto = pk_idProyecto && fk_idProyecto=' . filtrado($_POST['idProyecto']);
 
             //lanzamos la consulta.
-            // echo $consulta;
+            //echo $consulta;
 
             $controlador =  new ConectorBD();
             //pasamos la consulta  directamente a js
@@ -989,16 +990,16 @@ function devolverTareasPorIdProyecto()
     if (isset($_POST['accion']) && $_POST['accion'] === 'obtenerTareasPorIdProyecto') {
         if (gestionarSesionyRol(50) == 1) {
 
-          //  echo var_dump($_POST);
+            //  echo var_dump($_POST);
 
             if (isset($_POST['id'])) {
                 $consulta = "SELECT nombreTarea FROM Tareas WHERE fk_idProyecto ='" . $_POST['id'] . "'";
-               
-               
-               
+
+
+
                 $conector = new ConectorBD();
 
-               $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+                $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
 
                 if (count($resultado) > 0) {
                     echo json_encode($resultado);
