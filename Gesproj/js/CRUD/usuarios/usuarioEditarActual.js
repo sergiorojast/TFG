@@ -4,7 +4,8 @@ $(function () {
 
     obtenerDatosInicialesUsuario();
 
-    $('#contenido').fadeToggle(2000);
+    // $('#contenido').fadeToggle(2000);
+    $('#contenido').fadeIn('250');
     validarFomularioEdicion();
 
     cargarTituloImagen();

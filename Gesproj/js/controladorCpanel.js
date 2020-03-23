@@ -10,6 +10,9 @@ window.addEventListener('load', function () {
 
   controlBotonesPorRol();
 
+  comprobarNotificaciones();
+  setInterval(comprobarNotificaciones, 60000);
+
 })
 
 /**
@@ -107,6 +110,7 @@ function aniadeFuncionalidadBotonesBarraLateral() {
   $('#tablero').click(cargarTablero);
   $('#crudProyectos').click(cargarProyectos);
   $('#botonTareas').click(botonTareas);
+  $('#mostrarVistaAlertas').click(botonAlertas);
 
 
 
@@ -118,8 +122,9 @@ function aniadeFuncionalidadBotonesBarraLateral() {
   function botonEditarUsuario() {
     comprobarSesion();
 
-    $('#contenido').fadeToggle('slow');
-    $('#contenido').empty();
+  
+    $('#contenido').fadeOut('500');
+
     $('#contenido').html(preload);
 
     setTimeout(function () {
@@ -134,8 +139,9 @@ function aniadeFuncionalidadBotonesBarraLateral() {
   function botonUsuarios() {
     comprobarSesion();
 
-    $('#contenido').fadeToggle('slow');
-    $('#contenido').empty();
+  
+    $('#contenido').fadeOut('500');
+
     $('#contenido').html(preload);
 
 
@@ -174,10 +180,9 @@ function aniadeFuncionalidadBotonesBarraLateral() {
 
     comprobarSesion();
 
-    $('#contenido').fadeToggle('slow');
-    $('#contenido').empty();
-    $('#contenido').html(preload);
+    $('#contenido').fadeOut('500');
 
+    $('#contenido').html(preload);
 
     setTimeout(function () {
       $.post('vistas/Tareas/tareasResumen.html', function (htmle) {
@@ -186,11 +191,89 @@ function aniadeFuncionalidadBotonesBarraLateral() {
     }, 1000)
   }
 
-
-  function cargarProyectos() {
-
+  function botonAlertas() {
     comprobarSesion();
 
+    $('#contenido').fadeOut('500');
+
+    $('#contenido').html(preload);
+
+    setTimeout(function () {
+        $.post('vistas/alertas.html', function (htmle) {
+          $('#contenido').html(htmle);
+        }, 'html')}, 500);
+    }
+
+
+    function cargarProyectos() {
+
+      comprobarSesion();
+
+
+      $('#contenido').fadeOut('500');
+
+      $('#contenido').html(preload);
+
+
+      setTimeout(function () {
+        $.post('vistas/Proyectos/proyectosResumen.html', function (htmle) {
+          $('#contenido').html(htmle);
+        }, 'html');
+      }, 500);
+
+    }
+  }
+
+  function comprobarSesion() {
+    $.ajax({
+        type: "POST",
+        url: webService,
+        data: {
+          "accion": "sesion"
+        }
+
+      })
+      .done(function (data) {
+
+        //si la llamada ajax nos devuelve un string con dos corchetes quiere decir que no existe sesion alguna.
+        if (data == "-1") {
+          window.location = 'login.html';
+        }
+
+      })
+      .fail(function (data) {
+
+        falloAjax();
+      });
+  }
+
+  /**
+   * ponemos la imagen del usuario y el nombre en la barra lateral.
+   */
+  function dibujarDatosUsarioBarraLateral() {
+    $.ajax({
+        type: "POST",
+        url: webService,
+        data: {
+          'accion': 'datosUsuarioIniciales'
+        },
+      })
+      .done(function (data) {
+
+        let datos = JSON.parse(data);
+        //console.dir(datos);
+        $('.usuarioImg').attr('src', repositorioImagenes + "/" + datos['imagen']);
+        $('.nombreUsuario').html(datos['nombre']);
+        $('.apellidosUsuario').html(datos['apellidos']);
+      })
+      .fail(function (data) {
+        console.log(data)
+        falloAjax()
+      })
+  }
+
+  function cargarTablero() {
+    comprobarSesion();
     $('#contenido').fadeToggle('slow');
     $('#contenido').empty();
     $('#contenido').html(preload);
@@ -198,145 +281,96 @@ function aniadeFuncionalidadBotonesBarraLateral() {
 
 
     setTimeout(function () {
-      $.post('vistas/Proyectos/proyectosResumen.html', function (htmle) {
+
+      $.post('vistas/tablero.html', function (htmle) {
         $('#contenido').html(htmle);
       }, 'html');
     }, 1000);
-
   }
-}
+  /**
+   * Funcion encargada de ocultar los botones para los usuarios que no tengan los permisos.
+   */
+  function controlBotonesPorRol() {
+    let cookies = document.cookie.split(';');
+    let cookie;
+    let rol;
 
-function comprobarSesion() {
-  $.ajax({
-      type: "POST",
-      url: webService,
-      data: {
-        "accion": "sesion"
+
+
+    for (let i = 0; i < cookies.length; i++) {
+      let aux = cookies[i].split('=');
+
+      if (aux[0] == " usuario" || aux[0] == "usuario") {
+        cookie = aux[1];
+      }
+    }
+
+    cookie = cookie.split(',')
+    for (let i = 0; i < cookie.length; i++) {
+      aux = cookie[i].split(':');
+
+      if (aux[0] == '"rol"') {
+        rol = aux[1].substr(0, aux[1].length - 1);
+
       }
 
-    })
-    .done(function (data) {
+    }
+    rolUsuario = rol;
 
-      //si la llamada ajax nos devuelve un string con dos corchetes quiere decir que no existe sesion alguna.
-      if (data == "-1") {
-        window.location = 'login.html';
-      }
+    if (rolUsuario == 0) {
+      //eliminamos los botones de la barra lateral izquierda
+      $('#columnaUsuario').remove();
+      $('#columnaProyectos').remove();
+      //eliminamos crear tarea de la seccion tareas
+      $('#crearTarea').remove();
+      //Eliminamos las option del select de editar usuario actual
+      $('#administrador').remove();
+      $('#moderador').remove();
 
-    })
-    .fail(function (data) {
-
-      falloAjax();
-    });
-}
-
-/**
- * ponemos la imagen del usuario y el nombre en la barra lateral.
- */
-function dibujarDatosUsarioBarraLateral() {
-  $.ajax({
-      type: "POST",
-      url: webService,
-      data: {
-        'accion': 'datosUsuarioIniciales'
-      },
-    })
-    .done(function (data) {
-
-      let datos = JSON.parse(data);
-      //console.dir(datos);
-      $('.usuarioImg').attr('src', repositorioImagenes + "/" + datos['imagen']);
-      $('.nombreUsuario').html(datos['nombre']);
-      $('.apellidosUsuario').html(datos['apellidos']);
-    })
-    .fail(function (data) {
-      console.log(data)
-      falloAjax()
-    })
-}
-
-function cargarTablero() {
-  comprobarSesion();
-  $('#contenido').fadeToggle('slow');
-  $('#contenido').empty();
-  $('#contenido').html(preload);
+      //Eliminamos el boton de Crear tarea para proyecto en la vista de tareas ya que este solo tienen acceso administradores y moderadores.
+      $('#crearTareaSegunProyecto').remove();
 
 
 
-  setTimeout(function () {
 
-    $.post('vistas/tablero.html', function (htmle) {
-      $('#contenido').html(htmle);
-    }, 'html');
-  }, 1000);
-}
-/**
- * Funcion encargada de ocultar los botones para los usuarios que no tengan los permisos.
- */
-function controlBotonesPorRol() {
-  let cookies = document.cookie.split(';');
-  let cookie;
-  let rol;
+    } else if (rolUsuario == 50) {
+      //eliminamos los botones de la barra lateral izquierda
+      $('#columnaUsuario').remove();
+      //eliminamos crear tarea de la seccion tareas
+      $('#crearTarea').remove();
+      //Eliminamos las option del select de editar usuario actual
+      $('#administrador').remove();
+      //eliminamos el boton de solicitar tareas para los moderadores 
+      $('#solicitarTareaSegunProyecto').remove();
 
 
 
-  for (let i = 0; i < cookies.length; i++) {
-    let aux = cookies[i].split('=');
+    } else if (rolUsuario == 90) {
 
-    if (aux[0] == " usuario" || aux[0] == "usuario") {
-      cookie = aux[1];
+      //eliminamos el boton de solicitar tareas para los administradores
+      $('#solicitarTareaSegunProyecto').remove();
+
+
+
     }
   }
 
-  cookie = cookie.split(',')
-  for (let i = 0; i < cookie.length; i++) {
-    aux = cookie[i].split(':');
+  function comprobarNotificaciones() {
 
-    if (aux[0] == '"rol"') {
-      rol = aux[1].substr(0, aux[1].length - 1);
-
-    }
-
+    $.ajax({
+        type: "POST",
+        url: webService,
+        data: {
+          'accion': 'consultarNotificaciones'
+        }
+      })
+      .done(function (e) {
+        if (e == 1) {
+          $('#notificacionesAlerta').empty();
+          $('#notificacionesAlerta').append('<span  class="spinner-grow spinner-grow-sm text-danger" role="status"aria-hidden="true"></span>');
+        } else if (e == -1) {
+          $('#notificacionesAlerta').empty();
+        }
+      })
+      .fail(falloAjax);
   }
-  rolUsuario = rol;
-
-  if (rolUsuario == 0) {
-    //eliminamos los botones de la barra lateral izquierda
-    $('#columnaUsuario').remove();
-    $('#columnaProyectos').remove();
-    //eliminamos crear tarea de la seccion tareas
-    $('#crearTarea').remove();
-    //Eliminamos las option del select de editar usuario actual
-    $('#administrador').remove();
-    $('#moderador').remove();
-
-    //Eliminamos el boton de Crear tarea para proyecto en la vista de tareas ya que este solo tienen acceso administradores y moderadores.
-    $('#crearTareaSegunProyecto').remove();
-
-
-
-
-  } else if (rolUsuario == 50) {
-    //eliminamos los botones de la barra lateral izquierda
-    $('#columnaUsuario').remove();
-    //eliminamos crear tarea de la seccion tareas
-    $('#crearTarea').remove();
-    //Eliminamos las option del select de editar usuario actual
-    $('#administrador').remove();
-    //eliminamos el boton de solicitar tareas para los moderadores 
-    $('#solicitarTareaSegunProyecto').remove();
-
-
-
-  } else if (rolUsuario == 90) {
-
-    //eliminamos el boton de solicitar tareas para los administradores
-    $('#solicitarTareaSegunProyecto').remove();
-
-
-
-  }
-}
-
-function comprobarNotificaciones(){
-  
-}

@@ -16,7 +16,8 @@ $(function () {
     solicitarProyectos();
 
     //Una vez tenemos los datos en el doom mostramos la vista.
-    $('#contenido').fadeToggle(2500);
+    // $('#contenido').fadeToggle(2500);
+    $('#contenido').fadeIn('250');
 
 })
 

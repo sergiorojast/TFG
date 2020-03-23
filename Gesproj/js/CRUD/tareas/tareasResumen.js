@@ -1,5 +1,6 @@
 $(function () {
-    $('#contenido').fadeToggle(2000);
+    // $('#contenido').fadeToggle(2000);
+    $('#contenido').fadeIn('250');
 
     //solicitud de datos.
     solicitarProyectosPorTareas();

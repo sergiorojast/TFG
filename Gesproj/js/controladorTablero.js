@@ -4,7 +4,8 @@ $(function () {
     solicitarDatosUsuariosRegistrados();
 
     solicitarDatosRoles();
-    $('#contenido').fadeToggle(2000);
+    // $('#contenido').fadeToggle(2000);
+    $('#contenido').fadeIn('250');
 
 })
 
