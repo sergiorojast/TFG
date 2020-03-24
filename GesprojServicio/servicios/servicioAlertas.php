@@ -6,6 +6,18 @@ crearAlertaSolicitudNuevaTarea();
 
 consultarAlertas();
 
+obtenerNumeroNotficaciones();
+
+obtenerSolicitudesSinLeer();
+
+cambiarEstadoNotificaciones();
+
+obtenerSolicitudesLeidas();
+
+obtenerAlertasSinLeer();
+
+obtenerAlertasLeidas();
+
 /**
  * Funcion encargada de crear una nueva  alerta para los administradores donde se le notificara
  * que creen una tarea para X usuario, solicitada por el mismo dando un nombre y una descripción.
@@ -115,6 +127,178 @@ function consultarAlertas()
                 echo 1;
             } else {
                 echo -1;
+            }
+        }
+    }
+}
+
+/**
+ * Funcion que devuelve el numero de notificaciones que tiene el usuario sin leer, divididas en dos tipos, alertas y solicitudes.
+ * @return -1 ;
+ */
+function obtenerNumeroNotficaciones()
+{
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'obtenerNumeroNotficaciones') {
+        if (gestionarSesionyRol(0) == 1) {
+            //obtenemos el numero de alertas
+            $consulta1 = "SELECT COUNT(`pk_idAlerta`) as Alertas FROM Alertas WHERE`estado` = 0 AND `tipo` = 'Alerta' AND `fk_correo_receptor` = '" . $_SESSION['correo'] . "';";
+            $consulta2 = "SELECT COUNT(`pk_idAlerta`) as Solicitudes FROM Alertas WHERE`estado` = 0 AND `tipo` = 'Solicitud' AND `fk_correo_receptor` = '" . $_SESSION['correo'] . "';";
+            $controlador = new ConectorBD();
+
+            $resultado1 = $controlador->consultarBD($consulta1)->fetchAll(PDO::FETCH_ASSOC);
+            $resultado2 = $controlador->consultarBD($consulta2)->fetchAll(PDO::FETCH_ASSOC);
+
+            $resultado = [
+                'alertas' => $resultado1[0]['Alertas'],
+                'solicitudes' => $resultado2[0]['Solicitudes']
+            ];
+
+            echo json_encode($resultado);
+        }
+    }
+}
+
+/**
+ * Funcion que devolvera las solicitudes del usuario que tenga sin leer.
+ * @return json // Envio de la notificacion
+ * @return 0; el usuario no tiene solicitudes sin leer;
+ */
+function obtenerSolicitudesSinLeer()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'solicitudesSinLeer') {
+        if (gestionarSesionyRol(0) == 1) {
+
+            //creamos la consulta que nos devolvera si el usuario tiene alguna solicitud sin leer.
+
+            $consulta = "SELECT * FROM Alertas WHERE fk_correo_receptor ='" . $_SESSION['correo'] . "' AND estado  = 0 AND tipo = 'Solicitud'";
+
+
+            $conector = new ConectorBD();
+
+            $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($resultado) > 0) {
+                echo json_encode($resultado);
+            } else {
+                echo 0;
+            }
+        }
+    }
+}
+
+
+/**
+ * Funcion encargada de cambiar el estado de las anotaciones entre leidas y no leidas.
+ * @return 1; todo ok.
+ * @return -1; fallo;
+ */
+function cambiarEstadoNotificaciones()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'cambiarEstadoNotificaciones') {
+        if (gestionarSesionyRol(0) == 1) {
+            if ($_POST['leido'] == 0) {
+                // cambiar de leido a no leido
+                $consulta = "UPDATE `Alertas` SET`estado` = 0 WHERE `pk_idAlerta`  =" . $_POST['id'];
+            } else if ($_POST['leido'] == 1) {
+                // cambiar de no leido a leido
+                $consulta = "UPDATE `Alertas` SET`estado` = 1 WHERE `pk_idAlerta`  =" . $_POST['id'];
+            }
+
+            $conector = new ConectorBD();
+
+            if ($conector->actualizarBD($consulta)) {
+                echo 1;
+            } else {
+                echo -1;
+            }
+        }
+    }
+}
+
+/**
+ * Funcion encargada de devolver las solicitudes leidas del usuario.
+ */
+function obtenerSolicitudesLeidas()
+{
+
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'solicitudesLeidas') {
+        if (gestionarSesionyRol(0) == 1) {
+
+
+            //creamos la consulta que nos devolvera si el usuario tiene alguna solicitud sin leer.
+
+            $consulta = "SELECT * FROM Alertas WHERE fk_correo_receptor ='" . $_SESSION['correo'] . "' AND estado  = 1 AND tipo = 'Solicitud'";
+
+
+            $conector = new ConectorBD();
+
+            $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($resultado) > 0) {
+                echo json_encode($resultado);
+            } else {
+                echo 0;
+            }
+        }
+    }
+}
+
+/**
+ * Funcion que devolvera las solicitudes del usuario que tenga sin leer.
+ * @return json // Envio de la notificacion
+ * @return 0; el usuario no tiene solicitudes sin leer;
+ */
+
+function obtenerAlertasSinLeer()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'alertasSinLeer') {
+        if (gestionarSesionyRol(0) == 1) {
+
+            //creamos la consulta que nos devolvera si el usuario tiene alguna solicitud sin leer.
+
+            $consulta = "SELECT * FROM Alertas WHERE fk_correo_receptor ='" . $_SESSION['correo'] . "' AND estado  = 0 AND tipo = 'Alerta'";
+
+
+            $conector = new ConectorBD();
+
+            $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($resultado) > 0) {
+                echo json_encode($resultado);
+            } else {
+                echo 0;
+            }
+        }
+    }
+}
+
+
+/**
+ * Funcion que devolvera las solicitudes del usuario que tenga sin leer.
+ * @return json // Envio de la notificacion
+ * @return 0; el usuario no tiene solicitudes sin leer;
+ */
+
+function obtenerAlertasLeidas()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'alertasLeidas') {
+        if (gestionarSesionyRol(0) == 1) {
+
+            //creamos la consulta que nos devolvera si el usuario tiene alguna solicitud sin leer.
+
+            $consulta = "SELECT * FROM Alertas WHERE fk_correo_receptor ='" . $_SESSION['correo'] . "' AND estado  = 1 AND tipo = 'Alerta'";
+
+
+            $conector = new ConectorBD();
+
+            $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($resultado) > 0) {
+                echo json_encode($resultado);
+            } else {
+                echo 0;
             }
         }
     }

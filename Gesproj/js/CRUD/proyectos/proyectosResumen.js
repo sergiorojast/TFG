@@ -76,7 +76,7 @@ function agregarDatosProyectosAlDoM(datos) {
             barraDeProgreso = "<div class='row m-1'>" +
                 "<div class='col'>" +
                 "<div class='progress'>" +
-                "<div  id='barraProgreso' class='progress-bar text-secondary' role='progressbar' style='width: 0%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'>0%</div>" +
+                "<div  id='barraProgreso' class='progress-bar ' role='progressbar' style='width: 0%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'>0%</div>" +
                 "</div>" +
                 "</div>" +
                 "</div>";
@@ -113,7 +113,7 @@ function agregarDatosProyectosAlDoM(datos) {
         carta += "<hr class='m-2 bg-secondary'>";
 
         carta += "<div class='row m-1'>" +
-            "<small class='col text-secondary'>Descripción : </small>" +
+            "<small class='col '>Descripción : </small>" +
             "</div>";
 
         carta += "<div class='row m-1'>" +
@@ -122,7 +122,7 @@ function agregarDatosProyectosAlDoM(datos) {
         carta += "<hr class='m-2 bg-secondary'>";
 
         carta += "<div class='row m-1'>" +
-            "<small class='col text-secondary'>Fecha creación </small>" +
+            "<small class='col '>Fecha creación </small>" +
             "</div>";
         carta += "<div class='row m-1'>" +
 
@@ -131,7 +131,7 @@ function agregarDatosProyectosAlDoM(datos) {
         carta += "<hr class='m-2 bg-darck'>";
         if (datos[i]['estado'] === "Finalizado") {
             carta += "<div class='row m-1'>" +
-                "<small class='col text-secondary'>Fecha finalización: </small>" +
+                "<small class='col '>Fecha finalización: </small>" +
                 "</div>";
             carta += "<div class='row m-1'>" +
 
@@ -142,7 +142,7 @@ function agregarDatosProyectosAlDoM(datos) {
 
 
         carta += "<div class='row m-1'>" +
-            "<small class='col text-secondary'>Tiempo estimado: </small>" +
+            "<small class='col '>Tiempo estimado: </small>" +
             "</div>";
         carta += "<div class='row m-1'>" +
             "<div class='col'> <small>" + datos[i]['estimacion'] + "</small></div>" +

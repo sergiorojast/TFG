@@ -366,7 +366,7 @@ function dibujarProyectos(proyectos) {
         if (aux) {
             $('#listaProyectos').append("<a class='nav-item nav-link active ' id='Proyecto1' data-idProyecto='" +
                 proyectos[key][0]['pk_idProyecto'] +
-                "' data-toggle='tab'  role='tab'  aria-selected='true'><span class='mb-1 d-inline-block text-truncate' style='max-width: 200px;'> <span id='contenedorIcono'><i id='icono' class='mb-0 fas fa-sync-alt'></i></span><span id='texto' class='text-secondary'> " +
+                "' data-toggle='tab'  role='tab'  aria-selected='true'><span class='mb-1 d-inline-block text-truncate' style='max-width: 200px;'> <span id='contenedorIcono'><i id='icono' class='mb-0 fas fa-sync-alt'></i></span><span id='texto' class=''> " +
                 proyectos[key][0]['nombreProyecto'] +
                 " </span> </span> </a>")
             aux = false;
