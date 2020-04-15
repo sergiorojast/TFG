@@ -473,13 +473,15 @@
                     <form id='solicitarTarea'>
                         <div class="form-group">
                             <label for="solicitudNombre">Nombre</label>
-                            <input type="text" class="form-control" id="solicitudNombre" name="solicitudNombre" required maxlength="60"  minlength="3">
+                            <input type="text" class="form-control" id="solicitudNombre" name="solicitudNombre" required
+                                maxlength="60" minlength="3">
                         </div>
                         <div class="form-group">
                             <label for="solicitudDescripcion">Descripción</label>
                             <br>
 
-                            <textarea id="solicitudDescripcion" name="solicitudDescripcion"  class="form-control" rows="4" maxlength="600" minlength="3" required></textarea>
+                            <textarea id="solicitudDescripcion" name="solicitudDescripcion" class="form-control"
+                                rows="4" maxlength="600" minlength="3" required></textarea>
 
                         </div>
                     </form>
@@ -492,7 +494,8 @@
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i
                                         class="fas fa-times"></i> Cerrar</button>
-                                <button type="button" id="botonEnviarSolicitud" class="btn btn-success"><i class="fas fa-upload"></i>
+                                <button type="button" id="botonEnviarSolicitud" class="btn btn-success"><i
+                                        class="fas fa-upload"></i>
                                     Enviar</button>
                             </div>
                         </div>
@@ -503,6 +506,55 @@
     </div>
 
     <!-- Cierre modal solicitud Tareas -->
+    <!-- Modal de finalizacion de tareas -->
+    <div class="modal" id="modalFinalizacionTarea" tabindex="-1" role="dialog">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Finalización de la tarea</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col text-center">
+                            <small>Se esta  procediendo a finalizar esta tarea, siempre y cuando todos los participantes de la misma lo hayan  notificado.</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <div class="card text-white bg-danger mb-3 d-none" id="avisoRestricciones">
+                                <div class="card-header">Eliminar restricciones</div>
+                                <div class="card-body">
+
+                                    <p><small>Si marca esta casilla, la restricción que implica que todos los usuarios hayan
+                                        finalizado la tarea será eliminada. No es
+                                            recomendable.</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+
+                    <div class="text-right">
+                        <input type="checkbox" name="eliminarRestricciones" id="eliminarRestricciones">
+                        <label for="eliminarRestricciones">Eliminar restricciones</label>
+                    </div>
+
+                    <button class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i> Cerrar</button>
+                    <button class="btn btn-success" id="enviarFinalizarTarea"><i class="fas fa-upload"></i> Finalizar</button>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Cierre del modal de finalizacion de tareas -->
     <script>
         url = undefined;
         url = "js/CRUD/tareas/tareasResumen.js";

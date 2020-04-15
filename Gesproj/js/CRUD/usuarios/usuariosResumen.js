@@ -5,6 +5,7 @@ solicitarYPintarDatos();
 $('#contenido').fadeToggle(2000);
 $('#botonNuevoUsuario').on('click', crearUnNuevoUsuriof)
 
+eventosModales();
 
 // cargamos los datos de los usuarios
 function solicitarYPintarDatos() {
@@ -79,9 +80,9 @@ function solicitarYPintarDatos() {
                     "" +
                     "</button>" +
                     "<div class='dropdown-menu' >" +
-                    "<a class='dropdown-item' href='#'>Ver proyectos asignados</a>" +
-                    "<a class='dropdown-item' href='#'>Ver tareas Asignadas</a>" +
-                    "<a class='dropdown-item' href='#'>Ver anotaciones del usuario</a>" +
+                    "<a class='dropdown-item' data-toggle='modal' data-correo='" + e.correo + "' data-target='#modalVerProyectos' >Ver proyectos administrados</a>" +
+                    "<a class='dropdown-item' data-toggle='modal' data-correo='" + e.correo + "' data-target='#modalVerTareas'>Ver tareas administradas</a>" +
+                    "<a class='dropdown-item' data-toggle='modal' data-correo='" + e.correo + "' data-target='#modalVerAnotaciones'>Ver anotaciones del usuario</a>" +
                     "</div>" +
                     "</div>" +
                     "</div>");
@@ -211,7 +212,7 @@ function solicitarYPintarDatos() {
 
         function botonAnterior() {
             idUltimoElementovisible = parseInt($('tbody tr:not(.d-none):first').attr('id'));
-            //console.log(idUltimoElementovisible)
+
             $('#cuerpoTabla tr').addClass('d-none');
 
 
@@ -220,12 +221,12 @@ function solicitarYPintarDatos() {
                 idUltimoElementovisible = parseInt(idUltimoElementovisible - idUltimoElementovisible %
                     numeroElementosPorPagina);
             }
-            //console.log(idUltimoElementovisible);
+
 
 
             for (let i = idUltimoElementovisible; i > idUltimoElementovisible -
                 numeroElementosPorPagina; i--) {
-                //console.log("Usuarios mostrados-->" + i);
+
                 $('#' + i).removeClass('d-none');
 
 
@@ -293,7 +294,7 @@ function llamarVer() {
 
     $('#cuerpoTabla tr #verUsuario').each(function (i, e) {
         $(e).click(solicitarDatos);
-        // console.log(e)
+
     });
 
     function solicitarDatos() {
@@ -321,7 +322,7 @@ function llamarVer() {
 function llamarEditar() {
     $('#cuerpoTabla tr #editarUsuario').each(function (i, e) {
         $(e).click(solicitarDatosEdicion);
-        //console.log(e)
+
     });
 
     function solicitarDatosEdicion() {
@@ -376,7 +377,7 @@ function borrarUsuario() {
 
 
                     }).done(function (data) {
-                        //console.log(data)
+
                         let mensaje;
                         if (data == 1) {
 
@@ -442,4 +443,134 @@ function recargarListado() {
         }, 'html');
     }, 1000)
 
+}
+
+/**
+ * Función encargada de  hacer una llamada al servicio cada vez que el modal se haya abierto.
+ */
+function eventosModales() {
+    $('#modalVerProyectos').on('show.bs.modal', function (e) {
+        //obtenemos la dirección de correo del usuario.
+        let boton = $(e.relatedTarget);
+        let lista = "";
+
+        $.ajax({
+                type: "POST",
+                url: webService,
+                data: {
+                    'accion': 'obtenerProyectoDeUsuario',
+                    'correo': $(boton).attr('data-correo')
+                }
+            })
+            .done(function (datos) {
+
+                if (datos == -1) {
+                    mensajeDanger('Su usuario no tiene permisos para realizar esta acción.', '¡ERROR!');
+                } else if (datos == -2) {
+                    mensajeDanger('Fallo en la solicitud, falta el usuario que quiere solicitar.', '¡ERROR!');
+                } else {
+                    datos = JSON.parse(datos);
+
+                    if (datos.length > 0) {
+                        lista = '<ul class="list-group">';
+
+                        for (let i = 0; i < datos.length; i++) {
+                            lista += '<li class="list-group-item"><i class="fas fa-stream text-info"></i> ' + datos[i]['id'] + ' -  "<span class="text-truncate"> "+ ' + datos[i]['nombre'] + ' </span></li>';
+
+                        }
+
+                        lista += '</ul>'
+
+
+                        $('#cuerpoModalProyectos').empty(); //eliminamos le preload. 
+                        $('#cuerpoModalProyectos').append(lista)
+                    } else {
+                        // el usuario no administra proyectos.
+
+                        $('#cuerpoModalProyectos').empty(); //eliminamos le preload. 
+                        $('#cuerpoModalProyectos').append("<h4 class=' text-center text-warning'>El usuario no administra proyectos</h4>")
+                    }
+
+
+                }
+            })
+            .fail(falloAjax);
+    })
+
+    $('#modalVerTareas').on('show.bs.modal', function (e) {
+        let boton = $(e.relatedTarget);
+        let lista = "";
+        $.ajax({
+                type: "POST",
+                url: webService,
+                data: {
+                    'accion': 'obtenerTareasDeUsuario',
+                    'correo': $(boton).attr('data-correo')
+                }
+            })
+            .done(function (datos) {
+                if (datos == -1) {
+                    mensajeDanger('Su usuario no tiene permisos para realizar esta acción.', '¡ERROR!');
+                } else if (datos == -2) {
+                    mensajeDanger('Fallo en la solicitud, falta el usuario que quiere solicitar.', '¡ERROR!');
+                } else {
+                    datos = JSON.parse(datos);
+
+                    if (datos.length > 0) {
+
+
+                        lista = '<ul class="list-group">';
+                        for (let i = 0; i < datos.length; i++) {
+                            console.log(datos[i])
+                            lista += '<li class="list-group-item">';
+                            lista += "<div class='row'>";
+                            lista += "<div class='col-3'>";
+                            lista += '<i class="fas fa-project-diagram text-info"></i> ' + datos[i][0]['idProyecto'];
+                            lista += "</div>"; //cierre col
+                            lista += "<div class='col'>";
+                            lista += "<span class='text-truncate'> "+datos[i][0]['nombreProyecto']+ "</span>";
+
+                            lista += "</div>"; //cierre col
+                            lista += "</div>"; //cierre row
+                            lista += "<hr class='ml-5 mr-5'>"; //cierre row
+
+                            lista += "<div class='row'>";
+                            lista += "<div class='col-3'>";
+                            lista += '<i class="fas fa-tasks text-secondary"></i> ' + datos[i][0]['idTarea'];
+                            lista += "</div>"; //cierre col
+                            lista += "<div class='col'>";
+                            lista += "<span class='text-truncate'> "+ datos[i][0]['nombreTarea']+ "</span>";
+                            lista += "</div>"; //cierre col
+
+                            lista += "</div>"; //cierre row
+                           
+                            lista += "</li>"; //cierre li
+
+                        }
+
+                        lista += '</ul>';
+                        $('#cuerpoModalTareas').empty(); //eliminamos le preload. 
+                        $('#cuerpoModalTareas').append(lista);
+                    } else {
+                        // el usuario no administra proyectos.
+
+                        $('#cuerpoModalTareas').empty(); //eliminamos le preload. 
+                        $('#cuerpoModalTareas').append("<h4 class=' text-center text-warning'>El usuario no administra Tareas</h4>")
+                    }
+                }
+            })
+            .fail(falloAjax);
+    })
+
+    $('#modalVerAnotaciones').on('show.bs.modal', function (e) {
+        console.log("Anotaciones abierto.")
+    })
+    //evento cierre modal.
+    $('#modalVerProyectos').on('hidden.bs.modal', function (e) {
+        $('#cuerpoModalProyectos').html(preloadAzul);
+    })
+    $('#modalVerTareas').on('hidden.bs.modal', function (e) {
+        $('#cuerpoModalTareas').html(preloadRojo);
+
+    })
 }

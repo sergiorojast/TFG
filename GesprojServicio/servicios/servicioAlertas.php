@@ -303,3 +303,98 @@ function obtenerAlertasLeidas()
         }
     }
 }
+
+
+function crearAlertaUsuarioAniadidoTarea($idTarea, $usuario)
+{
+    $mensaje = "Su usuario acaba de ser añadido a la tarea: $idTarea";
+    if (gestionarSesionyRol(50) == 1) {
+        $consulta = "INSERT INTO `Alertas`( `fk_correo_emisor`, `fk_correo_receptor`, `mensaje`, `estado`, `fecha`, `tipo`)
+        VALUES ('" . $_SESSION['correo'] . "','$usuario','" . $mensaje . "',0,SYSDATE(),'Alerta')";
+
+        $conector = new ConectorBD();
+
+        $conector->actualizarBD($consulta);
+    }
+}
+
+function crearAlertaUsuarioBorradoTarea($idTarea, $usuario)
+{
+    $mensaje = "Su usuario acaba de ser borrado de la tarea: $idTarea";
+    if (gestionarSesionyRol(50) == 1) {
+        $consulta = "INSERT INTO `Alertas`( `fk_correo_emisor`, `fk_correo_receptor`, `mensaje`, `estado`, `fecha`, `tipo`)
+        VALUES ('" . $_SESSION['correo'] . "','$usuario','" . $mensaje . "',0,SYSDATE(),'Alerta')";
+
+        $conector = new ConectorBD();
+
+        $conector->actualizarBD($consulta);
+    }
+}
+
+function crearSolicitudFinalizacionParaUsuarios($idTarea, $usuario)
+{
+    $mensaje = "Los usuarios de la tarea: $idTarea han solicitado que se proceda a finalizarla. para que esto pueda realizarse, debe notificar su finalización";
+    if (gestionarSesionyRol(0) == 1) {
+        $consulta = "INSERT INTO `Alertas`( `fk_correo_emisor`, `fk_correo_receptor`, `mensaje`, `estado`, `fecha`, `tipo`)
+        VALUES ('" . $_SESSION['correo'] . "','$usuario','" . $mensaje . "',0,SYSDATE(),'Alerta')";
+
+        $conector = new ConectorBD();
+
+        $conector->actualizarBD($consulta);
+    }
+}
+
+function crearAlertaFinalizacionTarea($idTarea)
+{
+    $mensaje = "Los usuarios de la tarea: $idTarea han solicitado que se proceda a finalizarla.";
+    if (gestionarSesionyRol(0) == 1) {
+        //obtenemos el administrador de la tarea
+        $conector = new ConectorBD();
+        $consulta = "SELECT `fk_correo` FROM `Usuarios:Tareas` WHERE `fk_idTarea`  = $idTarea";
+
+        $resultado  = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+
+        $consulta = "INSERT INTO `Alertas`( `fk_correo_emisor`, `fk_correo_receptor`, `mensaje`, `estado`, `fecha`, `tipo`)
+        VALUES ('" . $resultado[0]['fk_correo'] . "','" . $resultado[0]['fk_correo'] . "','" . $mensaje . "',0,SYSDATE(),'Solicitud')";
+
+
+        $conector->actualizarBD($consulta);
+    }
+}
+
+/**
+ * Funcion encargada de notificar a todos los integrantes de una tarea de que esta fue finalizada.
+ */
+function alertaFinalizacion($id)
+{
+    $mensaje = "La tarea: $id a finalizado.";
+    $conector = new ConectorBD();
+
+    //notificamos al administrador de la tarea
+    $consulta = "SELECT `fk_correo` FROM `Usuarios:Tareas` WHERE `fk_idTarea` = $id";
+
+    $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+    $administrador = $resultado[0]['fk_correo'];
+
+
+    $consulta = "INSERT INTO `Alertas`( `fk_correo_emisor`, `fk_correo_receptor`, `mensaje`, `estado`, `fecha`, `tipo`)
+    VALUES ('" . $administrador . "','" . $administrador . "','" . $mensaje . "',0,SYSDATE(),'Alerta')";
+
+    enviarCorreoTareaFinalizada($administrador, $id);
+
+
+    $conector->actualizarBD($consulta);
+
+    $consulta = "SELECT `fk_correo` FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE `fk_idTarea` =  $id";
+    $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+    for ($i = 0; $i < count($resultado); $i++) {
+        $consulta = "INSERT INTO `Alertas`( `fk_correo_emisor`, `fk_correo_receptor`, `mensaje`, `estado`, `fecha`, `tipo`)
+    VALUES ('" . $administrador . "','" . $resultado[$i]['fk_correo'] . "','" . $mensaje . "',0,SYSDATE(),'Alerta')";
+        $conector->actualizarBD($consulta);
+
+        enviarCorreoTareaFinalizada($resultado[$i]['fk_correo'], $id);
+    }
+}

@@ -18,6 +18,14 @@ actualizarTarea();
 
 devolverTareasPorIdProyecto();
 
+comprobarSiUsuarioFinalizoTarea();
+
+cambiarEstadoFinalizadoTareaPorUsuarios();
+
+finalizarTarea();
+
+devolverListaTareasUsuario();
+
 /**
  * 
  * @return 2;// el usuario no tiene ninguna tarea asignada.
@@ -187,7 +195,7 @@ function solicitarDatosTareaProyectoPorIdProyecto()
                 $resultados =  $controlador->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
                 echo json_encode($resultados);
             }
-        } else if (gestionarSesionyRol(50) == 1) {
+        } else if (controlarRolExacto(50) == 1) {
             $consulta = 'SELECT
             pk_idProyecto ,
             nombre AS nombreProyecto,
@@ -242,6 +250,65 @@ function solicitarDatosTareaProyectoPorIdProyecto()
                 $resultados =  $controlador->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
                 echo json_encode($resultados);
             }
+        } else if (controlarRolExacto(90) == 1) {
+
+            // echo "ADMIN---------------------------";
+            $consulta = "SELECT
+            pk_idProyecto ,
+            nombre AS nombreProyecto,
+            Proyectos.descripcion AS descripcionProyecto,
+            Proyectos.fechaInicio AS fechaInicioProyecto,
+            Proyectos.fechaFinalizacion As fechaFinalizacionProyecto,
+            Proyectos.estado AS estadoProyecto,
+            Proyectos.estimacion AS estimacionProyecto,
+            pk_idTarea,
+            pk_idTarea,
+         
+            Tareas.fk_idProyecto,
+            nombreTarea,
+            Tareas.descripcion AS descripcionTarea,
+            Tareas.fechaInicio AS fechaInicioTare,
+            Tareas.fechaFinalizacion AS fechaFinalizacionTarea,
+            Tareas.estado AS estadoTarea,
+            Tareas.estimacion AS estimacionTarea
+           
+            
+            
+        FROM
+            Proyectos,
+            Tareas
+           
+        WHERE
+        pk_idProyecto='" . filtrado($_POST['idProyecto']) . "' AND   fk_idProyecto = pk_idProyecto";
+
+            //lanzamos la consulta.
+            // echo $consulta;
+            // echo "----------------------------------------------------";
+
+
+            $controlador =  new ConectorBD();
+            //pasamos la consulta  directamente a js
+
+            $resultados =  $controlador->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($resultados) > 0) {
+                echo json_encode($resultados);
+            } else {
+                $consulta = "SELECT
+                pk_idProyecto ,
+                nombre AS nombreProyecto,
+                Proyectos.descripcion AS descripcionProyecto,
+                Proyectos.fechaInicio AS fechaInicioProyecto,
+                Proyectos.fechaFinalizacion As fechaFinalizacionProyecto,
+                Proyectos.estado AS estadoProyecto,
+                Proyectos.estimacion AS estimacionProyecto
+                FROM
+                Proyectos
+                WHERE
+                pk_idProyecto='" . filtrado($_POST['idProyecto']) . "'";
+                $resultados =  $controlador->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+                echo json_encode($resultados);
+            }
         }
     }
 }
@@ -270,6 +337,7 @@ function insertarTarea()
                 $idProyecto = (int) filtrado($_POST['proyecto']);
                 $horas = (int) filtrado($_POST['horas']);
                 $minutos = (int) filtrado($_POST['minutos']);
+                $estadoProyecto = ""; //variable en la que almaceno el estado del proyecto para cambiarlo despues o no.
 
                 if ($minutos == 0 && $horas == 0) {
                     echo -4; // tiempo requerido
@@ -282,6 +350,7 @@ function insertarTarea()
 
                     $resultado = $conector->consultarBD($consulta)->fetch(PDO::FETCH_ASSOC);
 
+                    $estadoProyecto = $resultado['estado'];
 
                     if ($resultado['estado'] != 'Finalizado') {
                         //calculamos la horas que tiene el proyecto en total, contando las horas del proyecto
@@ -356,6 +425,13 @@ function insertarTarea()
 
                                     $consulta = "INSERT INTO `Usuarios:Tareas`(`fk_correo`, `fk_idTarea`)VALUES('" . $_SESSION['correo'] . "','" . $resultado['pk_idTarea'] . "')";
                                     if ($conector->actualizarBD($consulta)) {
+                                        //cambiamos el estado del proyecto de creado a En curso
+
+                                        if ($estadoProyecto == 'Creado') {
+                                            $consulta = "UPDATE `Proyectos` SET `estado`='En curso'WHERE  `pk_idProyecto` = $idProyecto";
+                                            $conector->actualizarBD($consulta);
+                                        }
+
                                         if ($aniadidoAdmin) {
                                             echo 2; //admin añadido y tarea creada con exito
                                         } else {
@@ -416,6 +492,10 @@ function insertarUsuariosQuePuedenAniadirNotificaciones()
 
             if ($estado) {
                 echo 1;
+
+                for ($i = 0; $i < count($usuarios); $i++) {
+                    crearAlertaUsuarioAniadidoTarea($idTarea[0]['pk_idTarea'], $usuarios[$i]);
+                }
             } else {
                 echo -1;
             }
@@ -452,10 +532,12 @@ function insertarTareaPorIdProyecto()
 
                 $respuesta = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
                 if (count($respuesta) == 1) {
+
                     //comprobamos el estado del proyecto. Si esta finalizado damos un codigo de error
                     $consulta = "SELECT estado, estimacion FROM Proyectos where pk_idProyecto = '" . filtrado($_POST['idProyecto']) . "'";
 
                     $respuesta = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+                    $estadoProyecto = $respuesta[0]['estado'];
                     if ($respuesta[0]['estado'] != 'Finalizado') {
                         ///almacenaremos la estimación del proyecto y consultaremos cual  es el tiempo ocupado  ahora mismo por el proyecto.
                         $estimacionProyecto = $respuesta[0]['estimacion'];
@@ -506,6 +588,7 @@ function insertarTareaPorIdProyecto()
                                     $consulta = "SELECT pk_idTarea FROM Tareas WHERE nombreTarea = '" . filtrado($_POST['nombre']) . "'";
                                     //echo $consulta;
                                     $resultado  = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+                                    $idTarea =  $resultado[0]['pk_idTarea'];
                                     if (count($resultado) > 0) {
 
                                         for ($i = 0; $i < count($usuarios); $i++) {
@@ -525,10 +608,22 @@ function insertarTareaPorIdProyecto()
                                             $resultado = $conector->consultarBD($consulta)->fetch(PDO::FETCH_ASSOC);
 
 
+
+                                            //actualizamos el estado del proyecto
+                                            if ($estadoProyecto == 'Creado') {
+                                                $consulta = "UPDATE `Proyectos` SET `estado`='En curso'WHERE  `pk_idProyecto` = '" . filtrado($_POST['idProyecto']) . "'";
+                                                $conector->actualizarBD($consulta);
+                                            }
+
                                             $consulta = "INSERT INTO `Usuarios:Tareas`(`fk_correo`, `fk_idTarea`)VALUES('" . $_SESSION['correo'] . "','" . $resultado['pk_idTarea'] . "')";
+
                                             if ($conector->actualizarBD($consulta)) {
 
                                                 echo 1;
+                                                for ($i = 0; $i < count($usuarios); $i++) {
+
+                                                    crearAlertaUsuarioAniadidoTarea($idTarea, $usuarios[$i]);
+                                                }
                                             } else {
                                                 echo -9;
                                             }
@@ -552,6 +647,7 @@ function insertarTareaPorIdProyecto()
                     }
                 } else {
                     if (controlarRolExacto(90)) {
+
                         //si el usuario que tiene la sesion iniciada es administrador, creamos la tarea añadiendolo como administrador del proyecto.
                         $consulta = "INSERT INTO `Usuarios:Proyectos`(`fk_correo`, `fk_idProyecto`) VALUES ('" . $_SESSION['correo'] . "','" . filtrado($_POST['idProyecto']) . "')";
 
@@ -561,6 +657,8 @@ function insertarTareaPorIdProyecto()
                         $consulta = "SELECT estado, estimacion FROM Proyectos where pk_idProyecto = '" . filtrado($_POST['idProyecto']) . "'";
 
                         $respuesta = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                        $estadoProyecto = $respuesta[0]['estado'];
                         if ($respuesta[0]['estado'] != 'Finalizado') {
                             ///almacenaremos la estimación del proyecto y consultaremos cual  es el tiempo ocupado  ahora mismo por el proyecto.
                             $estimacionProyecto = $respuesta[0]['estimacion'];
@@ -617,6 +715,29 @@ function insertarTareaPorIdProyecto()
                                             }
                                         }
                                         if ($estado) {
+
+
+                                            $consulta = "INSERT INTO `Usuarios:Tareas`(`fk_correo`, `fk_idTarea`)VALUES('" . $_SESSION['correo'] . "','" . $resultado[0]['pk_idTarea'] . "')";
+
+                                            //actualizamos el estado del proyecto
+
+                                            if ($conector->actualizarBD($consulta)) {
+
+
+                                                for ($i = 0; $i < count($usuarios); $i++) {
+
+                                                    crearAlertaUsuarioAniadidoTarea($idTarea, $usuarios[$i]);
+                                                }
+                                            }
+                                            if ($estadoProyecto == 'Creado') {
+                                                $consulta = "UPDATE `Proyectos` SET `estado`='En curso'WHERE  `pk_idProyecto` = '" . filtrado($_POST['idProyecto']) . "'";
+                                                $conector->actualizarBD($consulta);
+                                            }
+                                            //actualizamos el estado del proyecto
+                                            if ($estadoProyecto == 'Creado') {
+                                                $consulta = "UPDATE `Proyectos` SET `estado`='En curso'WHERE  `pk_idProyecto` = '" . filtrado($_POST['idProyecto']) . "'";
+                                                $conector->actualizarBD($consulta);
+                                            }
                                             echo 2;
                                         } else {
                                             echo -9;
@@ -768,9 +889,6 @@ function actualizarTarea()
                 $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
 
                 if (count($resultado) == 1) {
-                    //PARA ADMINISTRADOR DE LA PLATAFORMA, COPIAR DESDE AQUI
-                    //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-                    //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
 
 
                     //comenzamos con el calculo de tiempo de las tareas.
@@ -844,6 +962,7 @@ function actualizarTarea()
                                     $consulta = "DELETE FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE  `fk_idTarea` = $idTarea  AND `fk_correo` = '" . $resultado[$i]['fk_correo'] . "'";
 
                                     if ($conector->actualizarBD($consulta)) {
+                                        crearAlertaUsuarioBorradoTarea($idTarea, $resultado[$i]['fk_correo']);
                                     } else {
                                         $todoOk = false;
                                     }
@@ -852,6 +971,7 @@ function actualizarTarea()
 
                             if ($todoOk) {
                                 echo 1; // todo ok
+
                             } else {
                                 echo -5; //  fallo en la consulta relacionada con usuarios, contacte con administrador
                             }
@@ -861,20 +981,10 @@ function actualizarTarea()
                     } else {
                         echo -3; //el tiempo de estimado para la tarea ha superado al del proyecto.
                     }
-
-
-                    //PARA ADMINISTRADOR DE LA PLATAFORMA, COPIAR HASTA AQUI
-                    //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-                    //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
                 } else {
-                    //AQUI SI ERES ADMINISTRADOR Y NO ERES MODERADOR DE LA TAREA
-                    //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-                    //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+
 
                     if (gestionarSesionyRol(90)) {
-                        //PARA ADMINISTRADOR DE LA PLATAFORMA, COPIAR DESDE AQUI
-                        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-                        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
 
 
                         //comenzamos con el calculo de tiempo de las tareas.
@@ -948,6 +1058,7 @@ function actualizarTarea()
                                         $consulta = "DELETE FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE  `fk_idTarea` = $idTarea  AND `fk_correo` = '" . $resultado[$i]['fk_correo'] . "'";
 
                                         if ($conector->actualizarBD($consulta)) {
+                                            crearAlertaUsuarioBorradoTarea($idTarea, $resultado[$i]['fk_correo']);
                                         } else {
                                             $todoOk = false;
                                         }
@@ -956,6 +1067,7 @@ function actualizarTarea()
 
                                 if ($todoOk) {
                                     echo 1; // todo ok
+
                                 } else {
                                     echo -5; //  fallo en la consulta relacionada con usuarios, contacte con administrador
                                 }
@@ -965,11 +1077,6 @@ function actualizarTarea()
                         } else {
                             echo -3; //el tiempo de estimado para la tarea ha superado al del proyecto.
                         }
-
-
-                        //PARA ADMINISTRADOR DE LA PLATAFORMA, COPIAR HASTA AQUI
-                        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-                        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
                     } else {
                         echo -6; // el usuario no es administrador del proyecto ni de la plataforma.
                     }
@@ -1011,6 +1118,277 @@ function devolverTareasPorIdProyecto()
             }
         } else {
             echo -1; //sin permisos
+        }
+    }
+}
+
+/**
+ * Funcion encargada de  devolver si el usuario tiene permisos para crear anotaciones en la tarea 
+ * y ver si le ha dado a finalizar tarea.
+ * 
+ * @return -1; el usuario  no tiene permisos para la creacion de nuevas anotaciones por lo tanto es administrador de la tarea.
+ * @return 1; el usuario no ha notificado la finalizacion de la tarea
+ * @return 2 ; el usuario notifico la finaliacion de la tarea
+ */
+function comprobarSiUsuarioFinalizoTarea()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'usuarioFinalizoTarea') {
+        if (gestionarSesionyRol(0) == 1) {
+            $conector  = new ConectorBD();
+
+            //comprobamos que el usuario tenga permisos para crear anotaciones en la tarea
+            $consulta  = "SELECT * FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE fk_correo ='" . $_SESSION['correo'] . "' AND fk_idTarea  = '" . $_POST['id'] . "'";
+
+
+            $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($resultado) > 0) {
+                //ahora comprobamos si el usuario le ha  dado a tarea finalizada.
+
+
+                if ($resultado[0]['finalizacionTarea'] == NULL ||  $resultado[0]['finalizacionTarea'] == 0) {
+                    echo 1;
+                } else {
+                    echo 2;
+                }
+            } else {
+                echo -1;
+            }
+        }
+    }
+}
+
+
+/**
+ * Funcion encargada de modificar el estado de la notificacion de finalizacion del usuario.
+ * 
+ * @return 3;  //Usuario a cancelado la solicitud de finalizacion de la tarea
+ * @return 2; // No todos los usuarios han  solicitado la finalizacion de la tarea.
+ * @return 1; // se notificara al administrador  que puede finalizar la tarea.
+ * 
+ * @return -1; //faltan datos.
+ * @return -2; //usuario no tiene permisos para notificar la finalizacion de la tarea.
+ * @return -3; // ha fallado la actualización de finalizacion de la tarea.
+ * @return -4; // la tarea ya esta finalizada.
+ * 
+ */
+function cambiarEstadoFinalizadoTareaPorUsuarios()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'cambiarEstadoFinalizadoTarea') {
+        if (gestionarSesionyRol(0) == 1) {
+            //comporbamos los datos que nos llegan desde la parte del cliente.
+            if (isset($_POST['estado']) && isset($_POST['idTarea'])) {
+
+                $conector  = new ConectorBD();
+
+                $estado = filtrado($_POST['estado']);
+                $idTarea = filtrado($_POST['idTarea']);
+                //comprobamos que el usuario tenga permisos en la tarea.
+
+
+                $consulta  = "SELECT * FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE fk_correo ='" . $_SESSION['correo'] . "' AND fk_idTarea  = '" . $idTarea . "'";
+
+                //echo $consulta;
+                $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                if (count($resultado) > 0) {
+                    $consulta  = "SELECT estado FROM Tareas WHERE pk_idTarea = $idTarea";
+
+                    $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                    if ($resultado[0]['estado'] == 'Finalizado') {
+                        echo -4;
+                    } else {
+
+                        $consulta = "UPDATE `Usuarios:Tareas:PermisosNotificaciones` SET `finalizacionTarea`='$estado' WHERE `fk_idTarea` = '$idTarea' AND `fk_correo` = '" . $_SESSION['correo'] . "'";
+
+                        if ($conector->actualizarBD($consulta)) {
+                            if ($estado) { // el usuario  quiere solicitar la finalizacion de la tarea
+                                $notificarAdministrador = true;
+                                //comprobamos si todos los usuarios de la tarea han marcado la opcion de notificar la finalizacion de la tarea. 
+                                $consulta = "SELECT fk_correo, finalizacionTarea FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE fk_idTarea  = '$idTarea'";
+                                $resultado =  $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+                                for ($i = 0; $i < count($resultado); $i++) {
+                                    if ($resultado[$i]['finalizacionTarea'] == NULL || $resultado[$i]['finalizacionTarea'] == 0) {
+                                        $notificarAdministrador = false;
+                                        //Alertamos al usuario de que la tarea debe finalizarse y uno de sus compañeros ya ha notificado su finalización.
+                                        crearSolicitudFinalizacionParaUsuarios($idTarea, $resultado[$i]['fk_correo']);
+                                        enviarNotificacionUsuarioPendienteFinalizarTarea($resultado[$i]['fk_correo'], $idTarea); //enviamos un correo a los usuarios que quedan por finaliar.
+                                    }
+                                }
+
+                                //ahora comprobamos si tenemos que notificar al administrador de la tarea para que proceda a finalizarla.
+
+                                if ($notificarAdministrador) {
+                                    echo 1; // se notificara al administrador de la  finalizacion de la tarea
+                                    crearAlertaFinalizacionTarea($idTarea);
+                                    enviarNotificacionFinalizarTareaAdmin($idTarea);
+                                } else {
+                                    echo 2; // se ha almacenado la consulta, pero aun quedan usuarios sin finalizar la tarea.
+                                }
+                            } else { // el usuario quiere cancelar su solicitud de finalización de la tarea.
+                                echo 3;
+                                $consulta = "SELECT fk_correo, finalizacionTarea FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE fk_idTarea  = '$idTarea'";
+                                $resultado =  $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+                                for ($i = 0; $i < count($resultado); $i++) {
+                                    if ($resultado[$i]['finalizacionTarea'] == NULL || $resultado[$i]['finalizacionTarea'] == 0) {
+
+                                        //Alertamos al usuario de que la tarea debe finalizarse y uno de sus compañeros ya ha notificado su finalización.
+                                        crearSolicitudFinalizacionParaUsuarios($idTarea, $resultado[$i]['fk_correo']);
+                                        enviarNotificacionUsuarioPendienteFinalizarTarea($resultado[$i]['fk_correo'], $idTarea); //enviamos un correo a los usuarios que quedan por finaliar.
+                                    }
+                                }
+                            }
+                        } else {
+                            echo -3; // la consulta de actualizacion d la tarea ha fallado.
+                        }
+                    }
+                } else {
+                    echo -2; //usuario sin  permisos para notificar la finalizacion de la tarea.
+                }
+            } else {
+                echo -1; // faltan datos
+            }
+        }
+    }
+}
+
+/**
+ * Funcion encargada de finalizar las tareas
+ * 
+ * @return 4; //Tarea finalizada con restricciones de notificaciones de usuario por administrador de la plataforma
+ * @return 3; //Tarea finalizada sin restricciones de notificaciones de usuario por administrador de la plataforma
+ * @return 2; Tarea finalizada con restricciones de notificacion de usuario.
+ * @return 1; Tarea finalizada sin restricciones de notificaciones de usuario
+ * @return -1; fallo en la consulta de finalizacion sin restricciones;
+ * @return -2; un o varios usuarios no han solicitado la finalizacion de la tarea
+ * @return -3; fallo en la consulta;
+ * @return -4; el usuario no es administrador de la plataforma ni de la tarea
+ */
+
+function finalizarTarea()
+{
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'finalizarTarea') {
+        if (gestionarSesionyRol(50) == 1) {
+            // var_dump($_POST);
+            $restricciones =  $_POST['noRestricciones'];
+            //comprobamos que el usuario sea administrador de la tarea
+            $conector = new ConectorBD();
+
+            $consulta = "SELECT * FROM `Usuarios:Tareas` WHERE `fk_idTarea` ='" . $_POST['id'] . "' AND `fk_correo` ='" . $_SESSION['correo'] . "' ";
+
+            $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($resultado) > 0) {
+                if ($restricciones == 'true') {
+                    //sin restricciones
+                    $consulta = "UPDATE `Tareas` SET `fechaFinalizacion`=SYSDATE(),`estado`='Finalizado' WHERE `pk_idTarea` = '" . $_POST['id'] . "'";
+                    if ($conector->actualizarBD($consulta)) {
+                        echo 1;
+                        alertaFinalizacion($_POST['id']);
+                    } else {
+                        echo -1;
+                    }
+                } else if ($restricciones == "false") {
+                    $sefinaliza = true;
+                    $consulta = "SELECT   `finalizacionTarea` FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE `fk_idTarea` = '" . $_POST['id'] . "'";
+
+                    $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                    for ($i = 0; $i < count($resultado); $i++) {
+                        if ($resultado[$i]['finalizacionTarea'] == NULL || $resultado[$i]['finalizacionTarea'] == 0) {
+                            $sefinaliza = false;
+                        }
+                    }
+                    if ($sefinaliza) {
+                        $consulta = "UPDATE `Tareas` SET `fechaFinalizacion`=SYSDATE(),`estado`='Finalizado' WHERE `pk_idTarea` = '" . $_POST['id'] . "'";
+                        if ($conector->actualizarBD($consulta)) {
+                            echo 2; // todo ok, con restricciones
+                            alertaFinalizacion($_POST['id']);
+                        } else {
+                            echo -3; // fallo en la actualizacion
+                        }
+                    } else {
+                        echo -2; // Uno o varios usuarios no ha solicitado la finalizacion de la tarea
+                    }
+                }
+            } else {
+                if (gestionarSesionyRol(90) == 1) {
+                    if ($restricciones == 'true') {
+                        //sin restricciones
+                        $consulta = "UPDATE `Tareas` SET `fechaFinalizacion`=SYSDATE(),`estado`='Finalizado' WHERE `pk_idTarea` = '" . $_POST['id'] . "'";
+                        if ($conector->actualizarBD($consulta)) {
+                            echo 3;
+                            alertaFinalizacion($_POST['id']);
+                        } else {
+                            echo -1;
+                        }
+                    } else if ($restricciones == "false") {
+                        $sefinaliza = true;
+                        $consulta = "SELECT   `finalizacionTarea` FROM `Usuarios:Tareas:PermisosNotificaciones` WHERE `fk_idTarea` = '" . $_POST['id'] . "'";
+
+                        $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                        for ($i = 0; $i < count($resultado); $i++) {
+                            if ($resultado[$i]['finalizacionTarea'] == NULL || $resultado[$i]['finalizacionTarea'] == 0) {
+                                $sefinaliza = false;
+                            }
+                        }
+                        if ($sefinaliza) {
+                            $consulta = "UPDATE `Tareas` SET `fechaFinalizacion`=SYSDATE(),`estado`='Finalizado' WHERE `pk_idTarea` = '" . $_POST['id'] . "'";
+                            if ($conector->actualizarBD($consulta)) {
+                                echo 4; // todo ok, con restricciones
+                                alertaFinalizacion($_POST['id']);
+                            } else {
+                                echo -3; // fallo en la actualizacion
+                            }
+                        } else {
+                            echo -2; // Uno o varios usuarios no ha solicitado la finalizacion de la tarea
+                        }
+                    }
+                } else {
+                    echo -4;
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Funcion encargada de devolver la lista de tareas que tiene un usuario, solo puede ser llamada por el administrador
+ * ya que solo se puede acceder a las listas desde la gestion de usuarios.
+ * 
+ * @return -1; //El usuario no tiene los permisos necesarios para realizar esta acción.
+ * @return -2; // FLATAN DATOS
+ */
+function devolverListaTareasUsuario()
+{
+
+    if (isset($_POST['accion']) && $_POST['accion'] === 'obtenerTareasDeUsuario') {
+        if (gestionarSesionyRol(90) == 1) {
+            if (isset($_POST['correo'])) {
+                $correo = filtraCorreo($_POST['correo']);
+                $conector =  new ConectorBD();
+                $respuesta = [];
+                $consulta = "SELECT fk_idTarea as id FROM `Usuarios:Tareas` WHERE fk_correo ='" . $correo . "'";
+
+
+                $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+
+                for ($i = 0; $i < count($resultado); $i++) {
+                    $consulta = "SELECT pk_idTarea as idTarea, nombreTarea,pk_idProyecto as idProyecto,nombre as nombreProyecto FROM Tareas, Proyectos WHERE fk_idProyecto = pk_idProyecto AND pk_idTarea=" . $resultado[$i]['id'] . "";
+
+                    array_push($respuesta, $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC));
+                }
+
+                echo json_encode($respuesta);
+            } else {
+                echo -2;
+            }
+        } else {
+            echo -1;
         }
     }
 }

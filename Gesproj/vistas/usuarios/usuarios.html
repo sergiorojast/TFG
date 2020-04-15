@@ -75,6 +75,84 @@
 
 </div>
 
+
+<!-- Modal ver proyectos asignados-->
+
+<div class="modal fade" id="modalVerProyectos" tabindex="-1" role="dialog" aria-labelledby="modalVerProyectos"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Proyectos administrados por el usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id='cuerpoModalProyectos'>
+                <div class='text-center'>
+                    <div class='spinner-border text-primary' role='status'><span class='sr-only'>Loading...</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cierre modal ver proyectos asignados-->
+
+<!-- Modal ver tareas asignadas-->
+
+<div class="modal fade" id="modalVerTareas" tabindex="-1" role="dialog" aria-labelledby="modalVerTareas"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tareas administradas por el usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id='cuerpoModalTareas'>
+                <div class='text-center'>
+                    <div class='spinner-border text-danger' role='status'><span class='sr-only'>Loading...</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cierre modal ver tareas asignadas-->
+<!-- Modal ver anotaciones-->
+
+<div class="modal fade" id="modalVerAnotaciones" tabindex="-1" role="dialog" aria-labelledby="modalVerAnotaciones"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Anotaciones creadas por el usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class='text-center'>
+                    <div class='spinner-border text-success' role='status'><span class='sr-only'>Loading...</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cierre modal ver anotaciones-->
+
 <script>
     url = undefined;
     url = "js/CRUD/usuarios/usuariosResumen.js";

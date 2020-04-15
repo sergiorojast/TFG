@@ -19,12 +19,15 @@ $(function () {
     // $('#contenido').fadeToggle(2500);
     $('#contenido').fadeIn('250');
 
+    //asignamos el evento para ocultar los proyectos finalizados.
+    $('#ocultarProyectosFinalizados').click(botonOcultarProyectosFinalizados);
+
 })
 
 /**
  * Funcion encargada de solicitar por medio de ajax los proyectos de usuario.
  */
-function solicitarProyectos() {
+function solicitarProyectos(estado) {
     //console.log(webService);
     $.ajax({
             type: "POST",
@@ -36,7 +39,9 @@ function solicitarProyectos() {
         })
         .done(function (datos) {
             //console.log(datos)
-            agregarDatosProyectosAlDoM(JSON.parse(datos));
+            agregarDatosProyectosAlDoM(JSON.parse(datos), estado);
+
+            solicitarBarrasEstadoProyecto();
 
         })
         .fail(function (datos) {
@@ -48,12 +53,14 @@ function solicitarProyectos() {
  * Funcion encargada de dibujar los datos de un array que le llegan de la llamada ajax.
  * @param {Array} datos 
  */
-function agregarDatosProyectosAlDoM(datos) {
+function agregarDatosProyectosAlDoM(datos, estado) {
+
+
     let carta;
-    let barraDeProgreso;
-
+    let dibujar;
+    $('#capaProyectos').empty();
     for (let i = 0, j = 1; i < datos.length; i++, j++) {
-
+      
         if (j === 1) {
             $('#capaProyectos').append('<div id="columnasProyectos" class="row"> </div>')
 
@@ -69,42 +76,24 @@ function agregarDatosProyectosAlDoM(datos) {
 
 
         if (datos[i]['estado'] === "Creado") {
-            carta += "<span class=' m-1 badge badge-pill badge-primary'> Creado </span>" +
+            carta += "<span id='estadoProyecto' class=' m-1 badge badge-pill badge-primary'> Creado </span>" +
                 "</div>";
 
 
-            barraDeProgreso = "<div class='row m-1'>" +
-                "<div class='col'>" +
-                "<div class='progress'>" +
-                "<div  id='barraProgreso' class='progress-bar ' role='progressbar' style='width: 0%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'>0%</div>" +
-                "</div>" +
-                "</div>" +
-                "</div>";
+
 
         } else if (datos[i]['estado'] === "En curso") {
-            carta += "<span class=' m-1 badge badge-pill badge-success'> En curso </span>" +
+            carta += "<span id='estadoProyecto' class=' m-1 badge badge-pill badge-success'> En curso </span>" +
                 "</div>";
-            barraDeProgreso = "<div class='row m-1'>" +
-                "<div class='col'>" +
-                "<div class='progress'>" +
-                "<div  id='barraProgreso' class='progress-bar bg-success progress-bar-striped progress-bar-animated ' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'>100%</div>" +
-                "</div>" +
-                "</div>" +
-                "</div>";
+
         } else if (datos[i]['estado'] === "En espera") {
-            carta += "<span class=' m-1 badge badge-pill badge-warning'>En espera</span>" +
+            carta += "<span id='estadoProyecto' class=' m-1 badge badge-pill badge-warning'>En espera</span>" +
                 "</div>";
-            barraDeProgreso = "<div class='row m-1'>" +
-                "<div class='col'>" +
-                "<div class='progress'>" +
-                "<div id='barraProgreso' class='progress-bar bg-warning' role='progressbar' style='width: 100%;' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'>100%</div>" +
-                "</div>" +
-                "</div>" +
-                "</div>";
+
         } else if (datos[i]['estado'] === "Finalizado") {
-            carta += "<span class=' m-1 badge badge-pill badge-secondary'>Finalizado</span>" +
+            carta += "<span id='estadoProyecto' class=' m-1 badge badge-pill badge-secondary'>Finalizado</span>" +
                 "</div>";
-            barraDeProgreso = "";
+
         }
 
         carta += "<div class ='col col-sm-8 text-truncate'> <small>" + datos[i]['nombre'] + " </small> </div>";
@@ -152,17 +141,19 @@ function agregarDatosProyectosAlDoM(datos) {
 
         carta += "<hr class='m-2 bg-secondary'>";
 
-        carta += barraDeProgreso;
+        carta += "<div id='barraProgreso'>" + preloadPequenioAleatorio() + "</div>";
 
         carta += "</div>";
 
 
+            $('#capaProyectos #columnasProyectos:last-child').append(carta);
 
-        $('#capaProyectos #columnasProyectos:last-child').append(carta);
+   
 
     }
 
     asignarEventosCartasProyectos();
+
 
 
 }
@@ -193,4 +184,144 @@ function asignarEventosCartasProyectos() {
         })
 
     })
+}
+
+function solicitarBarrasEstadoProyecto() {
+    let elementosProyectos = $('div #cartasProyectos');
+    let id = "";
+
+    for (let i = 0; i < elementosProyectos.length; i++) {
+        id = $(elementosProyectos[i]).find('#idProyecto').text();
+        let estadoProyecto = $(elementosProyectos[i]).find('#estadoProyecto').text();
+        let barraDeProgreso = "";
+
+
+        $.ajax({
+                type: "POST",
+                url: webService,
+                data: {
+                    'accion': 'obtenerTareasYestado',
+                    id
+                },
+            })
+            .done(function (e) {
+                let datos = JSON.parse(e);
+                let enEspera = 0;
+                let enCurso = 0;
+                let finalizado = 0;
+                let creado = 0;
+                let totalTareas = 0;
+                let porcentaje = 0;
+                if (datos.length > 0) {
+
+                    for (let i = 0; i < datos.length; i++) {
+                        if (datos[i]['estado'] == 'Finalizado') {
+                            finalizado++;
+                        } else if (datos[i]['estado'] == 'Creado') {
+                            creado++;
+                        }
+                        if (datos[i]['estado'] == 'En espera') {
+                            enEspera++;
+                        }
+                        if (datos[i]['estado'] == 'En curso') {
+                            enCurso++;
+                        }
+                    }
+
+                    totalTareas = enEspera + enCurso + finalizado + creado;
+                    porcentaje = Math.trunc((finalizado / totalTareas) * 100);
+
+
+                    if (porcentaje > 0) {
+
+                        if (estadoProyecto == 'En espera') {
+                            barraDeProgreso = "<div class='row m-1'>" +
+                                "<div class='col'>" +
+                                "<div class='progress'>" +
+                                "<div id='barraProgreso' class='progress-bar bg-warning' role='progressbar' style='width: " + porcentaje + "%;' aria-valuenow='" + porcentaje + "' aria-valuemin='0' aria-valuemax='100'>" + porcentaje + "%</div>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>";
+                        } else {
+
+                            barraDeProgreso = "<div class='row m-1'>" +
+                                "<div class='col'>" +
+                                "<div class='progress'>" +
+                                "<div id='barraProgreso' class='progress-bar bg-success' role='progressbar' style='width: " + porcentaje + "%;' aria-valuenow='" + porcentaje + "' aria-valuemin='0' aria-valuemax='100'>" + porcentaje + "%</div>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>";
+                        }
+
+                    } else {
+                        if (estadoProyecto == 'En espera') {
+                            barraDeProgreso = "<div class='row m-1'>" +
+                                "<div class='col'>" +
+                                "<div class='progress'>" +
+                                "  <div class='progress-bar progress-bar-striped  bg-warning progress-bar-animated' role='progressbar' style='width: 100%' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'>0%</div>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>";
+                        } else {
+
+                            barraDeProgreso = "<div class='row m-1'>" +
+                                "<div class='col'>" +
+                                "<div class='progress'>" +
+                                "  <div class='progress-bar progress-bar-striped  bg-info progress-bar-animated' role='progressbar' style='width: 100%' aria-valuenow='100' aria-valuemin='0' aria-valuemax='100'>0%</div>" +
+                                "</div>" +
+                                "</div>" +
+                                "</div>";
+                        }
+
+                    }
+
+                    if (estadoProyecto != 'Finalizado') {
+                        $(elementosProyectos[i]).find('#barraProgreso').html(barraDeProgreso);
+
+                    } else {
+                        $(elementosProyectos[i]).find('#barraProgreso').empty();
+                    }
+
+                } else {
+                    barraDeProgreso = "<div class='row m-1'>" +
+                        "<div class='col'>" +
+                        "<div class='progress'>" +
+                        "<div id='barraProgreso' class='progress-bar bg-secondary' role='progressbar' style='width: 0%;' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100'>0%</div>" +
+                        "</div>" +
+                        "</div>" +
+                        "</div>";
+
+                    if (estadoProyecto != 'Finalizado') {
+                        $(elementosProyectos[i]).find('#barraProgreso').html(barraDeProgreso);
+
+                    } else {
+                        $(elementosProyectos[i]).find('#barraProgreso').empty();
+                    }
+
+                }
+            })
+            .fail(falloAjax);
+
+
+
+    }
+
+}
+
+function botonOcultarProyectosFinalizados() {
+    let estado = $(this).attr('data-estado');
+
+
+
+    if (estado == '1') {
+
+        $('#capaProyectos').html(preload);
+        solicitarProyectos(false);
+        $(this).attr('data-estado', '0');
+
+    } else {
+        $('#capaProyectos').html(preload);
+        solicitarProyectos(true);
+        $(this).attr('data-estado', '1');
+    }
 }

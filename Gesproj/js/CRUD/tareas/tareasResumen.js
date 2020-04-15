@@ -102,7 +102,7 @@ function solicitarDatosPorId(id) {
             },
         })
         .done(function (datos) {
-            // console.log(datos);
+
 
             if (JSON.parse(datos)[0]['pk_idTarea'] == undefined) {
 
@@ -280,6 +280,55 @@ function solicitarAnotacionesPorTarea(id, btn) {
 
 
 }
+
+
+function solicitarSiUsuarioAFinalizadoLaTarea(id) {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'usuarioFinalizoTarea',
+                id
+            },
+
+        })
+        .done(function (e) {
+
+            if (e == -1) {
+                //es administrador de la tare
+            } else if (e == 1) {
+                // el usuario no a notificado la finalizacion de la tarea
+                $('#accionesModalAnotaciones').append("<button  id='notificarFinalizacion' data-finalizado='0' class='btn  text-left btn-block btn-warning' data-idTarea=" + id + "><i class='fas fa-exclamation'></i> Notificar finalización</button>")
+                aniadeEventoAlBoton();
+            } else if (e == 2) {
+                // el usuario a notificado la finalizacion de la tarea
+                $('#accionesModalAnotaciones').append("<button  id='notificarFinalizacion' data-finalizado='1' class='btn  text-center btn-block btn-danger' data-idTarea=" + id + "><i class='fas fa-exclamation'></i> Eliminar Notificar finalización</button>")
+                aniadeEventoAlBoton();
+
+            }
+        })
+        .fail(falloAjax);
+
+
+    function aniadeEventoAlBoton() {
+        $('#notificarFinalizacion').click(function (e) {
+
+
+            if ($(this).attr('data-finalizado') == 0) {
+                $(this).attr('data-finalizado', '1')
+            } else {
+                $(this).attr('data-finalizado', '0')
+            }
+
+            notificarUsuarioFinalizado($(this).attr('data-finalizado'), this, $('#notificarFinalizacion').html());
+
+
+            $('#notificarFinalizacion').html(preloadPequenio)
+
+        })
+    }
+}
+
 //#endregion
 
 
@@ -347,7 +396,7 @@ function validarFormularioEditarTarea() {
         submitHandler: function (form, event) {
 
             event.preventDefault();
-
+            $('#botonEnviarFormularioModalEdicion').html(preloadPequenio);
             enviarDatosModalEdicion();
         }
     });
@@ -512,13 +561,13 @@ function dibujarTareasPorProyectos(datos) {
 
 
         if (datos[i]['estadoTarea'] == "En curso") {
-            elementos += "     <div class='col col-lg-3'> <span class='badge badge-success'>" + datos[i]['estadoTarea'] + "</span></div>"
+            elementos += "     <div class='col col-lg-3'> <span id='estado' class='badge badge-success'>" + datos[i]['estadoTarea'] + "</span></div>"
         } else if (datos[i]['estadoTarea'] == "En espera") {
-            elementos += "     <div class='col col-lg-3'> <span class='badge badge-warning'>" + datos[i]['estadoTarea'] + "</span></div>"
+            elementos += "     <div class='col col-lg-3'> <span id='estado' class='badge badge-warning'>" + datos[i]['estadoTarea'] + "</span></div>"
         } else if (datos[i]['estadoTarea'] == "Creado") {
-            elementos += "     <div class='col col-lg-3'> <span class='badge badge-primary'>" + datos[i]['estadoTarea'] + "</span></div>"
+            elementos += "     <div class='col col-lg-3'> <span id='estado' class='badge badge-primary'>" + datos[i]['estadoTarea'] + "</span></div>"
         } else if (datos[i]['estadoTarea'] == "Finalizado") {
-            elementos += "     <div class='col col-lg-3'> <span class='badge badge-secondary'>" + datos[i]['estadoTarea'] + "</span></div>"
+            elementos += "     <div class='col col-lg-3'> <span id='estado' class='badge badge-secondary'>" + datos[i]['estadoTarea'] + "</span></div>"
         }
         elementos += "</div>" +
             "<hr class='m-2 bg-secondary'>" +
@@ -548,17 +597,19 @@ function dibujarTareasPorProyectos(datos) {
 
 
         if (datos[i]['estimacionTarea'].split(':')[0] < 10) {
-            elementos += "<small class='col col-lg-6'>Estimación: <br> 0" + datos[i]['estimacionTarea'].split(':')[0] + ":";
+            elementos += "<small class='col-lg-5'>Estimación: <br> 0" + datos[i]['estimacionTarea'].split(':')[0].substring(datos[i]['estimacionTarea'].split(':')[0].length - 1) + ":";
+
             if (datos[i]['estimacionTarea'].split(':')[1] < 10) {
-                elementos += "0" + datos[i]['estimacionTarea'].split(':')[1];
+
+                elementos += "0" + datos[i]['estimacionTarea'].split(':')[1].substring(datos[i]['estimacionTarea'].split(':')[1].length - 1);
             } else {
                 elementos += datos[i]['estimacionTarea'].split(':')[1];
             }
             elementos += "</small>"
         } else {
-            elementos += "<small class='col col-lg-6'>Estimación: <br>" + datos[i]['estimacionTarea'].split(':')[0] + ":";
+            elementos += "<small class='col-lg-5'>Estimación: <br>" + datos[i]['estimacionTarea'].split(':')[0] + ":";
             if (datos[i]['estimacionTarea'].split(':')[1] < 10) {
-                elementos += "0" + datos[i]['estimacionTarea'].split(':')[1];
+                elementos += "0" + datos[i]['estimacionTarea'].split(':')[1].substring(datos[i]['estimacionTarea'].split(':')[1].length - 1);
             } else {
                 elementos += datos[i]['estimacionTarea'].split(':')[1];
             }
@@ -568,19 +619,27 @@ function dibujarTareasPorProyectos(datos) {
 
         // "<small class='col col-lg-6'>Estimación: <br> " + datos[i]['estimacionTarea'] + "</small>" ;
         elementos +=
-            "<div class='col col-lg-6'>" +
+            "<div class='col col-lg-7'>" +
             "<div class='btn-group' id='contenedorBotonesAccionTarea' role='group' aria-label='Basic example'>";
 
         if (rolUsuario == 90) {
 
             elementos += "<button type='button' id='botonEliminarTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-danger'><i class='fas fa-trash'></i></button>";
-            elementos += "<button type='button' id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-info '><i class='fas fa-pen'></i></button>"
+            if (datos[i]['estadoTarea'] != "Finalizado") {
+                elementos += "<button type='button' id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-info '><i class='fas fa-pen'></i></button>"
+                elementos += "<button type='button' id='botonFinalizarTarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-warning '><i class='fas fa-hourglass-end'></i></button>"
+
+            }
+
             elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
+
         } else if (rolUsuario == 0) {
             elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
+            //   elementos += "<button type='button' id='botonMarcarComoFinalizada' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
 
         } else {
             elementos += "<button type='button'  id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-info '><i class='fas fa-pen'></i></button>"
+            elementos += "<button type='button' id='botonFinalizarTarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-warning '><i class='fas fa-hourglass-end'></i></button>"
             elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
 
         }
@@ -717,6 +776,7 @@ function eventosBotonesAccionesTareas() {
 
     let botonesBorrarTarea = $('#contenedorBotonesAccionTarea #botonEliminarTareaAdministrador');
     let botonesEditarTarea = $('#contenedorBotonesAccionTarea #botonVerTareaAdministrador');
+    let botonesFinalizarTarea = $('#contenedorBotonesAccionTarea #botonFinalizarTarea');
 
     for (let i = 0; i < botonesBorrarTarea.length; i++) {
         $(botonesBorrarTarea[i]).click(function () {
@@ -786,6 +846,33 @@ function eventosBotonesAccionesTareas() {
 
         });
     }
+
+    for (let i = 0; i < botonesFinalizarTarea.length; i++) {
+
+        $(botonesFinalizarTarea[i]).off('click');
+
+        $(botonesFinalizarTarea[i]).click(function (e) {
+            let idTarea = $(this).attr('data-idTarea');
+
+
+            $('#modalFinalizacionTarea').modal('show');
+            $('#enviarFinalizarTarea').off('click');
+            $('#enviarFinalizarTarea').click(function (e) {
+                enviarFinalizacionTarea(idTarea, $('#eliminarRestricciones').prop('checked'));
+            });
+            $('#eliminarRestricciones').off('click');
+            $('#eliminarRestricciones').click(function (e) {
+                if ($('#eliminarRestricciones').prop('checked')) {
+                    $('#avisoRestricciones').removeClass('d-none');
+                } else {
+                    $('#avisoRestricciones').addClass('d-none');
+                }
+
+            })
+        })
+
+    }
+
 
 }
 
@@ -999,17 +1086,27 @@ function abrirModalAnotaciones() {
 
     $('#contenedorBotonesAccionTarea #botonVerAnotaciones').click(function (e) {
 
+
+
         //obtenemos el id de la tarea y la almacenamos en una variable y en un input hidden;
         let idTarea = $(this).attr('data-idTarea');
-        $('#idTareaModalAnotaciones').val('idTarea');
+
+        $('#idTareaModalAnotaciones').val(idTarea);
+
+
 
         //añadimos preload al boton de las tareas;
         $(this).html(preloadPequenio);
 
         let contenedorTarea = ($(this).parent().parent().parent().parent());
 
+
+        let estado = $(contenedorTarea).find('#estado');
+
         let nombreTarea = $(contenedorTarea).find('small')[0];
         //obtenemos el nombre de la  tarea, lo haremos a traves del boton.
+
+
 
         $('#datosTareaModalNotificaciones').empty();
         $('#datosTareaModalNotificaciones').append("<h4 class='text-truncate text-center'>" + $(nombreTarea).text() + "</h4>")
@@ -1017,15 +1114,20 @@ function abrirModalAnotaciones() {
 
         //generamos los botones de acción, donde se podra crear nuevas anotaciones;
         $('#accionesModalAnotaciones').empty(); //limpiamos la zona.
-        $('#accionesModalAnotaciones').append("<button id='comentarioTarea' class='btn  text-left btn-block btn-primary' data-idTarea=" + idTarea + "><i class='fas fa-plus'></i> Comentario</button>")
+        if ($(estado).html() == 'Finalizado') {
+            $('#accionesModalAnotaciones').append("<button disabled id='comentarioTarea' class='btn  text-left btn-block btn-primary' data-idTarea=" + idTarea + "><i class='fas fa-plus'></i> Comentario</button>")
+
+        } else {
+            $('#accionesModalAnotaciones').append("<button id='comentarioTarea' class='btn  text-left btn-block btn-primary' data-idTarea=" + idTarea + "><i class='fas fa-plus'></i> Comentario</button>")
+
+        }
         $('#accionesModalAnotaciones').append("<button disabled id='listaTarea' class='btn  text-left btn-block btn-primary' data-idTarea=" + idTarea + "><i class='fas fa-list-ul'></i> Lista</button>")
-
-        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-        //AÑADIR AUI LOS EVENTOS PARA AÑADIR NUEVAS ANOTACIONES.
+        solicitarSiUsuarioAFinalizadoLaTarea(idTarea);
 
 
 
+
+        //Asignamos el evento al boton de añadir comentarios 
         $('#comentarioTarea').click(function (e) {
             var envioNuevoComentarioNombre = false;
             var envioNuevoComentarioDescripcion = false;
@@ -1136,8 +1238,6 @@ function abrirModalAnotaciones() {
                 }
             })
         })
-        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-        //¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡¡
 
 
         //hacemos la llamada  para solitar las anotaciones de la tarea.
@@ -1329,12 +1429,15 @@ function enviarDatosModalEdicion() {
 
         })
         .done(function (e) {
-
+        
+           $('#botonEnviarFormularioModalEdicion').html("<i class='fas fa-upload'></i>  Actualizar tarea")
 
             if (e == 1) {
                 mensajeSuccess('Tarea actualizada con éxito')
             } else if (e == -1) {
                 mensajeDanger('Faltan permisos', '¡ERROR!')
+            } else if (e == -2) {
+                mensajeDanger('Debe seleccionar al menos un usuario.', '¡ERROR!')
             } else if (e == -3) {
                 mensajeDanger('El tiempo estimado de la tarea supera al tiempo estimado del proyecto', '¡ERROR!')
             } else if (e == -4) {
@@ -1407,7 +1510,7 @@ function eliminarAnotacion(id, btn) {
                 id
             }
         }).done(function (e) {
-            console.log(e)
+
 
             $(btn).html("<i class='fas fa-trash'></i>");
 
@@ -1450,18 +1553,84 @@ function enviarDatosModalSolicitud() {
             }
         })
         .done(function (e) {
-      
+
             $('#botonEnviarSolicitud').html('<i class="fas fa-upload"></i> Enviar');
-            if(e==1){
+            if (e == 1) {
                 mensajeSuccess('Los administradores del proyecto han sido notificados. Espere su respuesta');
-            }else if(e == -1){
-                mensajeDanger("Faltan datos  para poder solicitar la tarea","¡ERROR!")
-            }else if(e == -2){
-                mensajeDanger("Su usuario no tiene permisos  para solicitar tareas en este proyecto","¡ERROR!")
-            }else if(e == -3){
-                mensajeDanger("Fallo en la consulta de notificaciones","¡ERROR!")
+            } else if (e == -1) {
+                mensajeDanger("Faltan datos  para poder solicitar la tarea", "¡ERROR!")
+            } else if (e == -2) {
+                mensajeDanger("Su usuario no tiene permisos  para solicitar tareas en este proyecto", "¡ERROR!")
+            } else if (e == -3) {
+                mensajeDanger("Fallo en la consulta de notificaciones", "¡ERROR!")
             }
         })
         .fail(falloAjax);
+}
+
+function notificarUsuarioFinalizado(estado, btn, html) {
+    // si devuelve 0 el usuario no ha finalizado la tarea, por lo tanto notifica que se ha finalizado la tarea
+
+    // si devuelve 1 el usuario ya habia notificado la tarea. Pero quiere reabrirla.
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'cambiarEstadoFinalizadoTarea',
+                estado,
+                'idTarea': $('#idTareaModalAnotaciones').val()
+            }
+        })
+        .done(function (e) {
+            $(btn).html(html);
+            if (e == 3) {
+                mensajeSuccess('Acaba de eliminar la solicitud de finalización de la tarea');
+
+            } else if (e == 2) {
+                mensajeInfo('Se ha almacenado la solicitud de finalización de la tarea, pero no todos los participantes de la tarea la han finalizado. Se les notificara.', "", 7);
+            } else if (e == 1) {
+                mensajeSuccess('Solicitud enviada, se notificara al administrador de la tarea para que proceda a finalizarla');
+            } else if (e == -1) {
+                mensajeDanger('Faltan datos en la solicitud', '¡ERROR!');
+            } else if (e == -2) {
+                mensajeDanger('El usuario no pertenece  a esta tarea', '¡ERROR!');
+            } else if (e == -3) {
+                mensajeDanger('Fallo en la inserción de la consulta. Contacte con el administrador de la plataforma.', '¡ERROR!');
+            } else if (e == -4) {
+                mensajeDanger('La tarea esta en estado Finalizado, no puede solicitar su finalización.', '¡ERROR!');
+            }
+        })
+        .fail(falloAjax);
+}
+
+function enviarFinalizacionTarea(id, noRestricciones) {
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'finalizarTarea',
+                id,
+                noRestricciones
+            }
+        })
+        .done(function (e) {
+            if (e == 4) {
+                mensajeSuccess('Tarea finalizada, cumpliendo la restriccion de notificaciones de usuarios', 'Acción del administrador')
+            } else if (e == 3) {
+                mensajeSuccess('Tarea finalizada, sin cumplir la restriccion de notificaciones de usuarios', 'Acción del administrador')
+            } else if (e == 2) {
+                mensajeSuccess('Tarea finalizada, cumpliendola restriccion de notificaciones de usuarios')
+            } else if (e == 1) {
+                mensajeSuccess('Tarea finalizada, sin cumplir restriccion de notificaciones de usuarios')
+            } else if (e == -1) {
+                mensajeDanger('Fallo en la consulta ', '¡ERROR!')
+            } else if (e == -2) {
+                mensajeInfo('Uno o varios usuarios no han notificado la finalización de la tarea, por lo tanto no se ha finalizado.')
+            } else if (e == -3) {
+                mensajeDanger('Fallo en la consulta', '¡ERROR!')
+            } else if (e == -4) {
+                mensajeDanger('Usuario sin permisos para realizar esta acción', '¡ERROR!')
+            }
+        }).fail(falloAjax);
 }
 //#endregion

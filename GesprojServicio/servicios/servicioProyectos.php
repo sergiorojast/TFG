@@ -1,14 +1,24 @@
 <?php
 
 crearProyecto();
+
 listarProyectos();
+
 devolverProyectoporID();
+
 actualizarProyecto();
+
 devolverAdministradoresProyecto();
+
 actualizarAdministradoresProyecto();
+
 finalizarProyecto();
+
 devolverTodosProyectosID();
 
+obtenerTareasYEstadoPorProyecto();
+
+obtenerProyectosPorUsuario();
 /**
  * Funcion encargada  de crear proyectos, necesita un nivel de permisos 50 o superior
  * 
@@ -29,7 +39,7 @@ function crearProyecto()
                     $descripcion = filtrado($_POST['descripcion']);
                     $descripcion = htmlspecialchars($descripcion);
                     $descripcion = addslashes($descripcion);
-                   
+
                     $horas = (int) filtrado($_POST['horas']);
                     $minutos  = (int) filtrado($_POST['minutos']);
 
@@ -45,7 +55,7 @@ function crearProyecto()
 
                     //insertamos el proyecto en la base de datos
                     $consulta =  "INSERT INTO `Proyectos`(`nombre`, `descripcion`, `estado`, `estimacion`) VALUES ('" . $nombre . "','" . $descripcion . "','Creado','" . $estimacion . "')";
-                   
+
                     $conector = new ConectorBD();
                     if ($conector->actualizarBD($consulta)) {
 
@@ -207,7 +217,7 @@ function actualizarProyecto()
  * @param idProyecto;
  * @param accion;
  * 
- * @return -1; // Usuario que no tiene permisos para realizar esta acción
+ * @return -1; // Usuario no tiene permisos para realizar esta acción
  * @return -2; // el id no esta definido.
  */
 
@@ -312,31 +322,96 @@ function actualizarAdministradoresProyecto()
 
 
 /**
- * Funcion encargada de finalizar los proyectos;
+ * Funcion encargada de finalizar los proyectos, comprobando que todas las tareas estan finalizadas o sin comprobar, dependiendo si el
+ * administrador ha decidido  ignorar estas restricciones;
  * 
- * @return 1;//todo ok
+ * @return 3; // Proyecto finalizado obviando restricciones
+ * @return 2;// Proyecto finalizado. No tenia tareas
+ * @return 1;//tarea finalizada cumpliendo las restricciones.
  * @return -1; //faltan permisos.
- * @return -2;//faltan datos;
- * @return -3; // fallo en la consulta;
+ * @return -2; //faltan datos.
+ * @return -3; //Quedan Tareas por finalizar.
+ * @return -4; // Fallo en la consulta de modificacion del proyecto con restricciones.
+ * @return -5; //Fallo en la consulta de modificacion  de proyecto sin tareas.
+ * @return -6; // Fallo ne la consulta de modicacion de proyectos sin restricciones.
  */
 function finalizarProyecto()
 {
+    $id = 0;
+    $restricciones  = false;
+    $resultado  = null;
+    $todoFinalizado =  true;
 
     if (isset($_POST['accion']) && $_POST['accion'] === 'finalizarProyecto') {
         if (gestionarSesionyRol(50) == 1) {
 
-            if (isset($_POST['id']) && isset($_POST['fFinalizacion'])) {
-                //si todos los datos estan bien, creamos la consulta.
-                $consulta =  "UPDATE `Proyectos` SET `fechaFinalizacion` = '" . $_POST['fFinalizacion'] . "',`estado` = 'Finalizado' WHERE pk_idProyecto = '" . $_POST['id'] . "'";
+            if (isset($_POST['id']) && isset($_POST['restricciones'])) {
+                $id = filtrado($_POST['id']);
+                $restricciones  = filtrado($_POST['restricciones']);
                 $conector = new ConectorBD();
 
-                if ($conector->actualizarBD($consulta)) {
-                    echo 1; //todo ok;
-                } else {
-                    echo -3; // Fallo en la consulta.
+                if ($restricciones == 'false') {
+                    // si restricciones esta a false,  respetaremos las restricciones de finalizacion de proyecto
+                    //obtenemos las tareas que tiene el proyecto y obtenemos sus estados.
+                    $consulta = "SELECT estado FROM Tareas WHERE fk_idProyecto  = '" . $id . "'";
+
+                    $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                    if (count($resultado) > 0) {
+                        for ($i = 0; $i < count($resultado); $i++) {
+                            if ($resultado[$i]['estado'] != 'Finalizado') {
+                                $todoFinalizado = false;
+                            }
+                        }
+                        if ($todoFinalizado) {
+                            //creamos el uptadate para finalizar le proyecto.
+                            $consulta = "UPDATE
+                            `Proyectos`
+                        SET
+                            `fechaFinalizacion` = SYSDATE(),
+                            `estado` = 'Finalizado'
+                        WHERE
+                            pk_idProyecto= $id ";
+                            if ($conector->actualizarBD($consulta)) {
+                                echo 1; // Proyecto finalizado cumpliendo las restricciones
+                            } else {
+                                echo -4;
+                            }
+                        } else {
+                            echo -3; // Quedan tareas por finalizar.
+                        }
+                    } else {
+                        //el proyecto no tiene tareas asignadas.
+                        $consulta = "UPDATE
+                        `Proyectos`
+                    SET
+                        `fechaFinalizacion` = SYSDATE(),
+                        `estado` = 'Finalizado'
+                    WHERE
+                        pk_idProyecto= $id ";
+                        if ($conector->actualizarBD($consulta)) {
+                            echo 2; // Proyecto finalizado. No tenia tareas.
+                        } else {
+                            echo -5;
+                        }
+                    }
+                } else if ($restricciones == 'true') {
+                    $consulta = "UPDATE
+                    `Proyectos`
+                SET
+                    `fechaFinalizacion` = SYSDATE(),
+                    `estado` = 'Finalizado'
+                WHERE
+                    pk_idProyecto= $id ";
+
+                    if ($conector->actualizarBD($consulta)) {
+                        echo 3; //proyecto finalizado, Obviando restricciones
+                    } else {
+                        echo -6;
+                    }
                 }
             } else {
-                echo -2; //faltan datos;
+                echo -2; //faltan datos
             }
         } else {
             echo -1; // permisos requeridos.
@@ -363,6 +438,57 @@ function devolverTodosProyectosID()
             }
 
             echo json_encode($resultado);
+        } else {
+            echo -1;
+        }
+    }
+}
+
+
+function obtenerTareasYEstadoPorProyecto()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'obtenerTareasYestado') {
+        if (gestionarSesionyRol(50) == 1) {
+
+            $consulta = "SELECT estado FROM Tareas where fk_idProyecto = '" . filtrado($_POST['id']) . "'";
+
+            $conector = new ConectorBD();
+
+            echo json_encode($conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC));
+        }
+    }
+}
+
+/**
+ * Funcion encargada de devolver el nombre y la id de los proyectos que tiene asignados un usuario.
+ * @return -1;//El usuario que acaba de solicitar la accion no tiene permisos de administración
+ * @return -2;//Faltan datos
+ */
+function obtenerProyectosPorUsuario()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'obtenerProyectoDeUsuario') {
+        if (gestionarSesionyRol(90) == 1) {
+            $respuesta = []; // variable que usaremos para devolver el listado de proyectos del usuario
+            if (isset($_POST['correo'])) {
+                $correo = filtraCorreo($_POST['correo']);
+                $conector = new ConectorBD();
+
+                $consulta = "SELECT fk_idProyecto as id FROM `Usuarios:Proyectos` WHERE fk_correo = '$correo'";
+
+                $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                for ($i = 0; $i < count($resultado); $i++) {
+                    $resultado2 = "";
+                    $consulta = "SELECT pk_idProyecto as id,  nombre FROM Proyectos WHERE pk_idProyecto  ='" . $resultado[$i]['id'] . "'";
+                    $resultado2 = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                    array_push($respuesta, $resultado2[0]);
+                }
+
+                echo json_encode($respuesta);
+            } else {
+                echo -2;
+            }
         } else {
             echo -1;
         }

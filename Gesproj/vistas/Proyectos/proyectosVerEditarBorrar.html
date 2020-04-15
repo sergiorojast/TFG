@@ -177,6 +177,56 @@
         </div>
     </div>
 
+        <!-- Modal de finalizacion de proyectos -->
+        <div class="modal" id=modalFinalizacionProyectos tabindex="-1" role="dialog">
+            <div class="modal-dialog " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Finalización del proyecto</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col text-center">
+                                <small>Se esta  procediendo a finalizar este proyecto, siempre y cuando todas las tareas que lo constituyen esten en estado <strong>Finalizado</strong>.</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="card text-white bg-danger mb-3 d-none" id="avisoRestricciones">
+                                    <div class="card-header">Eliminar restricciones</div>
+                                    <div class="card-body">
+    
+                                        <p><small>Si marca esta casilla, la restricción que implica que todas las tareas hayan
+                                            finalizado será eliminada. No es
+                                                recomendable.</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+    
+                        <div class="text-right">
+                            <input type="checkbox" name="eliminarRestricciones" id="eliminarRestricciones">
+                            <label for="eliminarRestricciones">Eliminar restricciones</label>
+                        </div>
+    
+                        <button class="btn btn-danger" data-dismiss="modal" aria-label="Close"><i class="fas fa-times"></i> Cerrar</button>
+                        <button class="btn btn-success" id="enviarFinalizarProyecto"><i class="fas fa-upload"></i> Finalizar</button>
+    
+    
+    
+    
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Cierre del modal de finalizacion de proyectos -->
+
     <script>
         url = undefined;
         url = "js/CRUD/proyectos/proyectosVerEditarBorrar.js";

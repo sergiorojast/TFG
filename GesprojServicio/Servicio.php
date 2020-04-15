@@ -2,12 +2,12 @@
 
 
 
-include_once("./includes/ConectorBD.php");
-include_once("./includes/Usuario.php");
+include "./includes/ConectorBD.php";
+include ("./includes/Usuario.php");
 
-require_once "includes/phpMailer/src/Exception.php";
-require_once "includes/phpMailer/src/PHPMailer.php";
-require_once "includes/phpMailer/src/SMTP.php";
+require "includes/phpMailer/src/Exception.php";
+require "includes/phpMailer/src/PHPMailer.php";
+require "includes/phpMailer/src/SMTP.php";
 
 
 
@@ -31,18 +31,18 @@ date_default_timezone_set('Europe/Madrid');
  * @method registro();
  * @method consultarUsuario();
  */
-require_once('servicios/servicioLogin.php');
+require 'servicios/servicioLogin.php';
 /**
  * Gestionamos las sesiones, consultas y borrado de las mismas.
  * @method consultarSession();
  * @method eliminarSession();
  */
-require_once('servicios/servicioSesiones.php');
+require 'servicios/servicioSesiones.php';
 /**
  * Gestiona todo lo relacionado con las alertas de la plataforma
  */
 
-require_once('servicios/servicioAlertas.php');
+require 'servicios/servicioAlertas.php';
 /**
  * Gestion de todos  los datos exclusivos de usuarios;
  * @method datosIniciales();
@@ -54,21 +54,21 @@ require_once('servicios/servicioAlertas.php');
  * @method devolverRoles();
  * @method devolverAdministradores();
  */
-require_once('servicios/servicioUsuario.php');
+require 'servicios/servicioUsuario.php';
 /**
  * Gestion de todos los datos relacionados con proyectos;
  * @method 
  */
-require_once('servicios/servicioProyectos.php');
+require 'servicios/servicioProyectos.php';
 
 /**
  * Gestiona todo lo relacionado con las tareas.
  */
-require_once('servicios/servicioTareas.php');
+require 'servicios/servicioTareas.php';
 /**
  * Gestiona todo lo relacionado con las Anotaciones.
  */
-require_once('servicios/servicioAnotaciones.php');
+require 'servicios/servicioAnotaciones.php';
 
 
 

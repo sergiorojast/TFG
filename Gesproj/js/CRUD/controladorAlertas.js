@@ -1,6 +1,8 @@
 $(function () {
     $('#contenido').fadeIn('250');
 
+    comprobarNotificaciones();
+
     obtenerNumeroNotificaciones();
 
     añadirFuncionalidadBotones();
@@ -8,6 +10,9 @@ $(function () {
     obtenerSolcitudesSinLeer();
 
     obtenerAlertasSinLeer();
+   
+
+
 })
 
 //#region funcionalidad
@@ -37,6 +42,7 @@ function añadirFuncionalidadBotones() {
 
 
             }
+
             obtenerSolcitudesSinLeer();
         })
     }
@@ -59,6 +65,7 @@ function añadirFuncionalidadBotones() {
 
 
             }
+
             obtenerAlertasSinLeer();
         })
     }
@@ -131,7 +138,8 @@ function dibujarSolicitudesSinLeer(datos) {
                 $('#contadorSolicitudesSinLeer').html(numeroNotificaciones + 1);
 
             }
-            cambiarEstadoLeidoNoLeido($(this).attr('data-idsolicitud'), $(this).attr('data-leido'))
+            cambiarEstadoLeidoNoLeido($(this).attr('data-idsolicitud'), $(this).attr('data-leido'));
+            comprobarNotificaciones();
         })
 
     }
@@ -143,7 +151,7 @@ function dibujarSolicitudesLeidas(e) {
 
 
     $('#solicitudesLeidas').empty();
-    lista = '<li class="list-group-item list-group-item-info text-center">Solicitudes leidas</li>'
+    lista = '<li class="list-group-item list-group-item-info text-center">Solicitudes leídas</li>'
     $('#solicitudesLeidas').append(lista);
 
     for (let i = 0; i < solicitudes.length; i++) {
@@ -200,7 +208,8 @@ function dibujarSolicitudesLeidas(e) {
                 $('#contadorSolicitudesSinLeer').html(numeroNotificaciones + 1);
 
             }
-            cambiarEstadoLeidoNoLeido($(this).attr('data-idsolicitud'), $(this).attr('data-leido'))
+            cambiarEstadoLeidoNoLeido($(this).attr('data-idsolicitud'), $(this).attr('data-leido'));
+            comprobarNotificaciones();
         })
 
     }
@@ -261,6 +270,7 @@ function dibujarAlertasSinLeer(e) {
                 $(this).attr('data-leido', '1');
                 let numeroNotificaciones = parseInt($('#contadorAlertasSinLeer').html());
 
+
                 $('#contadorAlertasSinLeer').html(numeroNotificaciones - 1);
 
 
@@ -274,6 +284,7 @@ function dibujarAlertasSinLeer(e) {
 
             }
             cambiarEstadoLeidoNoLeido($(this).attr('data-idAlerta'), $(this).attr('data-leido'))
+            comprobarNotificaciones();
         })
 
     }
@@ -284,7 +295,7 @@ function dibujarAlertasLeidas(e) {
 
 
     $('#alertasLeidas').empty();
-    lista = '<li class="list-group-item list-group-item-info text-center">Alertas leidas</li>'
+    lista = '<li class="list-group-item list-group-item-info text-center">Alertas leídas</li>'
     $('#alertasLeidas').append(lista);
 
     for (let i = 0; i < alertas.length; i++) {
@@ -327,12 +338,16 @@ function dibujarAlertasLeidas(e) {
                 $(this).html("<i class='fas fa-envelope-open'></i>")
                 $(this).parent().parent().parent().find('#datosAlerta').removeClass('d-none');
                 $(this).attr('data-leido', '1');
+                $('#contadorAlertasSinLeer').removeClass('d-none');
+
                 let numeroNotificaciones = parseInt($('#contadorAlertasSinLeer').html());
 
                 $('#contadorAlertasSinLeer').html(numeroNotificaciones - 1);
 
 
             } else if ($(this).attr('data-leido') == 1) {
+                $('#contadorAlertasSinLeer').removeClass('d-none');
+
                 $(this).parent().parent().parent().find('#datosAlerta').addClass('d-none');
                 $(this).attr('data-leido', '0');
                 $(this).html("<i class='fas fa-envelope'></i>")
@@ -341,7 +356,8 @@ function dibujarAlertasLeidas(e) {
                 $('#contadorAlertasSinLeer').html(numeroNotificaciones + 1);
 
             }
-            cambiarEstadoLeidoNoLeido($(this).attr('data-idAlerta'), $(this).attr('data-leido'))
+            cambiarEstadoLeidoNoLeido($(this).attr('data-idAlerta'), $(this).attr('data-leido'));
+            comprobarNotificaciones();
         })
 
     }
@@ -362,13 +378,13 @@ function obtenerNumeroNotificaciones() {
             if (datos['alertas'] > 0) {
                 $('#contadorAlertasSinLeer').html(datos['alertas'])
             } else {
-                $('#contadorAlertasSinLeer').remove()
+                $('#contadorAlertasSinLeer').addClass('d-none')
             }
 
             if (datos['solicitudes'] > 0) {
                 $('#contadorSolicitudesSinLeer').html(datos['solicitudes'])
             } else {
-                $('#contadorSolicitudesSinLeer').remove();
+                $('#contadorSolicitudesSinLeer').addClass('d-none');
             }
 
 
@@ -446,11 +462,11 @@ function obtenerAlertasLeidas() {
             'accion': 'alertasLeidas'
         },
     }).done(function (e) {
-        console.log(e);
+
         if (e == 0) {
 
             $('#solicitarAlertas').html('<span class="fas fa-chevron-down"></span>')
-            lista = '<li class="list-group-item list-group-item-danger text-center">No tiene alertas leidas</li>'
+            lista = '<li class="list-group-item list-group-item-danger text-center">No tiene alertas leídas</li>'
             $('#alertasLeidas').empty();
             $('#alertasLeidas').append(lista);
 

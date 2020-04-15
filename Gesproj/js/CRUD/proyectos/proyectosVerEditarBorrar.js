@@ -78,70 +78,28 @@ function agregarDatos(datos) {
 }
 
 function agregarEventoBotonFinalizar() {
+    $('#botonFinalizar').click(function () {
+        $('#modalFinalizacionProyectos').modal('show');
 
-    if ($('#eFechaFinalizacionProyecto').val() == "" || $('#eFechaFinalizacionProyecto').val() == "" == null || $('#eFechaFinalizacionProyecto').val() == undefined) {
-        $('#botonFinalizar').click(function () {
+    })
+    $('#enviarFinalizarProyecto').off('click');
+    $('#enviarFinalizarProyecto').click(function (e) {
+        $(this).html(preloadPequenio)
+        finalizarProyecto();
+    })
+
+    $('#eliminarRestricciones').off('click');
+    $('#eliminarRestricciones').click(function (e) {
+        if ($('#eliminarRestricciones').prop('checked')) {
+            $('#avisoRestricciones').removeClass('d-none');
+        } else {
+            $('#avisoRestricciones').addClass('d-none');
+        }
+
+    })
 
 
 
-            let fecha = new Date();
-            fecha.setHours(fecha.getHours() + 1);
-            fecha = fecha.toJSON();
-            let fechaFormateada = fecha.slice(0, -5).replace("T", " ");
-            //fechaFormateada = fechaFormateada.replace("T", " ");
-            $('#eFechaFinalizacionProyecto').val(fechaFormateada);
-
-
-            finalizarProyecto();
-        })
-    } else {
-        $('#botonFinalizar').addClass('disabled');
-    }
-    /**
-     * Funcion encargada de enviar los datos para dar un proyecto como finalizado.
-     * @param id;
-     * @param fechaFinalizacion;
-     */
-    function finalizarProyecto() {
-        $.ajax({
-                type: "POST",
-                url: webService,
-                data: {
-                    'accion': 'finalizarProyecto',
-                    'id': $('#cIDProyecto').val(),
-                    'fFinalizacion': $('#eFechaFinalizacionProyecto').val()
-                },
-
-            })
-            .done(function (datos) {
-
-                if (datos == 1) {
-                    mensajeSuccess("Proyecto finalizado.")
-                    //eliminamos los botones  de acción.
-                    $('#controlModificacionProyecto').empty();
-                    $('#botonActualizarAdministradores').remove();
-
-                    $('#eNombreProyecto').addClass('disabled');
-                    $('#eDescripcionProyecto').addClass('disabled');
-                    $('#horas').addClass('disabled');
-                    $('#minutos').addClass('disabled');
-
-                    $('#listadoAdministradores li button').addClass('disabled');
-                    $('#listadoAdministradores li button').off('click');
-                    $('#botonSeleccionarAdministradores').off('click');
-
-                } else if (datos == -1) {
-                    mensajeDanger('Sin permisos para realizar esta acción');
-                } else if (datos == -2) {
-                    mensajeDanger("Faltan datos", "Error");
-                } else if (datos == -3) {
-                    mensajeDanger("Fallo en la consulta", "Error");
-                }
-            })
-            .fail(function (datos) {
-                falloAjax();
-            })
-    }
 }
 
 function rellenarSelectConEstados(estado) {
@@ -435,21 +393,21 @@ function solicitarTareas() {
             },
 
         }).done(function (e) {
-           
 
-            if(e==1){
+
+            if (e == 1) {
                 $('#zonaPreload').html('<small>Este proyecto no tiene tareas creadas.</small>');
                 $('#zonaPreload').addClass('text-center');
-            }else if( e == -1){
+            } else if (e == -1) {
                 mensajeDanger('No tienes permisos para realizar esta accion', '¡ERROR!');
-            }else if( e == -2){
+            } else if (e == -2) {
                 mensajeDanger('falta el id del proyecto', '¡ERROR!');
-            }else{
+            } else {
                 $('#zonaPreload').empty();
-                let tareas  = JSON.parse(e);
+                let tareas = JSON.parse(e);
                 for (let i = 0; i < tareas.length; i++) {
-                   //console.log(tareas[i])
-                    $('#listaTareas').append("<li class='list-group-item'> <span class='fas fa-stream text-info'></span>  "+tareas[i]['nombreTarea']+"</li>")
+                    //console.log(tareas[i])
+                    $('#listaTareas').append("<li class='list-group-item'> <span class='fas fa-stream text-info'></span>  " + tareas[i]['nombreTarea'] + "</li>")
                 }
             }
         })
@@ -544,6 +502,56 @@ function enviarActualizacionAdministradores() {
                 $('#botonActualizarAdministradores').html("<i class='fas fa-upload'></i> Actualizar");
             })
     }
+
+}
+
+function finalizarProyecto() {
+    //obtenemos los datos relacionados con el proyecto.
+    let id = $('#cIDProyecto').val();
+    let restricciones = $('#eliminarRestricciones').prop('checked');
+
+    $.ajax({
+            type: "POST",
+            url: webService,
+            data: {
+                'accion': 'finalizarProyecto',
+                id,
+                restricciones
+            }
+        })
+        .done(function (e) {
+            $('#enviarFinalizarProyecto').html('<i class="fas fa-upload"></i> Finalizar');
+
+            if (e == 3) {
+                mensajeInfo('Se han obviado las restricciones');
+                mensajeSuccess('Proyecto finalizado con éxito');
+            } else if (e == 2) {
+                mensajeInfo('Este proyecto no tenia tareas asignadas');
+                mensajeSuccess('Proyecto finalizado con éxito');
+            } else if (e == 1) {
+                mensajeSuccess('Proyecto finalizado con éxito');
+            } else if (e == -1) {
+                mensajeDanger('Su usuario no tiene los permisos adecuados', '¡ERROR!');
+            } else if (e == -2) {
+                mensajeDanger('No se ha podido finalizar el proyecto, hubo un fallo en el envio de datoss', '¡ERROR!');
+            } else if (e == -3) {
+                mensajeDanger('Este proyecto tiene tareas en proceso', '¡ERROR!');
+            } else if (e == -4) {
+                mensajeDanger('Fallo en la finalizacion de la tarea', '¡ERROR!');
+            } else if (e == -5) {
+                mensajeDanger('Fallo en la finalizacion de la tarea', '¡ERROR!');
+            } else if (e == -6) {
+                mensajeDanger('Fallo en la finalizacion de la tarea', '¡ERROR!');
+            }
+
+
+            solicitarDatosProyectoID();
+            $('#modalFinalizacionProyectos').modal('hide');
+        })
+        .fail(falloAjax)
+
+
+
 
 }
 //#endregion

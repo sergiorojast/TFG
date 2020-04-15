@@ -28,6 +28,7 @@ toastr.options.closeButton = true;
 
 
 var rolUsuario = null;
+
 function falloAjax() {
     toastr.error('Parece haber un error en la petición AJAX, le recomendamos que pruebe en unos minutos', 'Error AjaX!', {
         timeOut: 5000
@@ -90,4 +91,16 @@ function obtenerCookie(nombreCookie) {
     let valor = "; " + document.cookie;
     let cookie = valor.split("; " + nombreCookie + "=");
     if (cookie.length == 2) return cookie.pop().split(";").shift();
+}
+
+function preloadPequenioAleatorio() {
+    let preload = [
+        "<div class='text-center'><div class='spinner-border spinner-border-sm text-info' role='status'><span class='sr-only'>Loading...</span></div> </div>",
+        "<div class='text-center'><div class='spinner-border spinner-border-sm text-danger' role='status'><span class='sr-only'>Loading...</span></div> </div>",
+        "<div class='text-center'><div class='spinner-border spinner-border-sm text-warning' role='status'><span class='sr-only'>Loading...</span></div> </div>",
+        "<div class='text-center'><div class='spinner-border spinner-border-sm text-success' role='status'><span class='sr-only'>Loading...</span></div> </div>",
+        "<div class='text-center'><div class='spinner-border spinner-border-sm text-secondary' role='status'><span class='sr-only'>Loading...</span></div> </div>",
+        "<div class='text-center'><div class='spinner-border spinner-border-sm text-primary' role='status'><span class='sr-only'>Loading...</span></div> </div>",
+    ]
+    return preload[Math.trunc(Math.random()*6)];
 }
