@@ -475,7 +475,7 @@ function eventosModales() {
                         lista = '<ul class="list-group">';
 
                         for (let i = 0; i < datos.length; i++) {
-                            lista += '<li class="list-group-item"><i class="fas fa-stream text-info"></i> ' + datos[i]['id'] + ' -  "<span class="text-truncate"> "+ ' + datos[i]['nombre'] + ' </span></li>';
+                            lista += '<li class="list-group-item"><i class="fas fa-project-diagram text-info"></i> ' + datos[i]['id'] + ' - <span class="text-truncate">  ' + datos[i]['nombre'] + ' </span></li>';
 
                         }
 
@@ -528,7 +528,7 @@ function eventosModales() {
                             lista += '<i class="fas fa-project-diagram text-info"></i> ' + datos[i][0]['idProyecto'];
                             lista += "</div>"; //cierre col
                             lista += "<div class='col'>";
-                            lista += "<span class='text-truncate'> "+datos[i][0]['nombreProyecto']+ "</span>";
+                            lista += "<span class='text-truncate'> " + datos[i][0]['nombreProyecto'] + "</span>";
 
                             lista += "</div>"; //cierre col
                             lista += "</div>"; //cierre row
@@ -539,11 +539,11 @@ function eventosModales() {
                             lista += '<i class="fas fa-tasks text-secondary"></i> ' + datos[i][0]['idTarea'];
                             lista += "</div>"; //cierre col
                             lista += "<div class='col'>";
-                            lista += "<span class='text-truncate'> "+ datos[i][0]['nombreTarea']+ "</span>";
+                            lista += "<span class='text-truncate'> " + datos[i][0]['nombreTarea'] + "</span>";
                             lista += "</div>"; //cierre col
 
                             lista += "</div>"; //cierre row
-                           
+
                             lista += "</li>"; //cierre li
 
                         }
@@ -563,7 +563,73 @@ function eventosModales() {
     })
 
     $('#modalVerAnotaciones').on('show.bs.modal', function (e) {
-        console.log("Anotaciones abierto.")
+        let boton = $(e.relatedTarget);
+        let lista = "";
+
+        $.ajax({
+                type: "POST",
+                url: webService,
+                data: {
+                    "accion": "obtenerAnotacionesDeUsuario",
+                    "correo": $(boton).attr("data-correo")
+                }
+            })
+            .done(function (datos) {
+                if (datos == -1) {
+                    mensajeDanger("El usuario no tiene permisos para realizar esta acción", "¡ERROR!");
+                } else if (datos == -2) {
+                    mensajeDanger("Faltan datos para realizar la consulta", "¡ERROR!");
+                } else {
+                    datos = JSON.parse(datos);
+                    console.log(datos)
+                    if (datos.length > 0) {
+
+                        lista = '<ul class="list-group">';
+
+                        for (let i = 0; i < datos.length; i++) {
+                            lista += '<li class="list-group-item">';
+                            lista += "<div class='row'>";
+                            lista += "<div class='col'>";
+                            //datos proyecto
+                            lista += '<i class="fas fa-project-diagram text-info"></i> ' + datos[i][0]['pk_idProyecto'];
+                            lista += ' - <span class="text-truncate">' + datos[i][0]['nombreProyecto']+'</span>';
+
+                            lista += "</div>"; //cierre col
+                            lista += "<div class='col'>";
+                            //datos tarea
+                            lista += '<p><i class="fas fa-tasks text-secondary"></i> ' + datos[i][0]['pk_idTarea'];
+                            lista += ' - <span class="text-truncate">' + datos[i][0]['nombreTarea']+'</span></p>';
+
+                            lista += "</div>"; //cierre col
+                            lista += "</div>"; //cierre row
+
+                            lista += "<hr class='ml-5 mr-5'>"; //separador
+
+                            lista += "<div class='row'>";
+                            lista += "<div class='col text-center'>";
+                            //datos anotación
+                            lista += '<small class="">' + datos[i][0]['nombre']+'</small></p>';
+
+                            lista += "</div>"; //cierre col
+                            lista += "</div>"; //cierre row
+                            lista += "</li>"; //cierre li
+
+
+                        }
+
+
+                        $('#cuerpoModalAnotaciones').empty(); //eliminamos le preload. 
+                        $('#cuerpoModalAnotaciones').append(lista);
+
+                    } else {
+                        $('#cuerpoModalAnotaciones').empty(); //eliminamos le preload. 
+                        $('#cuerpoModalAnotaciones').append("<h4 class=' text-center text-warning'>El usuario no tiene ninguna anotación creada</h4>");
+                    }
+                }
+            })
+            .fail(falloAjax)
+
+
     })
     //evento cierre modal.
     $('#modalVerProyectos').on('hidden.bs.modal', function (e) {
@@ -572,5 +638,9 @@ function eventosModales() {
     $('#modalVerTareas').on('hidden.bs.modal', function (e) {
         $('#cuerpoModalTareas').html(preloadRojo);
 
+    })
+
+    $('#modalVerAnotaciones').on('hidden.bs.modal', function (e) {
+        $('#cuerpoModalAnotacion').html(preloadVerde);
     })
 }

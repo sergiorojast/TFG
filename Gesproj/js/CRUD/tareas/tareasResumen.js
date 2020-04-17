@@ -557,7 +557,7 @@ function dibujarTareasPorProyectos(datos) {
         elementos += "<div class='col-6 col-sm-4 col-lg-3 mb-2 '>" +
             "<div class='card' id='tareas'>" +
             "<div class='row m-1'>" +
-            "<small class='col col-lg-6 text-truncate'>" + datos[i]['nombreTarea'] + "</small>";
+            "<small id='nombre' class='col col-lg-6 text-truncate' data-toggle='popover' data-content='"+ datos[i]['nombreTarea'] +"'>" + datos[i]['nombreTarea'] + "</small>";
 
 
         if (datos[i]['estadoTarea'] == "En curso") {
@@ -577,7 +577,7 @@ function dibujarTareasPorProyectos(datos) {
             "<small class='col '>Descripción:</small>" +
             "</div>" +
             "<div class='row '>" +
-            "<small class='col text-truncate '>" + datos[i]['descripcionTarea'] + "</small>" +
+            "<small id='descripcion' class='col text-truncate ' data-toggle='popover' data-content='"+ datos[i]['descripcionTarea'] +"'>" + datos[i]['descripcionTarea'] + "</small>" +
             "</div>" +
             "</div>" +
             "</div>" +
@@ -677,6 +677,7 @@ function dibujarTareasPorProyectos(datos) {
     eventosBotonesAccionesTareas();
 
     abrirModalAnotaciones();
+    eventoMousePopover();
 }
 /**
  * Funcion encargada de cargar los datos en el modal de edicion y mostrarlo.
@@ -1301,6 +1302,10 @@ function ModalSolicitarTarea() {
     $('#solicitarTareaSegunProyecto').click(function (e) {
         $('#modalSolicitud').modal('show');
     })
+}
+
+function eventoMousePopover(){
+    console.log($('#tareas').find("#nombre"));
 }
 //#endregion
 

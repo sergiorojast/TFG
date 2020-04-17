@@ -6,6 +6,7 @@ crearAnotacionTipoComentario();
 
 eliminarAnotacion();
 
+obtenerAnotacionesUsuario();
 
 /**
  * Funcion encargada de devolver un listado de las anotaciones que tiene la tarea que se le solicite
@@ -273,6 +274,43 @@ function eliminarAnotacion()
             } else {
                 echo -1; //faltan datos;
             }
+        }
+    }
+}
+
+/**
+ * Función encargada de devolver las anotaciones de un usuario.Esta acción solo puede hacerse como administrador.
+ * @return -1; // el usuario no tiene los permisos necesarios para realizar esta acción.
+ * @return -2;// Faltan datos.
+ */
+function obtenerAnotacionesUsuario()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'obtenerAnotacionesDeUsuario') {
+        if (gestionarSesionyRol(90) == 1) {
+        
+            if (isset($_POST['correo'])) {
+     
+                $correo = filtraCorreo($_POST['correo']);
+                $conector =  new ConectorBD();
+                $respuesta = [];
+                $consulta = "SELECT fk_idAnotacion as id FROM `Usuarios:Anotaciones` WHERE fk_correo ='" . $correo . "'";
+
+                $resultado = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC);
+
+                
+                for ($i = 0; $i < count($resultado); $i++) {
+                   $consulta = "SELECT pk_idAnotacion, Anotaciones.nombre,pk_idTarea, nombreTarea, pk_idProyecto, Proyectos.nombre as nombreProyecto FROM Anotaciones,Tareas,Proyectos WHERE fk_idTarea = pk_idTarea AND fk_idProyecto = pk_idProyecto AND pk_idAnotacion =".$resultado[$i]['id'];
+                   
+                   array_push($respuesta,$conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC));
+                }
+
+                echo json_encode($respuesta);
+          
+            } else {
+                echo -2; //faltan daots
+            }
+        } else {
+            echo -1; //El usuario no tiene los permisos necesarios para realizar esta acción
         }
     }
 }
