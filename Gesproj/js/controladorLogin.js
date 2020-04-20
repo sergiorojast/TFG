@@ -95,7 +95,7 @@ function enviarDatosLogin(correo, contrasenia) {
         })
         .done(function (data) {
             let usuario = data;
-            // console.log(data);
+            
 
             if (isNaN(usuario)) {
                 $('.alertas').empty()
@@ -110,7 +110,7 @@ function enviarDatosLogin(correo, contrasenia) {
                 if ($('#recuerdame').val() == 'true') {
                     let fecha = new Date();
                     fecha.setDate(fecha.getDate()+2)
-                    console.log(fecha);
+                
                     document.cookie = "recuerdame=[" + $('#lCorreo').val() + "," + $('#lContrasenia').val() + "]; expires="+fecha;
                     // console.log(document.cookie);
                 }
@@ -175,7 +175,7 @@ function comprobarSesion(){
   
       })
       .done(function (data) {
-        console.log(data);
+       
         //si la llamada ajax nos devuelve un string con dos corchetes quiere decir que no existe sesion alguna.
         if (data == 1) {
           window.location = 'cpanel.html';

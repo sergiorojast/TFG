@@ -8,64 +8,65 @@
 
         </div>
     </div>
-
-    <div class="row" id="estadisticasUsuarios">
-        <div class="col-6">
-            <div class="card p-2 m-1">
-                <div class="row">
-                    <div class="col">
-                        <h6 class="text-center">Usuarios Registrados</h6>
+    <div class="d-none" id="estadisticasAdministrador">
+        <div class="row " >
+            <div class="col-6">
+                <div class="card p-2 m-1">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-center">Usuarios Registrados</h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <canvas id="diagramaUsarios"></canvas>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <canvas id="diagramaUsarios"></canvas>
+            </div>
+            <div class="col-6">
+                <div class="card p-2 m-1">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-center">Roles</h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <canvas id="diagramaRoles"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-6">
-            <div class="card p-2 m-1">
-                <div class="row">
-                    <div class="col">
-                        <h6 class="text-center">Roles</h6>
+        <div class="row" id="estadisticasAdministrador">
+            <div class="col">
+                <div class="card p-2 m-1">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-center">Diagrama</h6>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <canvas id="diagramaRoles"></canvas>
-                    </div>
+                    <canvas id=""></canvas>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="card p-2 m-1">
-                <div class="row">
-                    <div class="col">
-                        <h6 class="text-center">Diagrama</h6>
+        <div class="row">
+            <div class="col">
+                <div class="card p-2 m-1">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="text-center">Diagrama</h6>
+                        </div>
                     </div>
+                    <canvas id=""></canvas>
                 </div>
-                <canvas id=""></canvas>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="card p-2 m-1">
-                <div class="row">
-                    <div class="col">
-                        <h6 class="text-center">Diagrama</h6>
-                    </div>
-                </div>
-                <canvas id=""></canvas>
-            </div>
-        </div>
-    </div>
-
+    </div> <!-- Cierre diagrama administracion-->
 
 </div>
+
 
 <script>
     url = undefined;

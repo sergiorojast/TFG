@@ -1,9 +1,22 @@
 $(function () {
 
+    console.log(rolUsuario);
 
-    solicitarDatosUsuariosRegistrados();
+    if (rolUsuario == 90) {
+        solicitarDatosUsuariosRegistrados();
 
-    solicitarDatosRoles();
+        solicitarDatosRoles();
+
+        $("div #estadisticasAdministrador").removeClass("d-none");
+    } else if (rolUsuario == 50) {
+        $("div #estadisticasAdministrador").removeClass("d-none");
+        $("div #estadisticasAdministrador").addClass("d-none");
+    } else if (rolUsuario == 0) {
+        $("div #estadisticasAdministrador").removeClass("d-none");
+        $("div #estadisticasAdministrador").addClass("d-none");
+    }
+
+
     // $('#contenido').fadeToggle(2000);
     $('#contenido').fadeIn('250');
 
@@ -117,7 +130,7 @@ function solicitarDatosRoles() {
         let diagrama = new Chart(canvas, {
             type: 'doughnut',
             data: {
-                labels: ["Administradores", "Avanzados", "usuarios"],
+                labels: ["Administradores", "Moderadores", "usuarios"],
                 datasets: [{
                     label: 'Número de usuarios registrados',
                     data: [administradores, Avanzados, usuarios],

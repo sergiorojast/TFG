@@ -557,7 +557,7 @@ function dibujarTareasPorProyectos(datos) {
         elementos += "<div class='col-6 col-sm-4 col-lg-3 mb-2 '>" +
             "<div class='card' id='tareas'>" +
             "<div class='row m-1'>" +
-            "<small id='nombre' class='col col-lg-6 text-truncate' data-toggle='popover' data-content='"+ datos[i]['nombreTarea'] +"'>" + datos[i]['nombreTarea'] + "</small>";
+            "<small id='nombre' class='col col-lg-6 text-truncate' data-toggle='popover' data-content='" + datos[i]['nombreTarea'] + "'>" + datos[i]['nombreTarea'] + "</small>";
 
 
         if (datos[i]['estadoTarea'] == "En curso") {
@@ -577,7 +577,7 @@ function dibujarTareasPorProyectos(datos) {
             "<small class='col '>Descripción:</small>" +
             "</div>" +
             "<div class='row '>" +
-            "<small id='descripcion' class='col text-truncate ' data-toggle='popover' data-content='"+ datos[i]['descripcionTarea'] +"'>" + datos[i]['descripcionTarea'] + "</small>" +
+            "<small id='descripcion' class='col text-truncate ' data-toggle='popover' data-content='" + datos[i]['descripcionTarea'] + "'>" + datos[i]['descripcionTarea'] + "</small>" +
             "</div>" +
             "</div>" +
             "</div>" +
@@ -1304,8 +1304,17 @@ function ModalSolicitarTarea() {
     })
 }
 
-function eventoMousePopover(){
-    console.log($('#tareas').find("#nombre"));
+function eventoMousePopover() {
+    let nombres = $('div #tareas').find("#nombre");
+    let descripciones = $('div #tareas').find("#descripcion");
+    $(nombres).hover(function (e) {
+
+        $(this).popover('toggle');
+    })
+    $(descripciones).hover(function (e) {
+
+        $(this).popover('toggle');
+    })
 }
 //#endregion
 
@@ -1434,8 +1443,8 @@ function enviarDatosModalEdicion() {
 
         })
         .done(function (e) {
-        
-           $('#botonEnviarFormularioModalEdicion').html("<i class='fas fa-upload'></i>  Actualizar tarea")
+
+            $('#botonEnviarFormularioModalEdicion').html("<i class='fas fa-upload'></i>  Actualizar tarea")
 
             if (e == 1) {
                 mensajeSuccess('Tarea actualizada con éxito')

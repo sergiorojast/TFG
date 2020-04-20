@@ -107,19 +107,33 @@ function listarProyectos()
 {
     if (isset($_POST['accion']) && $_POST['accion'] === 'listarProyectosPropietario') {
         if (gestionarSesionyRol(90) == 1) { //solicitud administrador
-            $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
-                "FROM `Proyectos` ";
+            if ($_POST['estado'] == "true") {
+
+                $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
+                    "FROM `Proyectos` WHERE estado<>'Finalizado'";
+            } else {
+                $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
+                    "FROM `Proyectos` ";
+            }
+
 
             $controlador =  new ConectorBD();
 
             $filas = $controlador->consultarBD($consulta);
 
-            //echo $consulta;
+
             echo json_encode($filas->fetchAll(PDO::FETCH_ASSOC));
         } else if (gestionarSesionyRol(50) == 1) { //solicitud moderador
-            $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
-                "FROM `Proyectos` , `Usuarios:Proyectos` WHERE" .
-                "`fk_idProyecto` <=> `pk_idProyecto` AND `fk_correo` <=> '" . $_SESSION["correo"] . "'";
+            if ($_POST['estado'] == "true") {
+                $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
+                    "FROM `Proyectos` , `Usuarios:Proyectos` WHERE" .
+                    "`fk_idProyecto` <=> `pk_idProyecto` AND `fk_correo` <=> '" . $_SESSION["correo"] . "' AND estado <> 'Finalizado'";
+            } else {
+                $consulta  = "SELECT `pk_idProyecto`,`nombre`,`descripcion`,`fechaInicio`,`fechaFinalizacion`,`estado`,`estimacion`" .
+                    "FROM `Proyectos` , `Usuarios:Proyectos` WHERE" .
+                    "`fk_idProyecto` <=> `pk_idProyecto` AND `fk_correo` <=> '" . $_SESSION["correo"] . "'";
+            }
+
 
             $controlador =  new ConectorBD();
 

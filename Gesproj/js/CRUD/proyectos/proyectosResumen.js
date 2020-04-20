@@ -28,12 +28,13 @@ $(function () {
  * Funcion encargada de solicitar por medio de ajax los proyectos de usuario.
  */
 function solicitarProyectos(estado) {
-    //console.log(webService);
+
     $.ajax({
             type: "POST",
             url: webService,
             data: {
-                'accion': 'listarProyectosPropietario'
+                'accion': 'listarProyectosPropietario',
+                estado
             },
 
         })
@@ -53,14 +54,14 @@ function solicitarProyectos(estado) {
  * Funcion encargada de dibujar los datos de un array que le llegan de la llamada ajax.
  * @param {Array} datos 
  */
-function agregarDatosProyectosAlDoM(datos, estado) {
+function agregarDatosProyectosAlDoM(datos) {
 
 
     let carta;
     let dibujar;
     $('#capaProyectos').empty();
     for (let i = 0, j = 1; i < datos.length; i++, j++) {
-      
+
         if (j === 1) {
             $('#capaProyectos').append('<div id="columnasProyectos" class="row"> </div>')
 
@@ -146,9 +147,9 @@ function agregarDatosProyectosAlDoM(datos, estado) {
         carta += "</div>";
 
 
-            $('#capaProyectos #columnasProyectos:last-child').append(carta);
+        $('#capaProyectos #columnasProyectos:last-child').append(carta);
 
-   
+
 
     }
 
@@ -312,16 +313,22 @@ function botonOcultarProyectosFinalizados() {
     let estado = $(this).attr('data-estado');
 
 
+    //solicitarProyectos(estado);
+
 
     if (estado == '1') {
+        $(this).html("<i class='fas fa-eye'></i> Ocultar proyectos finalizados");
 
         $('#capaProyectos').html(preload);
         solicitarProyectos(false);
         $(this).attr('data-estado', '0');
 
     } else {
+        $(this).html("<i class='fas fa-eye-slash'></i> Mostrar proyectos finalizados");
+
         $('#capaProyectos').html(preload);
         solicitarProyectos(true);
         $(this).attr('data-estado', '1');
     }
+
 }

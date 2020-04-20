@@ -216,7 +216,7 @@ function validarFormularioInvitacion() {
 
             event.preventDefault();
             $('#botonInvitacion').addClass('disabled');
-            $('#botonInvitacion').html(preload);
+            $('#botonInvitacion').html(preloadPequenio);
 
             enviarDatosInvitacion();
 
