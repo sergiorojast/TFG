@@ -26,6 +26,8 @@ editarUsuarioActual();
 
 devolverTodosLosUsuarios();
 
+devolverNumeroUsuarios();
+
 /**
  * 
  * 
@@ -652,6 +654,20 @@ function devolverTodosLosUsuarios()
             echo json_encode($resultado->fetchAll(PDO::FETCH_ASSOC));
         } else {
             echo -1;
+        }
+    }
+}
+
+
+function devolverNumeroUsuarios()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'solicitarNumeroUsuarios') {
+        if (gestionarSesionyRol(90)) {
+
+            $consulta = "SELECT count(*) as num FROM Usuarios";
+            $conector = new ConectorBD();
+           
+            echo $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC)[0]['num'];
         }
     }
 }

@@ -19,6 +19,12 @@ devolverTodosProyectosID();
 obtenerTareasYEstadoPorProyecto();
 
 obtenerProyectosPorUsuario();
+
+devolverProyectosPorEstado();
+
+devolverNumeroProyectos();
+
+devolverPorcentajeProyectosFinalizados();
 /**
  * Funcion encargada  de crear proyectos, necesita un nivel de permisos 50 o superior
  * 
@@ -505,6 +511,67 @@ function obtenerProyectosPorUsuario()
             }
         } else {
             echo -1;
+        }
+    }
+}
+/**
+ * Funcion encargada de devolver el numero de proyectos englobados en los 4 estados.
+ */
+
+function devolverProyectosPorEstado()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'solicitarProyectosPorEstado') {
+        if (gestionarSesionyRol(90) == 1) {
+            $respuesta = [];
+            $conector = new ConectorBD();
+            $consulta = "SELECT count(*) as Finalizados FROM Proyectos WHERE estado  = 'Finalizado';";
+            array_push($respuesta, $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC));
+            $consulta = "SELECT count(*) as Creados FROM Proyectos WHERE estado  = 'Creado';";
+            array_push($respuesta, $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC));
+
+            $consulta = "SELECT count(*) as EnCurso FROM Proyectos WHERE estado  = 'En curso';";
+            array_push($respuesta, $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC));
+
+            $consulta = "SELECT count(*) as EnEspera FROM Proyectos WHERE estado  = 'En espera'";
+            array_push($respuesta, $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC));
+
+
+
+
+            echo json_encode($respuesta);
+        }
+    }
+}
+
+
+function devolverNumeroProyectos()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'solicitarNumeroProyectos') {
+        if (gestionarSesionyRol(90)) {
+
+            $consulta = "SELECT count(*) as num FROM Proyectos";
+            $conector = new ConectorBD();
+
+            echo $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC)[0]['num'];
+        }
+    }
+}
+
+function devolverPorcentajeProyectosFinalizados()
+{
+    if (isset($_POST['accion']) && $_POST['accion'] === 'solicitarPorcentajeProyectosFinalizados') {
+        if (gestionarSesionyRol(90)) {
+
+            $consulta = "SELECT count(*) as num FROM Proyectos";
+            $conector = new ConectorBD();
+            $numeroProyectosTotales = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC)[0]['num'];
+
+
+            $consulta  ="SELECT count(*) as num FROM Proyectos WHERE estado = 'Finalizado'";
+            $numeroProyectosFinalizados = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC)[0]['num'];
+
+            echo floor($numeroProyectosFinalizados/$numeroProyectosTotales *100);
+          
         }
     }
 }

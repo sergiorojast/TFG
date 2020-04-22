@@ -26,6 +26,10 @@ finalizarTarea();
 
 devolverListaTareasUsuario();
 
+obtenerNumeroTareasTotales();
+
+devolverPorcentajeTareasFinalizadas();
+
 /**
  * 
  * @return 2;// el usuario no tiene ninguna tarea asignada.
@@ -1389,6 +1393,35 @@ function devolverListaTareasUsuario()
             }
         } else {
             echo -1;
+        }
+    }
+}
+function obtenerNumeroTareasTotales(){
+    if (isset($_POST['accion']) && $_POST['accion'] === 'solicitarNumeroTareas') {
+        if (gestionarSesionyRol(90)) {
+
+            $consulta = "SELECT count(*) as num FROM Tareas";
+            $conector = new ConectorBD();
+           
+            echo $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC)[0]['num'];
+        }
+    }
+}
+
+function devolverPorcentajeTareasFinalizadas(){
+    if (isset($_POST['accion']) && $_POST['accion'] === 'solicitarPorcentajeTareasFinalizadas') {
+        if (gestionarSesionyRol(90)) {
+
+            $consulta = "SELECT count(*) as num FROM Tareas";
+            $conector = new ConectorBD();
+            $numeroTareasTotales = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC)[0]['num'];
+
+
+            $consulta  ="SELECT count(*) as num FROM Tareas WHERE estado = 'Finalizado'";
+            $numeroTareasFinalizadas = $conector->consultarBD($consulta)->fetchAll(PDO::FETCH_ASSOC)[0]['num'];
+
+            echo floor($numeroTareasFinalizadas/$numeroTareasTotales *100);
+          
         }
     }
 }
