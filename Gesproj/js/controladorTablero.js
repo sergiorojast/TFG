@@ -299,7 +299,7 @@ function solicitarDatosGenerales() {
             }
         })
         .done(function (e) {
-            console.log(e);
+          
             $("#barraProgresoTareas").html(
                 '<div class="progress"><div class="progress-bar bg-info" role="progressbar " style="width: '+e+'%;" aria-valuenow="'+e+'" aria-valuemin="0" aria-valuemax="100">'+e+'%</div></div>'
             )

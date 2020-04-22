@@ -413,7 +413,7 @@ function dibujarProyectos(proyectos) {
     for (const key in proyectos) {
 
         if (aux) {
-            $('#listaProyectos').append("<a class='nav-item nav-link active ' id='Proyecto1' data-idProyecto='" +
+            $('#listaProyectos').append("<a class='nav-item nav-link active w-25' id='Proyecto1' data-idProyecto='" +
                 proyectos[key][0]['pk_idProyecto'] +
                 "' data-toggle='tab'  role='tab'  aria-selected='true'><span class='mb-1 d-inline-block text-truncate' style='max-width: 200px;'> <span id='contenedorIcono'><i id='icono' class='mb-0 fas fa-sync-alt'></i></span><span id='texto' class=''> " +
                 proyectos[key][0]['nombreProyecto'] +
@@ -428,6 +428,8 @@ function dibujarProyectos(proyectos) {
 
 
     }
+    controladorCarruselProyectos();
+
     solicitarDatosPrimerProyectoSeleccionado();
     asignarEventosPestanias();
 
@@ -1315,6 +1317,83 @@ function eventoMousePopover() {
 
         $(this).popover('toggle');
     })
+}
+
+function controladorCarruselProyectos() {
+    //ocultamos los proyectos que nos hacen que salte de linea, segun la configuracion que le hemos dado, solo permitiremos que se muestren 4.
+    let arrayElementosProyectos = $("#listaProyectos a");
+    let botonDerecha = $("#botonDerecha");
+    let botonIzquierda = $("#botonIzquierda");
+    //comprobamos si hay mas de 4 elementos, si no los hubiera,  nos ocultamos las flechas y evitamos asignarle el evento;
+    if (arrayElementosProyectos.length > 4) {
+
+
+        for (let i = 4; i < arrayElementosProyectos.length; i++) {
+            $(arrayElementosProyectos[i]).addClass("d-none");
+        }
+        //Creamos la funcion que se ejecutara para desplazarse hacia la derecha con click.
+        $(botonDerecha).click(function (e) {
+            let aux = false; //variable que uso para obtener cual es el primer elemento en tener la clase d-none
+            for (let i = 0; i < arrayElementosProyectos.length; i++) {
+
+                if (!aux) {
+
+
+                    if ($(arrayElementosProyectos[i]).hasClass('d-none')) {
+
+                    } else {
+                        if ($(arrayElementosProyectos[i + 4]).length == 1) {
+                            $(botonIzquierda).removeAttr("disabled");
+                            $(arrayElementosProyectos[i]).fadeOut(250);
+                            $(arrayElementosProyectos[i]).addClass("d-none");
+                            setTimeout(function () {
+                                $(arrayElementosProyectos[i + 4]).removeClass("d-none")
+                                $(arrayElementosProyectos[i + 4]).fadeOut(1);
+                                $(arrayElementosProyectos[i + 4]).fadeIn(250);
+                            }, 300);
+                            aux = true;
+                        } else {
+                            $(botonDerecha).attr("disabled", "true");
+                        }
+                    }
+                }
+
+
+            }
+
+        })
+        //Creamos la funcion que se ejecutara para desplazarse hacia la izquierda con click.
+        $(botonIzquierda).click(function (e) {
+            let aux = false; // variable que usaremos para indicar que el ultimo elemento sin d-none fue encontrado.
+            for (let i = arrayElementosProyectos.length - 1; i > -1; i--) {
+
+                if (!aux) {
+                    if ($(arrayElementosProyectos[i]).hasClass('d-none')) {
+
+                    } else {
+                        if ($(arrayElementosProyectos[i - 4]).length == 1) {
+                            $(botonDerecha).removeAttr("disabled");
+                            $(arrayElementosProyectos[i]).fadeOut(250);
+                            $(arrayElementosProyectos[i]).addClass("d-none");
+                            setTimeout(function () {
+                                $(arrayElementosProyectos[i - 4]).removeClass("d-none")
+                                $(arrayElementosProyectos[i - 4]).fadeOut(1);
+                                $(arrayElementosProyectos[i - 4]).fadeIn(250);
+                            }, 300);
+                            aux = true;
+                        } else {
+                            $(botonIzquierda).attr("disabled", "true");
+                        }
+                    }
+                }
+
+            }
+        })
+    } else {
+        $(botonIzquierda).fadeOut();
+        $(botonDerecha).fadeOut();
+    }
+
 }
 //#endregion
 
