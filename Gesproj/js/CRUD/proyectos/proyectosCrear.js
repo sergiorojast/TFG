@@ -47,19 +47,21 @@ function volverAtras() {
 function validarFormulario() {
     $('#formularioProyecto').validate({
         rules: {
-            'eNombreProyecto': {
-                required: true
+            'cNombreProyecto': {
+                required: true,
+                minlength: 3,
+                maxlength:60
             },
-            'eDescripcionProyecto': {
+            'cDescripcionProyecto': {
                 required: true,
                 minlength: 10,
-                maxlength: 60000
+                maxlength: 6000
 
             },
             'horas': {
                 number: true,
                 min: 0,
-                max: 999
+                max: 9999
             },
             'minutos': {
                 number: true,

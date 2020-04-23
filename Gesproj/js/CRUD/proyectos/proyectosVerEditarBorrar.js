@@ -196,7 +196,7 @@ function validarFormularioUpdate() {
             'horas': {
                 number: true,
                 min: 0,
-                max: 99999
+                max: 9999
             },
             'minutos': {
                 number: true,
