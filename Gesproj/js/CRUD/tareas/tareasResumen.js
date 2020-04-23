@@ -342,6 +342,8 @@ function eventosAlCerrarModales() {
         $('#listaAdministradores').empty();
         $('#listadoUsuariosEdicion').empty();
 
+        solicitarUsuarios()
+
         recargarVista();
     });
 }
@@ -519,7 +521,7 @@ function dibujarDatosProyectoSinTareas(datos) {
 function dibujarTareasPorProyectos(datos) {
 
 
-
+    $("#crearTareaSegunProyecto").removeAttr("disabled");
     let elementos = "   <div class='container'>" +
         " <br>" +
         "  <div class='row '>" +
@@ -532,6 +534,7 @@ function dibujarTareasPorProyectos(datos) {
     } else if (datos[0]['estadoProyecto'] == "Creado") {
         elementos += "     <div class='col col-lg-3'> <span class='badge badge-primary'>" + datos[0]['estadoProyecto'] + "</span></div>"
     } else if (datos[0]['estadoProyecto'] == "Finalizado") {
+        $("#crearTareaSegunProyecto").attr("disabled", "true");
         elementos += "     <div class='col col-lg-3'> <span class='badge badge-secondary'>" + datos[0]['estadoProyecto'] + "</span></div>"
     }
 
@@ -626,23 +629,23 @@ function dibujarTareasPorProyectos(datos) {
 
         if (rolUsuario == 90) {
 
-            elementos += "<button type='button' id='botonEliminarTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-danger'><i class='fas fa-trash'></i></button>";
+            elementos += "<button type='button' id='botonEliminarTareaAdministrador'  data-toggle='tooltip' data-placement='top' title='Eliminar tarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-danger'><i class='fas fa-trash'></i></button>";
             if (datos[i]['estadoTarea'] != "Finalizado") {
-                elementos += "<button type='button' id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-info '><i class='fas fa-pen'></i></button>"
-                elementos += "<button type='button' id='botonFinalizarTarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-warning '><i class='fas fa-hourglass-end'></i></button>"
+                elementos += "<button type='button' id='botonVerTareaAdministrador' data-toggle='tooltip' data-placement='top' title='Editar tarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-info '><i class='fas fa-pen'></i></button>"
+                elementos += "<button type='button' id='botonFinalizarTarea' data-toggle='tooltip' data-placement='top' title='Finalizar tarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-warning '><i class='fas fa-hourglass-end'></i></button>"
 
             }
 
-            elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
+            elementos += "<button type='button' id='botonVerAnotaciones' data-toggle='tooltip' data-placement='top' title='Ver anotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
 
         } else if (rolUsuario == 0) {
-            elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
+            elementos += "<button type='button' id='botonVerAnotaciones' data-toggle='tooltip' data-placement='top' title='Ver anotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
             //   elementos += "<button type='button' id='botonMarcarComoFinalizada' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
 
         } else {
-            elementos += "<button type='button'  id='botonVerTareaAdministrador' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-info '><i class='fas fa-pen'></i></button>"
-            elementos += "<button type='button' id='botonFinalizarTarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-warning '><i class='fas fa-hourglass-end'></i></button>"
-            elementos += "<button type='button' id='botonVerAnotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
+            elementos += "<button type='button'  id='botonVerTareaAdministrador' data-toggle='tooltip' data-placement='top' title='Editar tarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-info '><i class='fas fa-pen'></i></button>"
+            elementos += "<button type='button' id='botonFinalizarTarea'data-toggle='tooltip' data-placement='top' title='Finalizar tarea' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-sm btn-outline-warning '><i class='fas fa-hourglass-end'></i></button>"
+            elementos += "<button type='button' id='botonVerAnotaciones'data-toggle='tooltip' data-placement='top' title='Ver anotaciones' data-idTarea='" + datos[i]['pk_idTarea'] + "' class='btn btn-outline-secondary '><i class='fas fa-th-list'></i></button>"
 
         }
 
@@ -679,7 +682,13 @@ function dibujarTareasPorProyectos(datos) {
     eventosBotonesAccionesTareas();
 
     abrirModalAnotaciones();
+    eventoTooltips();
     eventoMousePopover();
+}
+
+function eventoTooltips() {
+
+    $("#listadoTareas button").tooltip('enable')
 }
 /**
  * Funcion encargada de cargar los datos en el modal de edicion y mostrarlo.
@@ -704,12 +713,13 @@ function cargarDatosModalEditar(datosRaw) {
         $('#descripcionTareaEdicion').val(datos['tarea'][0]['descripcion'])
         $('#fechaCreacionTareaEditar').val(datos['tarea'][0]['fechaInicio'])
         if (hora[0] < 10) {
-            $('#horasEdicion').val("0" + hora[0]);
+          
+            $('#horasEdicion').val("0" + hora[0].substring((hora[0].length-1)));
         } else {
             $('#horasEdicion').val(hora[0]);
         }
         if (hora[1] < 10) {
-            $('#minutosEdicion').val("0" + hora[1]);
+            $('#minutosEdicion').val("0" + hora[1].substring((hora[1].length-1)));
         } else {
             $('#minutosEdicion').val(hora[1]);
         }
@@ -889,6 +899,7 @@ function botonCrearTareaSegunProyecto() {
     $('#modalModeradorCrearTarea').on('hidden.bs.modal', function (e) {
 
         $('#listadoUsuarios').empty();
+        solicitarUsuarios();
         recargarVista();
     });
 
@@ -950,7 +961,8 @@ function validarFormularioCrearTareaPorProyecto() {
 }
 
 function aniadeUsuariosSelectModal(datos) {
-
+    $('#selectorUsuariosModal').empty();
+    $('#selectorUsuariosModalEdicion').empty();
 
     for (let i = 0; i < datos.length; i++) {
 
